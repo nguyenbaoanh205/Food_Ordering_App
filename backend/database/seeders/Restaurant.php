@@ -17,7 +17,7 @@ class Restaurant extends Seeder
             ModelsRestaurant::create([
                 'name' => fake()->company,
                 'address' => fake()->address,
-                'phone' => fake()->phoneNumber,
+                'phone' => fake()->numerify('##########'), // Tạo số điện thoại gồm 10 chữ số
                 'rating' => fake()->randomFloat(2, 1, 5),
                 'description' => fake()->paragraph,
                 'opening_hours' => fake()->time() . ' - ' . fake()->time(),
