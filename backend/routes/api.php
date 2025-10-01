@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\FoodController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -7,10 +8,8 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/foods', function () {
-    return [
-        ['id' => 1, 'name' => 'Pizza', 'price' => 120000],
-        ['id' => 2, 'name' => 'Burger', 'price' => 60000],
-        ['id' => 3, 'name' => 'Trà sữa', 'price' => 45000],
-    ];
-});
+Route::get('/foods', [FoodController::class, 'index']);
+Route::post('/foods', [FoodController::class, 'store']);
+Route::get('/foods/{id}', [FoodController::class, 'show']);
+Route::put('/foods/{id}', [FoodController::class, 'update']);
+Route::delete('/foods/{id}', [FoodController::class, 'destroy']);
