@@ -19,7 +19,8 @@ class FoodController extends Controller
     }
     public function index()
     {
-        return $this->food->all();
+        $foods = $this->food->with('category')->get();
+        return response()->json(['data' => $foods], 200);
     }
 
     /**
@@ -27,10 +28,22 @@ class FoodController extends Controller
      */
     public function store(Request $request)
     {
-        $food = $this->food->create($request->all());
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'price'       => 'required|numeric',
+            'description' => 'nullable|string',
+            'image'       => 'nullable|string',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $food = $this->food->create($validated);
+
+        // load category để Vue dùng ngay
+        $food->load('category');
+
         return response()->json([
             'message' => 'Thực phẩm đã được tạo thành công!',
-            'data' => $food
+            'data'    => $food
         ], 201);
     }
 
@@ -40,7 +53,7 @@ class FoodController extends Controller
      */
     public function show(string $id)
     {
-        $food = $this->food->find($id);
+        $food =  $this->food->with('category')->find($id);
         if ($food) {
             return response()->json(['data' => $food], 200);
         } else {
@@ -54,12 +67,25 @@ class FoodController extends Controller
     public function update(Request $request, string $id)
     {
         $food = $this->food->find($id);
-        if ($food) {
-            $food->update($request->all());
-            return response()->json(['message' => 'Thực phẩm được cập nhật thanh cong!', $food], 200);
-        } else {
+        if (!$food) {
             return response()->json(['message' => 'Thực phẩm không tồn tại!'], 404);
         }
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'price'       => 'required|numeric',
+            'description' => 'nullable|string',
+            'image'       => 'nullable|string',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $food->update($validated);
+        // load category để frontend dùng luôn
+        $food->load('category');
+
+        return response()->json([
+            'message' => 'Thực phẩm được cập nhật thành công!',
+            'data'    => $food
+        ], 200);
     }
 
     /**

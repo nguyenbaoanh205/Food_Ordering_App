@@ -3,16 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class Category extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    protected $category;
+
+    public function __construct()
+    {
+        $this->category = new Category();
+    }
     public function index()
     {
-        //
+        $category = $this->category->all();
+        return response()->json($category, 200);
     }
 
     /**

@@ -44,24 +44,40 @@ const routes = [
       {
         path: 'order',
         name: 'Order',
-        component: () => import('@/views/admin/Order.vue')
+        component: () => import('@/views/admin/Order.vue'),
       },
       {
         path: 'food',
         name: 'Food',
-        component: () => import('@/views/admin/Food.vue')
+        component: () => import('@/views/admin/food/foodList.vue'),
+      },
+      {
+        path: 'food/create',
+        name: 'foodCreate',
+        component: () => import('@/views/admin/food/foodCreate.vue')
       },
       // {
-      //   path: 'users',
-      //   name: 'Users',
-      //   component: () => import('@/views/admin/Users.vue')
+      //   path: ':id/edit',
+      //   name: 'foodEdit',
+      //   component: () => import('@/views/admin/food/foodEdit.vue')
       // },
-      // {
-      //   path: 'settings',
-      //   name: 'Settings',
-      //   component: () => import('@/views/admin/Settings.vue')
-      // }
-    ]
+      {
+        path: 'food/:id',
+        name: 'foodShow',
+        component: () => import('@/views/admin/food/foodShow.vue'),
+        props: true
+      },
+  // {
+  //   path: 'users',
+  //   name: 'Users',
+  //   component: () => import('@/views/admin/Users.vue')
+  // },
+  // {
+  //   path: 'settings',
+  //   name: 'Settings',
+  //   component: () => import('@/views/admin/Settings.vue')
+  // }
+]
   }
 ]
 
