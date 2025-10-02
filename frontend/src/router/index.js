@@ -46,11 +46,11 @@ const routes = [
         name: 'Order',
         component: () => import('@/views/admin/Order.vue')
       },
-      // {
-      //   path: 'products',
-      //   name: 'Products',
-      //   component: () => import('@/views/admin/Products.vue')
-      // },
+      {
+        path: 'food',
+        name: 'Food',
+        component: () => import('@/views/admin/Food.vue')
+      },
       // {
       //   path: 'users',
       //   name: 'Users',

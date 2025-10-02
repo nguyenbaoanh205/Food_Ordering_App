@@ -6,10 +6,10 @@
         <RouterLink to="/admin/dashboard" class="nav-link text-white">Dashboard</RouterLink>
       </li>
       <li class="nav-item">
-        <RouterLink to="/admin/orders" class="nav-link text-white">Orders</RouterLink>
+        <RouterLink to="/admin/order" class="nav-link text-white">Orders</RouterLink>
       </li>
       <li class="nav-item">
-        <RouterLink to="/admin/products" class="nav-link text-white">Products</RouterLink>
+        <RouterLink to="/admin/food" class="nav-link text-white">Foods</RouterLink>
       </li>
       <li class="nav-item">
         <RouterLink to="/admin/users" class="nav-link text-white">Users</RouterLink>
