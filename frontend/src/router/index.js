@@ -42,43 +42,43 @@ const routes = [
         component: () => import('@/views/admin/Dashboard.vue')
       },
       {
-        path: 'order',
-        name: 'Order',
-        component: () => import('@/views/admin/Order.vue'),
-      },
-      {
         path: 'food',
         name: 'Food',
-        component: () => import('@/views/admin/food/foodList.vue'),
+        component: () => import('@/views/admin/foods/foodList.vue'),
       },
       {
         path: 'food/create',
         name: 'foodCreate',
-        component: () => import('@/views/admin/food/foodCreate.vue')
+        component: () => import('@/views/admin/foods/foodCreate.vue')
       },
       {
         path: 'food/edit/:id',
         name: 'foodEdit',
-        component: () => import('@/views/admin/food/foodEdit.vue'),
+        component: () => import('@/views/admin/foods/foodEdit.vue'),
         props: true
       },
       {
         path: 'food/:id',
         name: 'foodShow',
-        component: () => import('@/views/admin/food/foodShow.vue'),
+        component: () => import('@/views/admin/foods/foodShow.vue'),
         props: true
       },
-  // {
-  //   path: 'users',
-  //   name: 'Users',
-  //   component: () => import('@/views/admin/Users.vue')
-  // },
-  // {
-  //   path: 'settings',
-  //   name: 'Settings',
-  //   component: () => import('@/views/admin/Settings.vue')
-  // }
-]
+      {
+        path: 'order',
+        name: 'Order',
+        component: () => import('@/views/admin/Order.vue'),
+      },
+      // {
+      //   path: 'users',
+      //   name: 'Users',
+      //   component: () => import('@/views/admin/Users.vue')
+      // },
+      // {
+      //   path: 'settings',
+      //   name: 'Settings',
+      //   component: () => import('@/views/admin/Settings.vue')
+      // }
+    ]
   }
 ]
 

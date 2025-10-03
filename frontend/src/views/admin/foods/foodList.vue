@@ -76,7 +76,6 @@ const pagination = ref({
 const currentPage = ref(1)
 
 const fetchFoods = async (page = 1) => {
-    loading.value = true
     try {
         const res = await api.get(`/foods?page=${page}`)
         foods.value = res.data.data
