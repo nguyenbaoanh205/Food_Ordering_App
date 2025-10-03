@@ -56,11 +56,12 @@ const routes = [
         name: 'foodCreate',
         component: () => import('@/views/admin/food/foodCreate.vue')
       },
-      // {
-      //   path: ':id/edit',
-      //   name: 'foodEdit',
-      //   component: () => import('@/views/admin/food/foodEdit.vue')
-      // },
+      {
+        path: 'food/edit/:id',
+        name: 'foodEdit',
+        component: () => import('@/views/admin/food/foodEdit.vue'),
+        props: true
+      },
       {
         path: 'food/:id',
         name: 'foodShow',

@@ -17,11 +17,14 @@ class FoodController extends Controller
     {
         $this->food = new Food();
     }
-    public function index()
+    public function index(Request $request)
     {
-        $foods = $this->food->with('category')->get();
-        return response()->json(['data' => $foods], 200);
+        // phân trang 5 bản ghi / trang, có kèm category
+        $foods = $this->food->with('category')->paginate(5);
+
+        return response()->json($foods, 200);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -93,12 +96,11 @@ class FoodController extends Controller
      */
     public function destroy(string $id)
     {
-        $food = $this->food->find($id);
-        if ($food) {
-            $this->food->destroy($id);
-            return response()->json(['message' => 'Thực phẩm đã được xóa thành công!']);
-        } else {
-            return response()->json(['message' => 'Thực phẩm không tồn tại!'], 404);
-        }
+        $food = $this->food->findOrFail($id);
+        $food->delete();
+
+        return response()->json([
+            'message' => 'Thực phẩm đã được xóa thành công!'
+        ]);
     }
 }
