@@ -35,7 +35,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-success">Thêm</button>
-                    <router-link to="/food" class="btn btn-secondary ms-2">Hủy</router-link>
+                    <router-link to="/admin/food" class="btn btn-secondary ms-2">Hủy</router-link>
                 </form>
             </div>
         </div>

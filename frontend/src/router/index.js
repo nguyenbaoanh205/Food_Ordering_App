@@ -64,20 +64,28 @@ const routes = [
         props: true
       },
       {
+        path: 'category',
+        name: 'Category',
+        component: () => import('@/views/admin/categories/categoryList.vue'),
+      },
+      {
+        path: 'category/create',
+        name: 'categoryCreate',
+        component: () => import('@/views/admin/categories/categoryCreate.vue')
+      },
+      {
+        path: 'category/edit/:id',
+        name: 'categoryEdit',
+        component: () => import('@/views/admin/categories/categoryEdit.vue'),
+        props: true
+      },
+      {
         path: 'order',
         name: 'Order',
         component: () => import('@/views/admin/Order.vue'),
       },
-      // {
-      //   path: 'users',
-      //   name: 'Users',
-      //   component: () => import('@/views/admin/Users.vue')
-      // },
-      // {
-      //   path: 'settings',
-      //   name: 'Settings',
-      //   component: () => import('@/views/admin/Settings.vue')
-      // }
+
+
     ]
   }
 ]

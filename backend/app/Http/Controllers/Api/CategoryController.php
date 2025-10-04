@@ -20,7 +20,7 @@ class CategoryController extends Controller
     public function index()
     {
         $category = $this->category->all();
-        return response()->json($category, 200);
+        return response()->json(["data" => $category], 200);
     }
 
     /**
@@ -28,7 +28,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = $this->category->create($request->all());
+        return response()->json(["data" => $category], 201);
     }
 
     /**
@@ -36,7 +37,8 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $category = $this->category->find($id);
+        return response()->json(["data" => $category], 200);
     }
 
     /**
@@ -44,7 +46,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $category = $this->category->find($id);
+        $category->update($request->all());
+        return response()->json(["data" => $category], 200);
     }
 
     /**
@@ -52,6 +56,8 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = $this->category->find($id);
+        $category->delete();
+        return response()->json(["data" => $category], 200);
     }
 }
