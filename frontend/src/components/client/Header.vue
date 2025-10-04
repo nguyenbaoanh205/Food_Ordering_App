@@ -1,7 +1,10 @@
 <template>
-  <div class="hero_area">
+  <div class="hero_area" :style="heights[route.name] ? { height: heights[route.name] } : {}">
     <div class="bg-box">
-      <img :src="Image1" alt="">
+      <img :src="Image1" alt="" :style="{
+        objectFit: 'cover',
+        objectPosition: positions[route.name] || 'center center'
+      }">
     </div>
     <!-- header section strats -->
     <header class="header_section">
@@ -19,21 +22,29 @@
           </button>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav  mx-auto ">
-              <li class="nav-item active">
-                <RouterLink class="nav-link" :to="{ name: 'Home' }">Home <span class="sr-only">(current)</span>
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <RouterLink class="nav-link" :to="{ name: 'Home' }" active-class="active" exact-active-class="active">
+                  Home
                 </RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link" :to="{ name: 'Menu' }">Menu</RouterLink>
+                <RouterLink class="nav-link" :to="{ name: 'Menu' }" active-class="active">
+                  Menu
+                </RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link" :to="{ name: 'About' }">About</RouterLink>
+                <RouterLink class="nav-link" :to="{ name: 'About' }" active-class="active">
+                  About
+                </RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link" :to="{ name: 'Book' }">Book Table</RouterLink>
+                <RouterLink class="nav-link" :to="{ name: 'Book' }" active-class="active">
+                  Book Table
+                </RouterLink>
               </li>
             </ul>
+
             <div class="user_option">
               <a href="" class="user_link">
                 <i class="fa fa-user" aria-hidden="true"></i>
@@ -116,6 +127,41 @@ import Image1 from '@/assets/images/hero-bg.jpg';
 import { RouterLink, useRoute } from 'vue-router';
 import Banner from './Banner.vue';
 const route = useRoute()
+const heights = {
+  Home: '1000px',
+  Menu: '85px',
+  About: '85px',
+  Book: '85px',
+}
 
+const positions = {
+  Menu: 'top center',
+  About: 'top center',
+  Book: 'top center',
+}
 </script>
-<style></style>
+<style>
+.hero_area {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: unset !important;
+  /* xóa min-height mặc định */
+}
+
+.bg-box {
+  width: 100%;
+  height: 100%;
+}
+
+.bg-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.nav-link.active {
+  color: #ffbe33 !important;
+}
+</style>
