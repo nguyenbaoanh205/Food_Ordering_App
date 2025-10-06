@@ -418,7 +418,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4 all pasta">
+                    <!-- <div class="col-sm-6 col-lg-4 all pasta">
                         <div class="box">
                             <div>
                                 <div class="img-box">
@@ -903,7 +903,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="btn-box">
@@ -955,7 +955,7 @@
     <!-- end about section -->
 
     <!-- book section -->
-    <section class="book_section layout_padding">
+    <!-- <section class="book_section layout_padding">
         <div class="container">
             <div class="heading_container">
                 <h2>
@@ -1012,12 +1012,12 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- end book section -->
 
     <!-- client section -->
 
-    <section class="client_section layout_padding-bottom">
+    <section class="client_section layout_padding-bottom mt-5">
         <div class="container">
             <div class="heading_container heading_center psudo_white_primary mb_45">
                 <h2>

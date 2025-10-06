@@ -38,11 +38,11 @@
                   About
                 </RouterLink>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <RouterLink class="nav-link" :to="{ name: 'Book' }" active-class="active">
                   Book Table
                 </RouterLink>
-              </li>
+              </li> -->
             </ul>
 
             <div class="user_option">

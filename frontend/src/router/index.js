@@ -24,11 +24,11 @@ const routes = [
         name: 'About',
         component: () => import('@/views/client/About.vue')
       },
-      {
-        path: 'book',
-        name: 'Book',
-        component: () => import('@/views/client/Book.vue')
-      }
+      // {
+      //   path: 'book',
+      //   name: 'Book',
+      //   component: () => import('@/views/client/Book.vue')
+      // }
     ]
   },
   {
