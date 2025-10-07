@@ -14,7 +14,7 @@
                 <h4 class="card-title">{{ food.name }}</h4>
                 <p class="card-text">{{ food.description }}</p>
                 <p><strong>Giá:</strong> {{ food.price }} VNĐ</p>
-                <p><strong>Loại:</strong> {{ food.category.name }}</p>
+                <p><strong>Loại:</strong> {{ food.category?.name || 'No category' }}</p>
 
                 <div v-if="food.image">
                     <img :src="food.image" alt="Hình ảnh" class="img-fluid rounded" style="max-width: 400px;" />

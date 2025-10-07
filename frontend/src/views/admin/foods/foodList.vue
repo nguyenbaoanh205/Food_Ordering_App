@@ -1,49 +1,64 @@
 <template>
     <div>
-        <h2 class="fw-bold mb-4">Quản lý food</h2>
-
-        <RouterLink :to="{ name: 'foodCreate' }" class="btn btn-primary mb-3">Add Food</RouterLink>
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
+            <h2 class="fw-bold mb-0">Food Management</h2>
+            <div class="d-flex align-items-center gap-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input v-model="keyword" type="search" class="form-control"
+                        placeholder="Search by name, category..." @keydown.enter.prevent="applySearch" />
+                </div>
+                <RouterLink :to="{ name: 'foodCreate' }" class="btn btn-success w-50">Add Food</RouterLink>
+            </div>
+        </div>
 
         <div class="card shadow-sm">
             <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>id</th>
-                            <th>name</th>
-                            <th>price</th>
-                            <th>description</th>
-                            <th>image</th>
-                            <th>category</th>
-                            <th>action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="food in foods" :key="food.id">
-                            <td>{{ food.id }}</td>
-                            <td>{{ food.name }}</td>
-                            <td>{{ food.price }}</td>
-                            <td>{{ food.description }}</td>
-                            <td>
-                                <img :src="food.image" alt="" style="width: 100px; height: 100px; object-fit: cover;">
-                            </td>
-                            <td>{{ food.category?.name }}</td>
-                            <td>
-                                <RouterLink class="btn btn-sm btn-primary me-2"
-                                    :to="{ name: 'foodShow', params: { id: food.id } }">Chi tiết</RouterLink>
-                                <RouterLink class="btn btn-sm btn-primary me-2"
-                                    :to="{ name: 'foodEdit', params: { id: food.id } }">Edit</RouterLink>
-                                <button @click="deleteFood(food.id)" class="btn btn-sm btn-danger">Xóa</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div v-if="loading" class="p-4 text-center text-muted">Loading data...</div>
+                <div v-else-if="error" class="alert alert-danger m-3">{{ error }}</div>
+                <div v-else>
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-nowrap col-id">ID</th>
+                                <th class="col-name">Name</th>
+                                <th class="text-end col-price">Price</th>
+                                <th class="col-desc">Description</th>
+                                <th class="col-image">Image</th>
+                                <th class="col-category">Category</th>
+                                <th class="text-nowrap text-center col-actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="foods.length === 0">
+                                <td colspan="7" class="text-center text-muted py-4">No matching results</td>
+                            </tr>
+                            <tr v-for="food in foods" :key="food.id">
+                                <td class="col-id">{{ food.id }}</td>
+                                <td class="fw-500 col-name">{{ food.name }}</td>
+                                <td class="text-end col-price">{{ formatCurrency(food.price) }}</td>
+                                <td class="text-truncate col-desc">{{ food.description }}</td>
+                                <td class="col-image">
+                                    <img :src="food.image" alt="" class="rounded shadow-sm food-thumb">
+                                </td>
+                                <td class="col-category">{{ food.category?.name || 'No category' }}</td>
+                                <td class="text-center col-actions">
+                                    <RouterLink class="btn btn-sm btn-outline-secondary me-2"
+                                        :to="{ name: 'foodShow', params: { id: food.id } }">Details</RouterLink>
+                                    <RouterLink class="btn btn-sm btn-primary me-2"
+                                        :to="{ name: 'foodEdit', params: { id: food.id } }">Edit</RouterLink>
+                                    <button @click="deleteFood(food.id)" class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- PHÂN TRANG -->
         <nav v-if="pagination.last_page > 1" class="mt-3">
-            <ul class="pagination">
+            <ul class="pagination mb-0">
                 <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
                     <button class="page-link" @click="changePage(pagination.current_page - 1)">«</button>
                 </li>
@@ -74,10 +89,13 @@ const pagination = ref({
     last_page: 1
 })
 const currentPage = ref(1)
+const keyword = ref('')
 
+// Hàm lấy danh sách món ăn
 const fetchFoods = async (page = 1) => {
     try {
-        const res = await api.get(`/foods?page=${page}`)
+        const q = keyword.value ? `&q=${encodeURIComponent(keyword.value)}` : ''
+        const res = await api.get(`/foods?page=${page}${q}`)
         foods.value = res.data.data
         pagination.value = {
             current_page: res.data.current_page,
@@ -90,11 +108,12 @@ const fetchFoods = async (page = 1) => {
     }
 }
 
-
+// Khi component mount
 onMounted(() => {
     fetchFoods()
 })
 
+// Phân trang
 const changePage = (page) => {
     if (page >= 1 && page <= pagination.value.last_page) {
         currentPage.value = page
@@ -102,15 +121,91 @@ const changePage = (page) => {
     }
 }
 
+// Áp dụng tìm kiếm khi nhấn Enter
+const applySearch = () => {
+    loading.value = true
+    currentPage.value = 1
+    fetchFoods(1)
+}
+
+// Xóa món ăn
 const deleteFood = async (id) => {
-    if (!confirm('Bạn có chắc muốn xoá món ăn này?')) return
+    if (!confirm('Are you sure you want to delete this item?')) return
     try {
         await api.delete(`/foods/${id}`)
-        // Sau khi xoá xong, gọi lại API để refresh danh sách
         fetchFoods(currentPage.value)
-        alert('Xoá thành công!')
+        alert('Deleted successfully!')
     } catch (err) {
-        alert('Có lỗi khi xoá!')
+        alert('Failed to delete!')
+    }
+}
+
+// Định dạng tiền tệ
+const formatCurrency = (value) => {
+    if (value == null) return ''
+    try {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value))
+    } catch (e) {
+        return value
     }
 }
 </script>
+
+<style scoped>
+.fw-500 {
+    font-weight: 500;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+/* Cân đối độ rộng các cột */
+.col-id {
+    width: 72px;
+}
+
+.col-image {
+    width: 110px;
+}
+
+.col-actions {
+    width: 200px;
+}
+
+.col-price {
+    width: 12%;
+}
+
+.col-category {
+    width: 14%;
+}
+
+.col-name {
+    width: 18%;
+}
+
+.col-desc {
+    width: 25%;
+    max-width: 0;
+}
+
+/* Ảnh thumbnail của món ăn */
+.food-thumb {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+}
+
+/* Giúp bảng tôn trọng width đã set và xử lý truncate mượt hơn */
+table {
+    table-layout: fixed;
+}
+
+.col-desc {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>

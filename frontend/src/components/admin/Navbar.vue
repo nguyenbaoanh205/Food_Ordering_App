@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4" style="width: 88%; margin-left: 240px;">
     <div class="container-fluid">
       <!-- Sidebar toggle button for mobile -->
       <button
@@ -16,8 +16,8 @@
       <!-- Brand -->
       <span class="navbar-brand fw-bold text-primary">🍔 Food Admin</span>
 
-      <!-- User Info and Dropdown -->
-      <div class="d-flex align-items-center">
+      <!-- User -->
+      <div class="d-flex align-items-center ms-auto gap-3">
         <div class="dropdown">
           <button
             class="btn btn-outline-secondary d-flex align-items-center"
@@ -42,6 +42,8 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 const emit = defineEmits(['toggle-sidebar'])
 
 const toggleSidebar = () => {

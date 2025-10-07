@@ -9,7 +9,7 @@ class Category extends Model
     protected $table = 'categories';
     protected $fillable = ['name'];
 
-    public function products()
+    public function foods()
     {
         return $this->hasMany(Food::class);
     }

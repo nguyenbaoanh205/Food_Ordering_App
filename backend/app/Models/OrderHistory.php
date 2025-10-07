@@ -8,4 +8,9 @@ class OrderHistory extends Model
 {
     protected $table = 'order_history';
     protected $fillable = ['order_id', 'status', 'note'];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
 }

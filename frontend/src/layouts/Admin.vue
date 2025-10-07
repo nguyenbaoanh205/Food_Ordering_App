@@ -26,21 +26,26 @@ const toggleSidebar = () => {
 </script>
 
 <style scoped>
-.main-content-collapsed {
-  margin-left: 70px;
-}
-
+/* Default desktop spacing when sidebar is expanded */
 .content {
   margin-left: 240px;
+  width: 88%;
   transition: margin-left 0.3s ease;
 }
 
+/* When sidebar is collapsed, reduce left margin for main content */
+.main-content-collapsed .content {
+  margin-left: 70px;
+}
+
 @media (max-width: 991px) {
+  /* On tablet/mobile, default to compact sidebar width */
   .content {
     margin-left: 70px;
   }
 
-  .main-content-collapsed {
+  /* If sidebar is toggled (collapsed on mobile), use full width */
+  .main-content-collapsed .content {
     margin-left: 0;
   }
 }
