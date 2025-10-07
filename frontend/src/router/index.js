@@ -82,7 +82,13 @@ const routes = [
       {
         path: 'order',
         name: 'Order',
-        component: () => import('@/views/admin/Order.vue'),
+        component: () => import('@/views/admin/orders/orderList.vue'),
+      },
+      {
+        path: 'order/:id',
+        name: 'OrderShow',
+        component: () => import('@/views/admin/orders/orderShow.vue'),
+        props: true
       },
 
 

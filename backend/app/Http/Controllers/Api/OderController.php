@@ -17,7 +17,7 @@ class OderController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = Order::with(['details.food', 'history'])
+        $orders = Order::with(['user','details.food', 'history'])
             ->orderByDesc('id')
             ->paginate(10);
         return response()->json($orders, 200);
@@ -77,7 +77,7 @@ class OderController extends Controller
      */
     public function show(string $id)
     {
-        $order = Order::with(['details.food', 'history'])->find($id);
+        $order = Order::with(['user','details.food', 'history'])->find($id);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }

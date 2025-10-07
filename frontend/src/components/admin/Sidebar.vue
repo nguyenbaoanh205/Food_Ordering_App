@@ -1,39 +1,82 @@
 <template>
   <div class="sidebar bg-dark text-white p-3" :class="{ 'sidebar-collapsed': isCollapsed }" style="width: 240px;">
+    <!-- Brand -->
     <div class="d-flex align-items-center mb-4 brand">
       <i class="bi bi-basket2-fill text-primary me-2"></i>
       <h4 class="mb-0 text-primary">Food Admin</h4>
     </div>
+
+    <!-- Navigation -->
     <ul class="nav flex-column">
+      <!-- Dashboard -->
       <li class="nav-item">
         <RouterLink to="/admin/dashboard" class="nav-link text-white d-flex align-items-center" active-class="active">
           <i class="bi bi-house-door me-2"></i>
           <span>Dashboard</span>
         </RouterLink>
       </li>
-      <li class="nav-item mt-2 sidebar-section">Order Management</li>
-      <li class="nav-item">
-        <RouterLink to="/admin/order" class="nav-link text-white d-flex align-items-center" active-class="active">
-          <i class="bi bi-cart me-2"></i>
-          <span>Orders</span>
-        </RouterLink>
-      </li>
+
+      <!-- Food Management -->
       <li class="nav-item mt-3 sidebar-section">Food Management</li>
+
       <li class="nav-item">
         <RouterLink to="/admin/food" class="nav-link text-white d-flex align-items-center" active-class="active">
           <i class="bi bi-egg-fried me-2"></i>
           <span>Foods</span>
         </RouterLink>
       </li>
+
       <li class="nav-item">
         <RouterLink to="/admin/category" class="nav-link text-white d-flex align-items-center" active-class="active">
           <i class="bi bi-tags me-2"></i>
           <span>Categories</span>
         </RouterLink>
       </li>
+
+      <!-- Order Management -->
+      <li class="nav-item mt-3 sidebar-section">Order Management</li>
+      
+      <li class="nav-item">
+        <RouterLink to="/admin/cart" class="nav-link text-white d-flex align-items-center" active-class="active">
+          <i class="bi bi-bag-check me-2"></i>
+          <span>Cart</span>
+        </RouterLink>
+      </li>
+
+      <li class="nav-item">
+        <RouterLink to="/admin/order" class="nav-link text-white d-flex align-items-center" active-class="active">
+          <i class="bi bi-cart me-2"></i>
+          <span>Orders</span>
+        </RouterLink>
+      </li>
+
+      <li class="nav-item">
+        <RouterLink to="/admin/order-history" class="nav-link text-white d-flex align-items-center" active-class="active">
+          <i class="bi bi-clock-history me-2"></i>
+          <span>Order History</span>
+        </RouterLink>
+      </li>
+
+      <!-- User & Review Management -->
+      <li class="nav-item mt-3 sidebar-section">User & Review Management</li>
+
+      <li class="nav-item">
+        <RouterLink to="/admin/user" class="nav-link text-white d-flex align-items-center" active-class="active">
+          <i class="bi bi-people me-2"></i>
+          <span>Users</span>
+        </RouterLink>
+      </li>
+
+      <li class="nav-item">
+        <RouterLink to="/admin/review" class="nav-link text-white d-flex align-items-center" active-class="active">
+          <i class="bi bi-chat-dots me-2"></i>
+          <span>Reviews</span>
+        </RouterLink>
+      </li>
     </ul>
   </div>
 </template>
+
 
 <script setup>
 defineProps({

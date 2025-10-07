@@ -34,7 +34,7 @@ class FoodController extends Controller
         }
 
         $perPage = (int) $request->query('per_page', 10);
-        $foods = $query->paginate($perPage);
+        $foods = $query->orderByDesc('id')->paginate($perPage);
 
         return response()->json($foods, 200);
     }
