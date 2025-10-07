@@ -1,17 +1,24 @@
 <template>
-    <div class="container mt-4">
-        <h2 class="fw-bold mb-3">Chỉnh sửa danh mục</h2>
+    <div class="container-fluid mt-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
+            <h2 class="fw-bold mb-0">Edit Category</h2>
+            <router-link to="/admin/category" class="btn btn-outline-secondary">Back to list</router-link>
+        </div>
 
-        <div class="card shadow-sm">
+        <div class="card shadow-sm w-100">
             <div class="card-body">
                 <form @submit.prevent="updateCategory">
-                    <div class="mb-3">
-                        <label class="form-label">Tên danh mục</label>
-                        <input v-model="form.name" type="text" class="form-control" />
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Name</label>
+                            <input v-model="form.name" type="text" class="form-control" placeholder="Enter category name" />
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Cập nhật</button>
-                    <router-link to="/admin/category" class="btn btn-secondary ms-2">Hủy</router-link>
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <router-link to="/admin/category" class="btn btn-secondary">Cancel</router-link>
+                    </div>
                 </form>
             </div>
         </div>
@@ -52,10 +59,10 @@ onMounted(async () => {
 const updateCategory = async () => {
     try {
         await api.put(`/categories/${props.id}`, form.value)
-        alert('Cập nhật thành công!')
+        alert('Updated successfully!')
         router.push('/admin/category')
     } catch (err) {
-        alert('Lỗi cập nhật món ăn')
+        alert('Failed to update category')
     }
 }
 </script>

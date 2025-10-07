@@ -17,10 +17,20 @@ class CategoryController extends Controller
     {
         $this->category = new Category();
     }
-    public function index()
+    public function index(Request $request)
     {
-        $category = $this->category->all();
-        return response()->json(["data" => $category], 200);
+        // List categories, support search and pagination
+        $query = $this->category->newQuery();
+
+        $search = $request->query('q');
+        if (!empty($search)) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $perPage = (int) $request->query('per_page', 10);
+        $categories = $query->paginate($perPage);
+
+        return response()->json($categories, 200);
     }
 
     /**
