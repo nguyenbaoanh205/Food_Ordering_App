@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container-fluid mt-4">
         <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
             <h2 class="fw-bold mb-0">Food Management</h2>
             <div class="d-flex align-items-center gap-2">
@@ -33,8 +33,8 @@
                             <tr v-if="foods.length === 0">
                                 <td colspan="7" class="text-center text-muted py-4">No matching results</td>
                             </tr>
-                            <tr v-for="food in foods" :key="food.id">
-                                <td class="col-id">{{ food.id }}</td>
+                            <tr v-for="(food, index) in foods" :key="food.id">
+                                <td class="col-id">{{ (pagination.current_page - 1) * 10 + index + 1 }}</td>
                                 <td class="fw-500 col-name">{{ food.name }}</td>
                                 <td class="text-end col-price">{{ formatCurrency(food.price) }}</td>
                                 <td class="text-truncate col-desc">{{ food.description }}</td>
@@ -99,7 +99,8 @@ const fetchFoods = async (page = 1) => {
         foods.value = res.data.data
         pagination.value = {
             current_page: res.data.current_page,
-            last_page: res.data.last_page
+            last_page: res.data.last_page,
+            per_page: res.data.per_page
         }
     } catch (err) {
         error.value = err.message || 'Lỗi kết nối API'

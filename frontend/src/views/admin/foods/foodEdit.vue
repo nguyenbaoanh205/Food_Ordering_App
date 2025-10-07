@@ -1,41 +1,47 @@
 <template>
-    <div class="container mt-4">
-        <h2 class="fw-bold mb-3">Chỉnh sửa món ăn</h2>
+    <div class="container-fluid mt-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
+            <h2 class="fw-bold mb-0">Edit Food</h2>
+            <router-link to="/admin/food" class="btn btn-outline-secondary">Back to list</router-link>
+        </div>
 
-        <div class="card shadow-sm">
+        <div class="card shadow-sm w-100">
             <div class="card-body">
                 <form @submit.prevent="updateFood">
-                    <div class="mb-3">
-                        <label class="form-label">Tên món</label>
-                        <input v-model="form.name" type="text" class="form-control" />
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Name</label>
+                            <input v-model="form.name" type="text" class="form-control" placeholder="Enter food name" />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Price</label>
+                            <input v-model="form.price" type="number" step="0.01" class="form-control" placeholder="Enter price" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea v-model="form.description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Image (URL)</label>
+                            <input v-model="form.image" type="text" class="form-control" placeholder="https://..." />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Category</label>
+                            <select v-model="form.category_id" class="form-select">
+                                <option disabled value="">-- Select category --</option>
+                                <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Giá</label>
-                        <input v-model="form.price" type="text" class="form-control" />
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <router-link to="/admin/food" class="btn btn-secondary">Cancel</router-link>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Mô tả</label>
-                        <textarea v-model="form.description" class="form-control"></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Hình ảnh (URL)</label>
-                        <input v-model="form.image" type="text" class="form-control" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục</label>
-                        <select v-model="form.category_id" class="form-select">
-                            <option v-for="c in categories" :key="c.id" :value="c.id">
-                                {{ c.name }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Cập nhật</button>
-                    <router-link to="/admin/food" class="btn btn-secondary ms-2">Hủy</router-link>
                 </form>
             </div>
         </div>
@@ -47,7 +53,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
 
-// ✅ nhận props từ router
+// receive id from route
 const props = defineProps({
     id: {
         type: String,
@@ -69,13 +75,13 @@ const categories = ref([])
 
 onMounted(async () => {
     try {
-        // Lấy danh mục
+        // Fetch categories
         const catRes = await api.get('/categories')
-        categories.value = catRes.data
-
-        // Lấy chi tiết món ăn
+        categories.value = catRes.data.data
+        
+        // Fetch food detail
         const res = await api.get(`/foods/${props.id}`)
-        // 👇 Nếu Laravel trả về { data: { ... } }
+        // Handle both { data: { ... } } and direct object
         const food = res.data.data || res.data
 
         form.value = {
@@ -86,17 +92,17 @@ onMounted(async () => {
             category_id: food.category_id
         }
     } catch (err) {
-        alert('Lỗi tải dữ liệu')
+        alert('Failed to load data')
     }
 })
 
 const updateFood = async () => {
     try {
         await api.put(`/foods/${props.id}`, form.value)
-        alert('Cập nhật thành công!')
+        alert('Updated successfully!')
         router.push('/admin/food')
     } catch (err) {
-        alert('Lỗi cập nhật món ăn')
+        alert('Failed to update food')
     }
 }
 </script>
