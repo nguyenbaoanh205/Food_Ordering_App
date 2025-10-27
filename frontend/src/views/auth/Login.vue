@@ -24,10 +24,12 @@
     <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
   </div>
 </template>
-
 <script setup>
 import { ref } from "vue";
-import api from '@/services/api'
+import api from "@/services/api";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const form = ref({
   email: "",
@@ -40,13 +42,25 @@ const handleLogin = async () => {
   error.value = "";
   try {
     const res = await api.post("/login", form.value);
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+    const { token, user, redirect } = res.data;
+
+    // Lưu token và thông tin người dùng
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
 
     alert("Đăng nhập thành công!");
-    window.location.href = "/"; // chuyển hướng sang trang chính
+
+    // ✅ Điều hướng theo role
+    if (redirect === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/");
+    }
   } catch (err) {
-    error.value = err.response?.data?.message || "Đăng nhập thất bại!";
+    error.value =
+      err.response?.data?.message ||
+      err.response?.data?.errors?.email?.[0] ||
+      "Đăng nhập thất bại!";
   }
 };
 </script>

@@ -7,7 +7,7 @@
 
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <div class="card shadow-sm p-4">
+          <div class="card shadow-sm p-4" v-if="user">
             <div class="text-center mb-4">
               <i class="fa fa-user-circle fa-4x text-primary"></i>
               <h4 class="mt-2">{{ user.name }}</h4>
@@ -34,6 +34,13 @@
               <button class="btn btn-outline-danger ms-2" @click="logout">Đăng xuất</button>
             </div>
           </div>
+
+          <div v-else class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Đang tải thông tin...</p>
+          </div>
         </div>
       </div>
     </div>
@@ -41,24 +48,70 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import api from '@/services/api'
+import { useRouter } from 'vue-router'
 
-const user = ref({
-  name: 'Nguyễn Văn A',
-  email: 'nguyenvana@example.com'
-})
-
+const router = useRouter()
+const user = ref(null)
 const password = ref('')
 
-const updateProfile = () => {
-  console.log('Đã cập nhật:', user.value, password.value)
-  alert('Cập nhật thông tin thành công!')
+// ✅ Lấy thông tin user từ API
+const fetchProfile = async () => {
+  try {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+      return
+    }
+
+    const res = await api.get('/profile', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    user.value = res.data.user
+  } catch (error) {
+    console.error(error)
+    router.push('/login')
+  }
 }
 
-const logout = () => {
-  localStorage.removeItem('user')
-  window.location.href = '/login'
+// ✅ Cập nhật thông tin
+const updateProfile = async () => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await api.post(
+      '/update-profile',
+      { name: user.value.name, password: password.value },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+
+    alert(res.data.message)
+    password.value = ''
+  } catch (error) {
+    alert('Cập nhật thất bại!')
+  }
 }
+
+// ✅ Đăng xuất
+const logout = async () => {
+  try {
+    // Gửi yêu cầu logout đến Laravel
+    await api.post("/logout", {}, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    });
+
+    alert("Đăng xuất thành công!");
+  } catch (error) {
+    console.error("Lỗi khi gọi API logout:", error);
+  } finally {
+    // Xóa dữ liệu cục bộ
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  }
+};
+
+onMounted(fetchProfile)
 </script>
 
 <style scoped>

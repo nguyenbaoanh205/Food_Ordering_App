@@ -1,39 +1,62 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4" style="width: 88%; margin-left: 240px;">
-    <div class="container-fluid">
-      <!-- Sidebar toggle button for mobile -->
+  <nav
+    class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top"
+    :class="{ 'navbar-collapsed': isSidebarCollapsed }"
+  >
+    <div class="container-fluid px-4">
+      <!-- Sidebar toggle button (mobile + responsive) -->
       <button
-        class="navbar-toggler me-3"
+        class="btn btn-outline-primary d-lg-none me-3"
         type="button"
         @click="toggleSidebar"
         aria-controls="sidebar"
         aria-expanded="false"
         aria-label="Toggle sidebar"
       >
-        <span class="navbar-toggler-icon"></span>
+        <i class="bi bi-list"></i>
       </button>
 
       <!-- Brand -->
-      <span class="navbar-brand fw-bold text-primary">🍔 Food Admin</span>
+      <span class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2">
+        <i class="bi bi-basket2-fill fs-4"></i>
+        <span>Food Admin</span>
+      </span>
 
-      <!-- User -->
+      <!-- Right side -->
       <div class="d-flex align-items-center ms-auto gap-3">
+        <!-- Notification bell -->
+        <button class="btn btn-light position-relative">
+          <i class="bi bi-bell fs-5"></i>
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.6rem;"
+          >
+            3
+          </span>
+        </button>
+
+        <!-- User dropdown -->
         <div class="dropdown">
           <button
-            class="btn btn-outline-secondary d-flex align-items-center"
-            type="button"
+            class="btn btn-outline-secondary d-flex align-items-center gap-2"
             id="userDropdown"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <span class="me-2">Xin chào, Admin</span>
-            <i class="bi bi-person-circle"></i>
+            <i class="bi bi-person-circle fs-5"></i>
+            <span>Xin chào, {{ userName }}</span>
+            <i class="bi bi-caret-down-fill small"></i>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><button class="dropdown-item text-danger" @click="logout">Đăng xuất</button></li>
+
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
+            <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button class="dropdown-item text-danger d-flex align-items-center gap-2" @click="handleLogout">
+                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -46,34 +69,52 @@ import { ref } from 'vue'
 
 const emit = defineEmits(['toggle-sidebar'])
 
+const userName = ref('Admin') // sau này có thể lấy từ API hoặc localStorage
+const isSidebarCollapsed = ref(false)
+
 const toggleSidebar = () => {
   emit('toggle-sidebar')
+  isSidebarCollapsed.value = !isSidebarCollapsed.value
 }
 
-const logout = () => {
-  // Add logout logic here (e.g., clear token, redirect to login)
-  console.log('Logged out')
+const handleLogout = () => {
+  if (confirm('Bạn có chắc muốn đăng xuất?')) {
+    localStorage.removeItem('token')
+    window.location.href = '/login'
+  }
 }
 </script>
 
 <style scoped>
 .navbar {
+  height: 64px;
   border-bottom: 1px solid #e9ecef;
+  z-index: 1030;
   transition: all 0.3s ease;
 }
 
-.navbar-brand {
-  font-size: 1.5rem;
-  color: #007bff !important;
+.navbar-collapsed {
+  width: calc(100% - 80px);
+  margin-left: 80px;
+}
+
+.navbar:not(.navbar-collapsed) {
+  width: calc(100% - 240px);
+  margin-left: 240px;
 }
 
 .btn-outline-secondary {
   border-radius: 50px;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.9rem;
 }
 
 .dropdown-menu {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: none;
+  border-radius: 0.75rem;
+  min-width: 180px;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
 }
 </style>

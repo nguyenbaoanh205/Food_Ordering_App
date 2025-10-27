@@ -65,11 +65,15 @@ class AuthController extends Controller
         // Tạo token mới
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Kiểm tra vai trò
+        $redirect = $user->role == 1 ? 'admin' : 'client';
+
         return response()->json([
-            'status'  => true,
-            'message' => 'Đăng nhập thành công',
-            'user'    => $user,
-            'token'   => $token,
+            'status'   => true,
+            'message'  => 'Đăng nhập thành công',
+            'user'     => $user,
+            'token'    => $token,
+            'redirect' => $redirect,
         ], 200);
     }
 
@@ -91,11 +95,36 @@ class AuthController extends Controller
     /**
      * 🙍‍♂️ Lấy thông tin user hiện tại
      */
-    public function me(Request $request)
+    public function profile(Request $request)
     {
         return response()->json([
             'status' => true,
             'user'   => $request->user(),
         ], 200);
+    }
+
+    /**
+     * ✏️ Cập nhật thông tin người dùng
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|min:6',
+        ]);
+
+        $user->name = $validated['name'];
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Cập nhật thông tin thành công!',
+            'user' => $user,
+        ]);
     }
 }

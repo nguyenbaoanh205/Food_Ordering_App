@@ -16,10 +16,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/profile', [AuthController::class, 'profile']);
+    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::apiResource('/users', UserController::class);
 });
+Route::apiResource('/users', UserController::class);
 Route::get('/users/{id}/profile', [UserController::class, 'profile']);
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
