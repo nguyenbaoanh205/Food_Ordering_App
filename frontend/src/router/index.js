@@ -24,6 +24,16 @@ const routes = [
         name: 'About',
         component: () => import('@/views/client/About.vue')
       },
+      {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/auth/Login.vue')
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        component: () => import('@/views/auth/Register.vue')
+      },
       // {
       //   path: 'book',
       //   name: 'Book',
@@ -88,6 +98,22 @@ const routes = [
         path: 'order/:id',
         name: 'OrderShow',
         component: () => import('@/views/admin/orders/orderShow.vue'),
+        props: true
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/admin/users/userList.vue'),
+      },
+      {
+        path: 'user/create',
+        name: 'userCreate',
+        component: () => import('@/views/admin/users/userCreate.vue')
+      },
+      {
+        path: 'user/edit/:id',
+        name: 'userEdit',
+        component: () => import('@/views/admin/users/userEdit.vue'),
         props: true
       },
 
