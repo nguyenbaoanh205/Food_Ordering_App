@@ -3,47 +3,44 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // 🧾 Lấy giỏ hàng của 1 user
+    public function getCart($userId)
     {
-        //
+        $cart = Cart::with('items.food')->where('user_id', $userId)->first();
+
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found'], 404);
+        }
+
+        return response()->json($cart);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    // 🔼 Cập nhật số lượng sản phẩm
+    public function updateQuantity(Request $request, $itemId)
     {
-        //
+        $item = CartItem::find($itemId);
+        if (!$item) return response()->json(['message' => 'Item not found'], 404);
+
+        $item->quantity = $request->quantity;
+        $item->save();
+
+        return response()->json(['message' => 'Quantity updated', 'item' => $item]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // ❌ Xóa sản phẩm khỏi giỏ
+    public function removeItem($itemId)
     {
-        //
-    }
+        $item = CartItem::find($itemId);
+        if (!$item) return response()->json(['message' => 'Item not found'], 404);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $item->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json(['message' => 'Item removed']);
     }
 }

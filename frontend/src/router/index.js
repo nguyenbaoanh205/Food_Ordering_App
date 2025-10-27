@@ -10,6 +10,16 @@ const routes = [
     component: Client,
     children: [
       {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/auth/Login.vue')
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        component: () => import('@/views/auth/Register.vue')
+      },
+      {
         path: '',
         name: 'Home',
         component: () => import('@/views/client/Home.vue')
@@ -25,15 +35,16 @@ const routes = [
         component: () => import('@/views/client/About.vue')
       },
       {
-        path: '/login',
-        name: 'Login',
-        component: () => import('@/views/auth/Login.vue')
+        path: 'cart',
+        name: 'Cart',
+        component: () => import('@/views/client/Cart.vue')
       },
       {
-        path: '/register',
-        name: 'Register',
-        component: () => import('@/views/auth/Register.vue')
-      },
+        path: 'profile',
+        name: 'Profile',
+        component: () => import('@/views/client/Profile.vue')
+      }
+
       // {
       //   path: 'book',
       //   name: 'Book',

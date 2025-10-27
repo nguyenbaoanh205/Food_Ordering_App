@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -16,22 +17,27 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role' => 'in:0,1'
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'role'     => 'nullable|in:0,1', // 0: user, 1: admin
         ]);
 
+        // Mã hóa mật khẩu
         $validated['password'] = Hash::make($validated['password']);
+        $validated['role'] = $validated['role'] ?? 0; // Mặc định là user
+
+        // Tạo user
         $user = User::create($validated);
 
-        // tạo token
+        // Tạo token truy cập
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status'  => true,
             'message' => 'Đăng ký thành công',
-            'user' => $user,
-            'token' => $token
+            'user'    => $user,
+            'token'   => $token,
         ], 201);
     }
 
@@ -41,22 +47,29 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'email'    => 'required|email',
+            'password' => 'required|string|min:6',
         ]);
 
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['message' => 'Sai email hoặc mật khẩu'], 401);
+            throw ValidationException::withMessages([
+                'email' => ['Email hoặc mật khẩu không chính xác.'],
+            ]);
         }
 
+        // Xóa token cũ (nếu bạn muốn chỉ 1 phiên đăng nhập)
+        $user->tokens()->delete();
+
+        // Tạo token mới
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status'  => true,
             'message' => 'Đăng nhập thành công',
-            'user' => $user,
-            'token' => $token
+            'user'    => $user,
+            'token'   => $token,
         ], 200);
     }
 
@@ -65,11 +78,14 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        if ($request->user()) {
+            $request->user()->currentAccessToken()->delete();
+        }
 
         return response()->json([
-            'message' => 'Đăng xuất thành công'
-        ]);
+            'status'  => true,
+            'message' => 'Đăng xuất thành công',
+        ], 200);
     }
 
     /**
@@ -78,7 +94,8 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         return response()->json([
-            'user' => $request->user()
-        ]);
+            'status' => true,
+            'user'   => $request->user(),
+        ], 200);
     }
 }
