@@ -32,7 +32,13 @@
 
 <script setup>
 import { ref } from "vue";
-import api from '@/services/api'
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+
+const userStore = useUserStore();
+const router = useRouter();
+const toast = useToast();
 
 const form = ref({
   name: "",
@@ -45,13 +51,12 @@ const error = ref("");
 const handleRegister = async () => {
   error.value = "";
   try {
-    const res = await api.post("/register", form.value);
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-    alert("Đăng ký thành công!");
-    window.location.href = "/"; // hoặc /home, tuỳ bạn
-  } catch (err) {
-    error.value = err.response?.data?.message || "Đăng ký thất bại!";
+    const redirect = await userStore.register(form.value); // dùng store
+    toast.success("Đăng ký thành công!");
+    // Điều hướng sau khi register
+    redirect === "admin" ? router.push("/admin") : router.push("/");
+  } catch (errMsg) {
+    toast.error(errMsg); // hiển thị lỗi bằng toast
   }
 };
 </script>

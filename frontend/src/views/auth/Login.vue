@@ -2,7 +2,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user"; // ✅ import Pinia store
-
+import { useToast } from "vue-toastification";
+const toast = useToast();
 const router = useRouter();
 const userStore = useUserStore();
 
@@ -17,14 +18,14 @@ const handleLogin = async () => {
   error.value = "";
   try {
     const redirect = await userStore.login(form.value); // ✅ Gọi Pinia login
-
+    toast.success("Đăng nhập thành công!");
     if (redirect === "admin") {
       router.push("/admin");
     } else {
       router.push("/");
     }
   } catch (errMsg) {
-    error.value = errMsg;
+    toast.error(errMsg);
   }
 };
 </script>

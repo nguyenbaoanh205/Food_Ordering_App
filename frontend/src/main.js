@@ -7,9 +7,21 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
+// alert notification //
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+// end alert notification //
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 app.mount('#app')
+app.use(Toast, {
+    position: "top-right",
+    timeout: 3000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+});
 

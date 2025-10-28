@@ -65,25 +65,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import { useToast } from "vue-toastification";
 
-const emit = defineEmits(['toggle-sidebar'])
+const router = useRouter();
+const userStore = useUserStore();
+const toast = useToast();
 
-const userName = ref('Admin') // sau này có thể lấy từ API hoặc localStorage
-const isSidebarCollapsed = ref(false)
-
-const toggleSidebar = () => {
-  emit('toggle-sidebar')
-  isSidebarCollapsed.value = !isSidebarCollapsed.value
-}
-
-const handleLogout = () => {
-  if (confirm('Bạn có chắc muốn đăng xuất?')) {
-    localStorage.removeItem('token')
-    window.location.href = '/login'
-  }
-}
+const handleLogout = async () => {
+    await userStore.logout(); // xóa token + user
+    toast.success("Đăng xuất thành công!");
+    router.push("/login"); // chuyển trang mà không reload
+};
 </script>
+
 
 <style scoped>
 .navbar {

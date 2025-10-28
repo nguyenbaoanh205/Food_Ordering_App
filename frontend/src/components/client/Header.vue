@@ -106,11 +106,14 @@
 </template>
 <script setup>
 import Image1 from '@/assets/images/hero-bg.jpg';
-import { RouterLink, useRoute } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Banner from './Banner.vue';
 import { useUserStore } from '@/stores/user';
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 
 const heights = {
@@ -132,8 +135,8 @@ const positions = {
 
 const logout = async () => {
   await userStore.logout();
-  alert("Đăng xuất thành công!");
-  window.location.href = "/login";
+  toast.success("Đăng xuất thành công!");
+  router.push("/login"); // chuyển trang mà toast vẫn hiển thị
 };
 </script>
 
