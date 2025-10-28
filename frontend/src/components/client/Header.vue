@@ -123,6 +123,8 @@ const heights = {
   Book: '95px',
   Login: '95px',
   Register: '95px',
+  Profile: '95px',
+  Cart: '95px',
 };
 
 const positions = {
@@ -131,6 +133,8 @@ const positions = {
   Book: 'top center',
   Login: 'top center',
   Register: 'top center',
+  Profile: 'top center',
+  Cart: 'top center',
 };
 
 const logout = async () => {
