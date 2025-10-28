@@ -9,78 +9,41 @@ use Illuminate\Http\Request;
 
 class OderHistoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $request->validate(['order_id' => 'required|exists:orders,id']);
-        $history = OrderHistory::where('order_id', $request->order_id)
-            ->orderBy('id')
-            ->get();
+        $query = OrderHistory::query();
+
+        // Search theo status hoặc note (tùy chọn)
+        $search = $request->query('q');
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('status', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            });
+        }
+
+        // Phân trang, mặc định 10 bản ghi / trang
+        $perPage = (int) $request->query('per_page', 10);
+        $histories = $query->orderByDesc('id')->paginate($perPage);
+
+        return response()->json([
+            'data' => $histories->items(),
+            'current_page' => $histories->currentPage(),
+            'last_page' => $histories->lastPage(),
+            'per_page' => $histories->perPage(),
+            'total' => $histories->total(),
+        ], 200);
+    }
+
+
+    public function show($id)
+    {
+        $history = OrderHistory::find($id);
+
+        if (!$history) {
+            return response()->json(['message' => 'History not found'], 404);
+        }
+
         return response()->json(['data' => $history], 200);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'order_id' => 'required|exists:orders,id',
-            'status' => 'required|in:pending,confirmed,completed,cancelled',
-            'note' => 'nullable|string',
-        ]);
-
-        $order = Order::findOrFail($validated['order_id']);
-        $history = OrderHistory::create($validated);
-        $order->update(['status' => $validated['status']]);
-
-        return response()->json(['message' => 'History added', 'data' => $history], 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $history = OrderHistory::find($id);
-        if (!$history) {
-            return response()->json(['message' => 'History not found'], 404);
-        }
-        return response()->json(['data' => $history], 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $history = OrderHistory::find($id);
-        if (!$history) {
-            return response()->json(['message' => 'History not found'], 404);
-        }
-        $validated = $request->validate([
-            'status' => 'nullable|in:pending,confirmed,completed,cancelled',
-            'note' => 'nullable|string',
-        ]);
-        $history->update($validated);
-        if (isset($validated['status'])) {
-            Order::where('id', $history->order_id)->update(['status' => $validated['status']]);
-        }
-        return response()->json(['message' => 'History updated', 'data' => $history], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $history = OrderHistory::find($id);
-        if (!$history) {
-            return response()->json(['message' => 'History not found'], 404);
-        }
-        $history->delete();
-        return response()->json(['message' => 'History deleted'], 200);
     }
 }

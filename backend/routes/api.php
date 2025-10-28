@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
-});
+// });
 Route::apiResource('/users', UserController::class);
 Route::get('/users/{id}/profile', [UserController::class, 'profile']);
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
@@ -56,10 +56,7 @@ Route::delete('/order-details/{id}', [OderDetailController::class, 'destroy']);
 
 // Order History
 Route::get('/order-history', [OderHistoryController::class, 'index']); // expects order_id
-Route::post('/order-history', [OderHistoryController::class, 'store']);
 Route::get('/order-history/{id}', [OderHistoryController::class, 'show']);
-Route::put('/order-history/{id}', [OderHistoryController::class, 'update']);
-Route::delete('/order-history/{id}', [OderHistoryController::class, 'destroy']);
 
 // Reviews
 Route::get('/reviews', [ReviewController::class, 'index']);

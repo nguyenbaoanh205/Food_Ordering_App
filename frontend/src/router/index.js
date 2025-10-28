@@ -112,6 +112,17 @@ const routes = [
         props: true
       },
       {
+        path: 'order-history',
+        name: 'OrderHistory',
+        component: () => import('@/views/admin/order_history/orderList.vue'),
+      },
+      {
+        path: 'order-history/:id',
+        name: 'OrderHistoryShow',
+        component: () => import('@/views/admin/order_history/orderShow.vue'),
+        props: true
+      },
+      {
         path: 'user',
         name: 'User',
         component: () => import('@/views/admin/users/userList.vue'),

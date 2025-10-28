@@ -6,7 +6,7 @@
     <!-- Main content -->
     <div class="flex-grow-1" :class="{ 'main-content-collapsed': isSidebarCollapsed }">
       <Navbar @toggle-sidebar="toggleSidebar" />
-      <div class="container-fluid p-4 content">
+      <div class="container-fluid p-4 mt-5 content">
         <RouterView />
       </div>
     </div>
