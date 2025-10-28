@@ -31,7 +31,7 @@
 
             <div class="text-center">
               <button class="btn btn-primary" @click="updateProfile">Cập nhật thông tin</button>
-              <button class="btn btn-outline-danger ms-2" @click="logout">Đăng xuất</button>
+              <!-- <button class="btn btn-outline-danger ms-2" @click="logout">Đăng xuất</button> -->
             </div>
           </div>
 
@@ -93,23 +93,23 @@ const updateProfile = async () => {
 }
 
 // ✅ Đăng xuất
-const logout = async () => {
-  try {
-    // Gửi yêu cầu logout đến Laravel
-    await api.post("/logout", {}, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    });
+// const logout = async () => {
+//   try {
+//     // Gửi yêu cầu logout đến Laravel
+//     await api.post("/logout", {}, {
+//       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+//     });
 
-    alert("Đăng xuất thành công!");
-  } catch (error) {
-    console.error("Lỗi khi gọi API logout:", error);
-  } finally {
-    // Xóa dữ liệu cục bộ
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.href = "/login";
-  }
-};
+//     alert("Đăng xuất thành công!");
+//   } catch (error) {
+//     console.error("Lỗi khi gọi API logout:", error);
+//   } finally {
+//     // Xóa dữ liệu cục bộ
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("user");
+//     window.location.href = "/login";
+//   }
+// };
 
 onMounted(fetchProfile)
 </script>

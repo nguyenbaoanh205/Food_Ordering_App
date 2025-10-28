@@ -45,14 +45,47 @@
               </li> -->
             </ul>
 
-            <div class="user_option">
-              <!-- 👤 Profile -->
-              <RouterLink :to="{ name: 'Profile' }" class="user_link">
-                <i class="fas fa-user"></i>
-              </RouterLink>
+            <div class="user_option d-flex align-items-center gap-3">
+              <!-- 👤 Profile dropdown -->
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary d-flex align-items-center" type="button" id="userDropdown"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-user me-2"></i>
+                  <span>{{ userStore.user?.name || 'Tài khoản' }}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <template v-if="userStore.user">
+                    <li>
+                      <RouterLink class="dropdown-item" :to="{ name: 'Profile' }">
+                        Hồ sơ của tôi
+                      </RouterLink>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                      <button class="dropdown-item text-danger" @click="logout">
+                        Đăng xuất
+                      </button>
+                    </li>
+                  </template>
+                  <template v-else>
+                    <li>
+                      <RouterLink class="dropdown-item" :to="{ name: 'Login' }">
+                        Đăng nhập
+                      </RouterLink>
+                    </li>
+                    <li>
+                      <RouterLink class="dropdown-item" :to="{ name: 'Register' }">
+                        Đăng ký
+                      </RouterLink>
+                    </li>
+                  </template>
+                </ul>
+              </div>
 
               <!-- 🛒 Cart -->
-              <RouterLink :to="{ name: 'Cart' }" class="cart_link">
+              <RouterLink :to="{ name: 'Cart' }" class="cart_link" style="text-decoration: none;">
                 <i class="fas fa-shopping-cart"></i>
               </RouterLink>
 
@@ -62,11 +95,6 @@
                   <i class="fas fa-search"></i>
                 </button>
               </form>
-
-              <!-- 🧾 Order Online -->
-              <RouterLink :to="{ name: 'Order' }" class="order_online">
-                Order Online
-              </RouterLink>
             </div>
           </div>
         </nav>
@@ -80,24 +108,40 @@
 import Image1 from '@/assets/images/hero-bg.jpg';
 import { RouterLink, useRoute } from 'vue-router';
 import Banner from './Banner.vue';
-const route = useRoute()
+import { useUserStore } from '@/stores/user';
+
+const route = useRoute();
+const userStore = useUserStore();
+
 const heights = {
   Home: '1000px',
-  Menu: '85px',
-  About: '85px',
-  Book: '85px',
-}
+  Menu: '95px',
+  About: '95px',
+  Book: '95px',
+  Login: '95px',
+  Register: '95px',
+};
 
 const positions = {
   Menu: 'top center',
   About: 'top center',
   Book: 'top center',
-}
+  Login: 'top center',
+  Register: 'top center',
+};
+
+const logout = async () => {
+  await userStore.logout();
+  alert("Đăng xuất thành công!");
+  window.location.href = "/login";
+};
 </script>
+
 <style>
 .hero_area {
   position: relative;
-  overflow: hidden;
+  overflow: visible !important;
+  /* Cho phép phần tử con tràn ra */
   width: 100%;
   min-height: unset !important;
   /* xóa min-height mặc định */
