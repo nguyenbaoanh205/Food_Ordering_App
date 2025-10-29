@@ -57,11 +57,11 @@ const routes = [
     name: 'Admin',
     component: Admin,
     children: [
-      {
-        path: '',
-        name: 'Dashboard',
-        component: () => import('@/views/admin/Dashboard.vue')
-      },
+      // {
+      //   path: '',
+      //   name: 'Dashboard',
+      //   component: () => import('@/views/admin/Dashboard.vue')
+      // },
       {
         path: 'food',
         name: 'Food',
@@ -154,7 +154,11 @@ const routes = [
         component: () => import('@/views/admin/users/userEdit.vue'),
         props: true
       },
-
+      {
+        path: 'review',
+        name: 'Review',
+        component: () => import('@/views/admin/reviews/reviewList.vue'),
+      }
 
     ]
   }

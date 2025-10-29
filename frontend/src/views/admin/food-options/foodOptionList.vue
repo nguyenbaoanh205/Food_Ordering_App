@@ -189,7 +189,7 @@ const deleteOption = async (id) => {
 
 .col-id { width: 72px; }
 .col-actions { width: 200px; }
-.col-name { width: 40%; }
+.col-name { width: 20%; }
 
 table { table-layout: fixed; }
 </style>
