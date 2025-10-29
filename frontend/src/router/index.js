@@ -85,6 +85,22 @@ const routes = [
         props: true
       },
       {
+        path: 'food-options',
+        name: 'FoodOption',
+        component: () => import('@/views/admin/food-options/FoodOptionList.vue'),
+      },
+      {
+        path: 'food-options/create',
+        name: 'foodOptionCreate',
+        component: () => import('@/views/admin/food-options/FoodOptionCreate.vue'),
+      },
+      {
+        path: 'food-options/edit/:id',
+        name: 'foodOptionEdit',
+        component: () => import('@/views/admin/food-options/FoodOptionEdit.vue'),
+        props: true
+      },
+      {
         path: 'category',
         name: 'Category',
         component: () => import('@/views/admin/categories/categoryList.vue'),

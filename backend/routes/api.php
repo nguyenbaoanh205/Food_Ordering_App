@@ -28,14 +28,14 @@ Route::get('/users/{id}/profile', [UserController::class, 'profile']);
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
 Route::delete('/cart-items/{id}', [CartController::class, 'removeItem']);
-// Route::get('/reviews', [ReviewController::class, 'index']);
+Route::get('/reviews', [ReviewController::class, 'index']);
 
 Route::get('/foods', [FoodController::class, 'index']);
 Route::post('/foods', [FoodController::class, 'store']);
 Route::get('/foods/{id}', [FoodController::class, 'show']);
 Route::put('/foods/{id}', [FoodController::class, 'update']);
 Route::delete('/foods/{id}', [FoodController::class, 'destroy']);
-Route::apiResource('food-options', FoodOptionController::class);
+Route::apiResource('/food-options', FoodOptionController::class);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/categories', [CategoryController::class, 'store']);

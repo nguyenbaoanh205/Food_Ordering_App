@@ -27,7 +27,7 @@
       </li>
 
       <li class="nav-item">
-        <RouterLink to="/admin/food-option" class="nav-link text-white d-flex align-items-center" active-class="active">
+        <RouterLink to="/admin/food-options" class="nav-link text-white d-flex align-items-center" active-class="active">
           <i class="bi bi-egg-fried me-2"></i>
           <span>Food Options</span>
         </RouterLink>
