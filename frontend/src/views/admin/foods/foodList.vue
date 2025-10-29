@@ -26,7 +26,7 @@
                                 <th class="col-desc">Description</th>
                                 <th class="col-image">Image</th>
                                 <th class="col-category">Category</th>
-                                <th>Options</th>
+                                <th class="col-option">Options</th>
                                 <th class="text-nowrap text-center col-actions">Actions</th>
                             </tr>
                         </thead>
@@ -180,7 +180,7 @@ const formatCurrency = (value) => {
 }
 
 .col-image {
-    width: 110px;
+    width: 140px;
 }
 
 .col-actions {
@@ -192,9 +192,12 @@ const formatCurrency = (value) => {
 }
 
 .col-category {
-    width: 14%;
+    width: 10%;
 }
 
+.col-option{
+    width: 13%;
+}
 .col-name {
     width: 7%;
 }
@@ -206,8 +209,8 @@ const formatCurrency = (value) => {
 
 /* Ảnh thumbnail của món ăn */
 .food-thumb {
-    width: 72px;
-    height: 72px;
+    width: 92px;
+    height: 92px;
     object-fit: cover;
 }
 

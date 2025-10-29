@@ -52,7 +52,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
-
+import { useToast } from "vue-toastification";
+const toast = useToast();
 // receive id from route
 const props = defineProps({
     id: {
@@ -92,17 +93,17 @@ onMounted(async () => {
             category_id: food.category_id
         }
     } catch (err) {
-        alert('Failed to load data')
+        toast.error('Failed to load data')
     }
 })
 
 const updateFood = async () => {
     try {
         await api.put(`/foods/${props.id}`, form.value)
-        alert('Updated successfully!')
+        toast.success('Updated successfully!')
         router.push('/admin/food')
     } catch (err) {
-        alert('Failed to update food')
+        toast.error('Failed to update food')
     }
 }
 </script>

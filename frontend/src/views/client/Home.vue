@@ -175,7 +175,7 @@
                 <div class="row grid">
                     <MotionGroup tag="div" class="d-flex flex-wrap" :initial="{ opacity: 0, y: 30 }"
                         :enter="{ opacity: 1, y: 0 }" :leave="{ opacity: 0, y: -30 }" transition="ease-in-out">
-                        <FoodCard v-for="food in filteredFoods" :key="food.id" :food="food" @add-to-cart="addToCart"
+                        <FoodCard v-for="foodChildren in filteredFoods" :key="foodChildren.id" :food="foodChildren" @add-to-cart="addToCart"
                             class="col-sm-6 col-lg-4" />
                     </MotionGroup>
                 </div>
@@ -394,13 +394,13 @@ const setFilter = (filter) => {
 
 const fetchFoods = async () => {
     try {
-        const res = await api.get('/foods', {
-            params: {
-                limit: 9
-            }
-        })
-        foods.value = res.data.data
-        categories.value = [...new Set(res.data.data.map(f => f.category))] // tách category
+        const res = await api.get('/foods')
+        foods.value = res.data.data.slice(0, 9)
+        categories.value = res.data.data
+            .map(f => f.category)                       // lấy category của từng food
+            .filter((cat, index, self) =>               // loại trùng theo id
+                cat && index === self.findIndex(c => c.id === cat.id)
+            )
     } catch (err) {
         toast.error('Không thể tải menu!')
     }
