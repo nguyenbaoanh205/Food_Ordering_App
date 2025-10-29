@@ -20,17 +20,17 @@ class FoodController extends Controller
     public function index(Request $request)
     {
         // List foods with category, support search and pagination
-        $query = $this->food->with('category');
+        $query = $this->food->with(['category', 'options']);
 
         $search = $request->query('q');
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             })
-            ->orWhereHas('category', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
-            });
+                ->orWhereHas('category', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
         }
 
         $perPage = (int) $request->query('per_page', 10);

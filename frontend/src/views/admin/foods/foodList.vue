@@ -26,6 +26,7 @@
                                 <th class="col-desc">Description</th>
                                 <th class="col-image">Image</th>
                                 <th class="col-category">Category</th>
+                                <th>Options</th>
                                 <th class="text-nowrap text-center col-actions">Actions</th>
                             </tr>
                         </thead>
@@ -42,6 +43,17 @@
                                     <img :src="food.image" alt="" class="rounded shadow-sm food-thumb">
                                 </td>
                                 <td class="col-category">{{ food.category?.name || 'No category' }}</td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <span v-for="(option, i) in food.options.slice(0, 3)" :key="i"
+                                            class="badge bg-light text-dark border">
+                                            {{ option.name }}
+                                        </span>
+                                        <span v-if="food.options.length > 3" class="badge bg-secondary text-white">
+                                            +{{ food.options.length - 3 }} more
+                                        </span>
+                                    </div>
+                                </td>
                                 <td class="text-center col-actions">
                                     <RouterLink class="btn btn-sm btn-outline-secondary me-2"
                                         :to="{ name: 'foodShow', params: { id: food.id } }">Details</RouterLink>
@@ -184,7 +196,7 @@ const formatCurrency = (value) => {
 }
 
 .col-name {
-    width: 18%;
+    width: 7%;
 }
 
 .col-desc {
