@@ -23,4 +23,10 @@ class CartItem extends Model
     {
         return $this->belongsTo(Food::class);
     }
+
+    public function options()
+    {
+        return $this->hasMany(CartItemOption::class);
+    }
+
 }
