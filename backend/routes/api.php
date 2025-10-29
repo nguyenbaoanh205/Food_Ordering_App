@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CartItemOptionController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FoodController;
+use App\Http\Controllers\Api\FoodOptionController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\OderController;
 use App\Http\Controllers\Api\OderDetailController;
 use App\Http\Controllers\Api\OderHistoryController;
+use App\Http\Controllers\Api\OrderItemOptionController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +35,7 @@ Route::post('/foods', [FoodController::class, 'store']);
 Route::get('/foods/{id}', [FoodController::class, 'show']);
 Route::put('/foods/{id}', [FoodController::class, 'update']);
 Route::delete('/foods/{id}', [FoodController::class, 'destroy']);
+Route::apiResource('food-options', FoodOptionController::class);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/categories', [CategoryController::class, 'store']);
@@ -71,3 +75,6 @@ Route::post('/carts', [CartController::class, 'store']);
 Route::get('/carts/{id}', [CartController::class, 'show']);
 Route::put('/carts/{id}', [CartController::class, 'update']);
 Route::delete('/carts/{id}', [CartController::class, 'destroy']);
+Route::get('/cart-items/{id}/options', [CartItemOptionController::class, 'index']);
+Route::get('/order-details/{id}/options', [OrderItemOptionController::class, 'index']);
+
