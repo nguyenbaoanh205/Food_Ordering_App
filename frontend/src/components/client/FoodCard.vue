@@ -1,10 +1,12 @@
 <template>
     <div class="col-sm-6 col-lg-4 all" :class="food.category?.name?.toLowerCase()">
         <div class="box">
-            <div>
-                <div class="img-box">
-                    <img :src="food.image" :alt="food.name" />
-                </div>
+            <!-- <div> -->
+                <RouterLink :to="{ name: 'foodDetail', params: { id: food.id } }">
+                    <div class="img-box">
+                        <img :src="food.image" :alt="food.name" />
+                    </div>
+                </RouterLink>
                 <div class="detail-box">
                     <h5>{{ food.name }}</h5>
                     <p>{{ food.description.slice(0, 140) }}{{ food.description.length > 140 ? '...' : '' }}</p>
@@ -15,7 +17,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            <!-- </div> -->
         </div>
     </div>
 </template>

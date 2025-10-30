@@ -43,7 +43,14 @@ const routes = [
         path: 'profile',
         name: 'Profile',
         component: () => import('@/views/client/Profile.vue')
+      },
+      {
+        path: '/food/:id',
+        name: 'foodDetail',
+        component: () => import('@/views/client/FoodDetail.vue'),
+        props: true
       }
+
 
       // {
       //   path: 'book',

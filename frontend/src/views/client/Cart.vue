@@ -22,8 +22,24 @@
               <td style="width:100px">
                 <img :src="item.image" alt="" class="img-fluid rounded">
               </td>
-              <td>{{ item.name }}</td>
+
+              <td>
+                <strong>{{ item.name }}</strong>
+                <ul v-if="item.options?.length" class="mt-2 mb-0 small text-muted">
+                  <li v-for="opt in item.options" :key="opt.id">
+                    <template v-if="opt.option">
+                      <span class="text-capitalize">{{ opt.option.type }}:</span>
+                      {{ opt.option.name }}
+                      (+{{ formatCurrency(opt.option.extra_price) }})
+                    </template>
+                  </li>
+                </ul>
+              </td>
+              {{ console.log(item.options) }}
+
+
               <td>{{ formatCurrency(item.price) }}</td>
+
               <td>
                 <div class="d-flex align-items-center justify-content-center gap-2">
                   <button class="btn btn-outline-secondary btn-sm" @click="updateQuantity(item, -1)">-</button>
@@ -31,7 +47,9 @@
                   <button class="btn btn-outline-secondary btn-sm" @click="updateQuantity(item, 1)">+</button>
                 </div>
               </td>
-              <td>{{ formatCurrency(item.price * item.quantity) }}</td>
+
+              <td>{{ formatCurrency(getItemTotal(item)) }}</td>
+
               <td>
                 <button class="btn btn-danger btn-sm" @click="removeItem(item.id)">
                   <i class="fa fa-trash"></i>
@@ -43,7 +61,7 @@
 
         <div class="text-end mt-4">
           <h4>Tổng cộng: <span class="text-primary">{{ formatCurrency(totalPrice) }}</span></h4>
-          <RouterLink :to="{ name: 'Checkout' }" class="btn btn-warning mt-3">Thanh toán</RouterLink>
+          <!-- <RouterLink :to="{ name: 'Checkout' }" class="btn btn-warning mt-3">Thanh toán</RouterLink> -->
         </div>
       </div>
 
@@ -57,29 +75,29 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
-import { RouterLink } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import api from '@/services/api'
 
-// 🧑 Giả sử userId bạn lưu trong localStorage khi đăng nhập
-const userId = localStorage.getItem('userId') || 1
+const userStore = useUserStore()
+const userId = userStore.user?.id
 
 const cartItems = ref([])
 const loading = ref(true)
 
-const formatCurrency = (value) =>
-  value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+const formatCurrency = val =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val)
 
-// ✅ Lấy giỏ hàng từ backend
+// 🧾 Lấy giỏ hàng
 const fetchCart = async () => {
   try {
-    const res = await axios.get(`http://localhost:8000/api/users/${userId}/cart`)
-    // Laravel trả về { items: [ {id, quantity, food: {...}} ] }
+    const res = await api.get(`/users/${userId}/cart`)
     cartItems.value = res.data.items.map(i => ({
       id: i.id,
       name: i.food.name,
       image: i.food.image,
-      price: i.food.price,
-      quantity: i.quantity
+      price: i.price, // giá item, có thể đã bao gồm base + size
+      quantity: i.quantity,
+      options: i.options || []
     }))
   } catch (err) {
     console.error('Lỗi khi tải giỏ hàng:', err)
@@ -88,25 +106,25 @@ const fetchCart = async () => {
   }
 }
 
-// ✅ Cập nhật số lượng
+// ✅ Tính tổng cho từng item (bao gồm topping)
+const getItemTotal = (item) => {
+  const optionsTotal = item.options?.reduce((sum, o) => sum + o.price, 0) || 0
+  return (item.price + optionsTotal) * item.quantity
+}
 const updateQuantity = async (item, change) => {
   const newQty = item.quantity + change
   if (newQty <= 0) return
-
   item.quantity = newQty
   try {
-    await axios.put(`http://localhost:8000/api/cart-items/${item.id}`, {
-      quantity: newQty
-    })
+    await api.put(`/cart-items/${item.id}`, { quantity: newQty })
   } catch (err) {
     console.error('Lỗi cập nhật số lượng:', err)
   }
 }
 
-// ✅ Xóa sản phẩm
 const removeItem = async (id) => {
   try {
-    await axios.delete(`http://localhost:8000/api/cart-items/${id}`)
+    await api.delete(`/cart-items/${id}`)
     cartItems.value = cartItems.value.filter(i => i.id !== id)
   } catch (err) {
     console.error('Lỗi xóa sản phẩm:', err)
@@ -114,12 +132,11 @@ const removeItem = async (id) => {
 }
 
 const totalPrice = computed(() =>
-  cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  cartItems.value.reduce((sum, item) => sum + getItemTotal(item), 0)
 )
 
 onMounted(fetchCart)
 </script>
-
 
 <style scoped>
 .cart_section {

@@ -19,12 +19,14 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/profile', [AuthController::class, 'profile']);
-    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/profile', [AuthController::class, 'profile']);
+Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+Route::post('/logout', [AuthController::class, 'logout']);
 // });
 Route::apiResource('/users', UserController::class);
 Route::get('/users/{id}/profile', [UserController::class, 'profile']);
+
+Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
 Route::delete('/cart-items/{id}', [CartController::class, 'removeItem']);
@@ -70,11 +72,10 @@ Route::put('/reviews/{id}', [ReviewController::class, 'update']);
 Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 
 // Carts
-Route::get('/carts', [CartController::class, 'index']);
-Route::post('/carts', [CartController::class, 'store']);
-Route::get('/carts/{id}', [CartController::class, 'show']);
-Route::put('/carts/{id}', [CartController::class, 'update']);
-Route::delete('/carts/{id}', [CartController::class, 'destroy']);
+// Route::get('/carts', [CartController::class, 'index']);
+// Route::post('/carts', [CartController::class, 'store']);
+// Route::get('/carts/{id}', [CartController::class, 'show']);
+// Route::put('/carts/{id}', [CartController::class, 'update']);
+// Route::delete('/carts/{id}', [CartController::class, 'destroy']);
 Route::get('/cart-items/{id}/options', [CartItemOptionController::class, 'index']);
 Route::get('/order-details/{id}/options', [OrderItemOptionController::class, 'index']);
-

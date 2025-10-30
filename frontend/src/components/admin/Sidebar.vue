@@ -21,14 +21,14 @@
 
       <li class="nav-item">
         <RouterLink to="/admin/food" class="nav-link text-white d-flex align-items-center" active-class="active">
-          <i class="bi bi-egg-fried me-2"></i>
+          <i class="bi bi-basket me-2"></i> <!-- Thay đổi icon ở đây -->
           <span>Foods</span>
         </RouterLink>
       </li>
-
       <li class="nav-item">
-        <RouterLink to="/admin/food-options" class="nav-link text-white d-flex align-items-center" active-class="active">
-          <i class="bi bi-egg-fried me-2"></i>
+        <RouterLink to="/admin/food-options" class="nav-link text-white d-flex align-items-center"
+          active-class="active">
+          <i class="bi bi-list-check me-2"></i> <!-- Thay đổi icon ở đây -->
           <span>Food Options</span>
         </RouterLink>
       </li>
@@ -42,7 +42,7 @@
 
       <!-- Order Management -->
       <li class="nav-item mt-3 sidebar-section">Order Management</li>
-      
+
       <!-- <li class="nav-item">
         <RouterLink to="/admin/cart" class="nav-link text-white d-flex align-items-center" active-class="active">
           <i class="bi bi-bag-check me-2"></i>
@@ -58,7 +58,8 @@
       </li>
 
       <li class="nav-item">
-        <RouterLink to="/admin/order-history" class="nav-link text-white d-flex align-items-center" active-class="active">
+        <RouterLink to="/admin/order-history" class="nav-link text-white d-flex align-items-center"
+          active-class="active">
           <i class="bi bi-clock-history me-2"></i>
           <span>Order History</span>
         </RouterLink>
@@ -135,7 +136,7 @@ defineProps({
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 @media (max-width: 991px) {

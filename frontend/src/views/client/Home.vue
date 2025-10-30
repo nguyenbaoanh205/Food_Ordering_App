@@ -395,7 +395,7 @@ const setFilter = (filter) => {
 const fetchFoods = async () => {
     try {
         const res = await api.get('/foods')
-        foods.value = res.data.data.slice(0, 9)
+        foods.value = res.data.data
         categories.value = res.data.data
             .map(f => f.category)                       // lấy category của từng food
             .filter((cat, index, self) =>               // loại trùng theo id

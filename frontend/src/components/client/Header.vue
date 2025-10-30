@@ -46,38 +46,43 @@
             </ul>
 
             <div class="user_option d-flex align-items-center gap-3">
+
               <!-- 👤 Profile dropdown -->
               <div class="dropdown">
-                <button class="btn btn-outline-secondary d-flex align-items-center" type="button" id="userDropdown"
-                  data-bs-toggle="dropdown" aria-expanded="false">
+                <button
+                  class="btn btn-transparent text-light d-flex align-items-center px-2 py-1 rounded-3 hover-bright"
+                  type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fas fa-user me-2"></i>
                   <span>{{ userStore.user?.name || 'Tài khoản' }}</span>
+                  <i class="fas fa-chevron-down ms-2 small opacity-75"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0 mt-2">
                   <template v-if="userStore.user">
                     <li>
-                      <RouterLink class="dropdown-item" :to="{ name: 'Profile' }">
-                        Hồ sơ của tôi
+                      <RouterLink class="dropdown-item py-2" :to="{ name: 'Profile' }">
+                        <i class="fas fa-id-card me-2 text-secondary"></i> Hồ sơ của tôi
                       </RouterLink>
                     </li>
                     <li>
                       <hr class="dropdown-divider" />
                     </li>
                     <li>
-                      <button class="dropdown-item text-danger" @click="logout">
-                        Đăng xuất
+                      <button class="dropdown-item text-danger py-2" @click="logout">
+                        <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
                       </button>
                     </li>
                   </template>
+
                   <template v-else>
                     <li>
-                      <RouterLink class="dropdown-item" :to="{ name: 'Login' }">
-                        Đăng nhập
+                      <RouterLink class="dropdown-item py-2" :to="{ name: 'Login' }">
+                        <i class="fas fa-sign-in-alt me-2 text-success"></i> Đăng nhập
                       </RouterLink>
                     </li>
                     <li>
-                      <RouterLink class="dropdown-item" :to="{ name: 'Register' }">
-                        Đăng ký
+                      <RouterLink class="dropdown-item py-2" :to="{ name: 'Register' }">
+                        <i class="fas fa-user-plus me-2 text-primary"></i> Đăng ký
                       </RouterLink>
                     </li>
                   </template>
@@ -85,17 +90,20 @@
               </div>
 
               <!-- 🛒 Cart -->
-              <RouterLink :to="{ name: 'Cart' }" class="cart_link" style="text-decoration: none;">
+              <RouterLink :to="{ name: 'Cart' }"
+                class="icon-btn text-light d-flex align-items-center justify-content-center hover-bright text-decoration-none">
                 <i class="fas fa-shopping-cart"></i>
               </RouterLink>
 
               <!-- 🔍 Search -->
-              <form class="form-inline">
-                <button class="btn my-2 my-sm-0 nav_search-btn" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-              </form>
+              <button class="icon-btn text-light d-flex align-items-center justify-content-center hover-bright"
+                type="button">
+                <i class="fas fa-search"></i>
+              </button>
+
             </div>
+
+
           </div>
         </nav>
       </div>
@@ -140,7 +148,7 @@ const positions = {
 const logout = async () => {
   await userStore.logout();
   toast.success("Đăng xuất thành công!");
-  router.push("/login"); // chuyển trang mà toast vẫn hiển thị
+  router.push("/"); // chuyển trang mà toast vẫn hiển thị
 };
 </script>
 
@@ -168,5 +176,39 @@ const logout = async () => {
 
 .nav-link.active {
   color: #ffbe33 !important;
+}
+
+.btn-transparent {
+  background: transparent;
+  border: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-transparent:hover {
+  /* color: #0d6efd; */
+  transform: translateY(-1px);
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  width: 40px;
+  height: 40px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.icon-btn:hover {
+  color: #0d6efd;
+  transform: scale(1.1);
+}
+
+.hover-bright:hover {
+  /* color: #0d6efd !important; */
+}
+
+.dropdown-menu {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
 }
 </style>

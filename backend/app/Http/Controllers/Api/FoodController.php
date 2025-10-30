@@ -70,7 +70,7 @@ class FoodController extends Controller
      */
     public function show(string $id)
     {
-        $food =  $this->food->with('category')->find($id);
+        $food = Food::with(['category', 'options'])->find($id);
         if ($food) {
             return response()->json(['data' => $food], 200);
         } else {
