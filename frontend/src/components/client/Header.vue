@@ -214,9 +214,9 @@ const logout = async () => {
   transform: scale(1.1);
 }
 
-.hover-bright:hover {
-  /* color: #0d6efd !important; */
-}
+/* .hover-bright:hover {
+  color: #0d6efd !important;
+} */
 
 .dropdown-menu {
   background: rgba(255, 255, 255, 0.95);

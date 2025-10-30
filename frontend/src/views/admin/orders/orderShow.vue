@@ -11,27 +11,55 @@
         <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
         <div v-else>
             <!-- Thông tin người dùng -->
-            <div class="row" style="padding: 12px;">
-                <div class="col-6 card shadow-sm mb-4 p-0">
-                    <div class="card-header bg-light fw-bold">Customer Information</div>
-                    <div class="card-body">
-                        <p><strong>Name:</strong> {{ order.user.name }}</p>
-                        <p><strong>Email:</strong> {{ order.user.email }}</p>
-                        <p><strong>Phone:</strong> {{ order.user.phone ?? 'N/A' }}</p>
+            <div class="" style="padding: 12px;">
+                <div class="row g-3 mb-4">
+                    <!-- Customer Information -->
+                    <div class="col-md-4 d-flex">
+                        <div class="card shadow-sm flex-fill">
+                            <div class="card-header bg-light fw-bold">Customer Information</div>
+                            <div class="card-body">
+                                <p><strong>Name:</strong> {{ order.receiver_name || 'N/A' }}</p>
+                                <p><strong>Phone:</strong> {{ order.receiver_phone || 'N/A' }}</p>
+                                <p><strong>Address:</strong> {{ order.receiver_address || 'N/A' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="col-md-4 d-flex">
+                        <div class="card shadow-sm flex-fill">
+                            <div class="card-header bg-light fw-bold">Order Summary</div>
+                            <div class="card-body">
+                                <p><strong>Status:</strong> {{ order.status }}</p>
+                                <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+                                <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+                                <p><strong>Created At:</strong> {{ formatDate(order.created_at) }}</p>
+                                <p><strong>Total:</strong> {{ formatCurrency(order.total) }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Update Status -->
+                    <div class="col-md-4 d-flex">
+                        <div class="card shadow-sm flex-fill p-3">
+                            <label class="form-label fw-bold">Update Order Status</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <select v-model="status" class="form-select w-auto">
+                                    <option value="pending">Pending</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <button class="btn btn-primary" @click="updateStatus" :disabled="updating">
+                                    <span v-if="updating" class="spinner-border spinner-border-sm me-1"></span>
+                                    Update
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Thông tin đơn hàng -->
-                <div class="col-6 card shadow-sm mb-4 p-0">
-                    <div class="card-header bg-light fw-bold">Order Summary</div>
-                    <div class="card-body">
-                        <p><strong>Status:</strong> {{ order.status }}</p>
-                        <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
-                        <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
-                        <p><strong>Created At:</strong> {{ formatDate(order.created_at) }}</p>
-                        <p><strong>Total:</strong> {{ formatCurrency(order.total) }}</p>
-                    </div>
-                </div>
+
                 <!-- Chi tiết món ăn -->
                 <div class="card shadow-sm p-0">
                     <div class="card-header bg-light fw-bold">Order Items</div>
@@ -41,6 +69,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th class="col-3">Food</th>
+                                    <th class="col-3">Options</th>
                                     <th class="text-center">Quantity</th>
                                     <th class="text-end">Price</th>
                                     <th class="text-end">Subtotal</th>
@@ -54,10 +83,44 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img v-if="detail.food?.image" :src="detail.food.image" class="thumb me-2"
-                                                alt="food" />
-                                            <span>{{ detail.food?.name ?? 'Unknown' }}</span>
+                                            <!-- Ảnh món ăn -->
+                                            <img v-if="detail.food?.image" :src="detail.food.image"
+                                                class="img-thumbnail me-2" style="width: 20%;" alt="food" />
+
+                                            <!-- Tên và giá món -->
+                                            <div>
+                                                <div class="fw-bold">{{ detail.food?.name ?? 'Unknown' }}</div>
+                                                <div class="text-muted small">
+                                                    Giá gốc: {{ formatCurrency(detail.food?.price ?? 0) }}
+                                                </div>
+                                            </div>
                                         </div>
+                                    </td>
+
+                                    <td>
+                                        <div v-if="detail.options?.length">
+                                            <!-- Size -->
+                                            <div v-if="detail.options.filter(o => o.option.type === 'size').length">
+                                                <strong>Size: </strong>
+                                                <span
+                                                    v-for="opt in detail.options.filter(o => o.option.type === 'size')"
+                                                    :key="opt.id">
+                                                    {{ opt.option.name }} (+{{ formatCurrency(opt.option.extra_price ||
+                                                        0) }})
+                                                </span>
+                                            </div>
+                                            <!-- Topping -->
+                                            <div v-if="detail.options.filter(o => o.option.type === 'topping').length">
+                                                <strong>Topping: </strong>
+                                                <span
+                                                    v-for="opt in detail.options.filter(o => o.option.type === 'topping')"
+                                                    :key="opt.id">
+                                                    {{ opt.option.name }} (+{{ formatCurrency(opt.option.extra_price ||
+                                                        0) }})
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div v-else class="text-muted">No options</div>
                                     </td>
                                     <td class="text-center">{{ detail.quantity }}</td>
                                     <td class="text-end">{{ formatCurrency(detail.price) }}</td>
@@ -77,24 +140,32 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import api from '@/services/api'
 
-// const route = useRoute()
 const order = ref(null)
 const loading = ref(true)
 const error = ref(null)
 
+const status = ref('')      // trạng thái đơn hàng
+const updating = ref(false) // trạng thái loading khi cập nhật
+
+// Props
 const props = defineProps({
     id: String,
     require: true
 })
 
+// Lấy chi tiết order
 const fetchOrderDetail = async () => {
+    loading.value = true
     try {
         const res = await api.get(`/orders/${props.id}`)
         order.value = res.data.data
+
+        // Khi order load xong, set status hiện tại
+        status.value = order.value.status
     } catch (err) {
         error.value = err.message || 'Failed to fetch order details'
     } finally {
@@ -104,15 +175,35 @@ const fetchOrderDetail = async () => {
 
 onMounted(fetchOrderDetail)
 
+// Hàm format ngày
 const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' })
 }
 
+// Hàm format tiền
 const formatCurrency = (value) => {
     if (value == null) return ''
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value))
 }
+
+// ✅ Cập nhật trạng thái order
+const updateStatus = async () => {
+    if (!status.value || status.value === order.value.status) return
+
+    updating.value = true
+    try {
+        const res = await api.put(`/orders/${props.id}`, { status: status.value })
+        order.value = res.data.data // cập nhật order mới từ response
+        alert('Cập nhật trạng thái thành công!')
+    } catch (err) {
+        console.error(err)
+        alert('Cập nhật thất bại!')
+    } finally {
+        updating.value = false
+    }
+}
 </script>
+
 
 <style scoped>
 .thumb {
@@ -120,5 +211,10 @@ const formatCurrency = (value) => {
     height: 48px;
     object-fit: cover;
     border-radius: 8px;
+}
+
+td {
+    vertical-align: middle;
+    /* căn giữa theo chiều dọc */
 }
 </style>

@@ -165,7 +165,7 @@ const formatCurrency = (value) => {
 }
 
 .col-price {
-    width: 19%;
+    width: 13%;
 }
 
 .col-category {
@@ -173,11 +173,11 @@ const formatCurrency = (value) => {
 }
 
 .col-name {
-    width: 6%;
+    width: 13%;
 }
 
 .col-desc {
-    width: 16%;
+    width: 13%;
     max-width: 0;
 }
 

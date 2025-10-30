@@ -15,7 +15,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = Order::with(['user', 'details.food', 'history'])
+        $orders = Order::with(['user', 'details.food', 'details.options.option', 'history'])
             ->orderByDesc('id')
             ->paginate(15);
 
@@ -35,7 +35,7 @@ class OrderController extends Controller
             'items.*.food_id' => 'required|exists:foods,id',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.price' => 'required|numeric|min:0',
-            'items.*.options' => 'array' 
+            'items.*.options' => 'array'
         ]);
 
         $order = DB::transaction(function () use ($validated) {
@@ -104,7 +104,7 @@ class OrderController extends Controller
 
     public function show(string $id)
     {
-        $order = Order::with(['user', 'details.food', 'history'])->find($id);
+        $order = Order::with(['user', 'details.food', 'details.options.option', 'history'])->find($id);
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
@@ -115,7 +115,7 @@ class OrderController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $order = Order::find($id);
+        $order = Order::with(['user', 'details.food', 'history'])->find($id);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
@@ -126,21 +126,40 @@ class OrderController extends Controller
             'payment_method' => 'nullable|in:cash,credit_card,paypal,momo,stripe',
         ]);
 
-        $order->update($validated);
-
+        // ✅ Kiểm tra trạng thái mới hợp lệ
         if (isset($validated['status'])) {
+            $validTransitions = [
+                'pending' => ['confirmed', 'cancelled'],
+                'confirmed' => ['completed', 'cancelled'],
+                'completed' => [],
+                'cancelled' => [],
+            ];
+
+            $current = $order->status;
+            $newStatus = $validated['status'];
+
+            if (!in_array($newStatus, $validTransitions[$current] ?? [])) {
+                return response()->json([
+                    'message' => 'Invalid status transition.'
+                ], 400);
+            }
+
+            // Tạo lịch sử trạng thái
             OrderHistory::create([
                 'order_id' => $order->id,
-                'status' => $validated['status'],
+                'status' => $newStatus,
                 'note' => 'Status updated',
             ]);
         }
+
+        $order->update($validated);
 
         return response()->json([
             'message' => 'Order updated',
             'data' => $order->load(['details.food', 'history'])
         ], 200);
     }
+
 
     // public function destroy(string $id)
     // {
@@ -153,16 +172,16 @@ class OrderController extends Controller
     //     return response()->json(['message' => 'Order deleted'], 200);
     // }
 
-    public function stats()
-    {
-        $totalOrders = Order::count();
-        $totalRevenue = Order::where('status', 'completed')->sum('total');
-        $customers = Order::distinct('user_id')->count('user_id');
+    // public function stats()
+    // {
+    //     $totalOrders = Order::count();
+    //     $totalRevenue = Order::where('status', 'completed')->sum('total');
+    //     $customers = Order::distinct('user_id')->count('user_id');
 
-        return response()->json([
-            'total_orders' => (int) $totalOrders,
-            'total_revenue' => (float) $totalRevenue,
-            'customers' => (int) $customers,
-        ], 200);
-    }
+    //     return response()->json([
+    //         'total_orders' => (int) $totalOrders,
+    //         'total_revenue' => (float) $totalRevenue,
+    //         'customers' => (int) $customers,
+    //     ], 200);
+    // }
 }

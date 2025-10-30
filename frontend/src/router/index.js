@@ -104,17 +104,17 @@ const routes = [
       {
         path: 'food-options',
         name: 'FoodOption',
-        component: () => import('@/views/admin/food-options/FoodOptionList.vue'),
+        component: () => import('@/views/admin/food-options/foodOptionList.vue'),
       },
       {
         path: 'food-options/create',
         name: 'foodOptionCreate',
-        component: () => import('@/views/admin/food-options/FoodOptionCreate.vue'),
+        component: () => import('@/views/admin/food-options/foodOptionCreate.vue'),
       },
       {
         path: 'food-options/edit/:id',
         name: 'foodOptionEdit',
-        component: () => import('@/views/admin/food-options/FoodOptionEdit.vue'),
+        component: () => import('@/views/admin/food-options/foodOptionEdit.vue'),
         props: true
       },
       {
