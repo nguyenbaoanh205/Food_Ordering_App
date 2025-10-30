@@ -62,6 +62,13 @@
                                     placeholder="Nhập địa chỉ giao hàng"></textarea>
                             </div>
 
+                            <div class="mb-3">
+                                <label class="form-label">Ghi chú (tùy chọn)</label>
+                                <textarea v-model="checkoutInfo.note" class="form-control" rows="2"
+                                    placeholder="VD: Không ăn cay, giao giờ hành chính…">
+                                </textarea>
+                            </div>
+
                             <!-- 💰 Phương thức thanh toán -->
                             <div class="mb-3">
                                 <label class="form-label">Phương thức thanh toán</label>
@@ -120,7 +127,8 @@ const loading = ref(false)
 const checkoutInfo = ref({
     name: '',
     phone: '',
-    address: ''
+    address: '',
+    note: ''
 })
 
 // 🧮 Tính tổng giá có size + topping
@@ -188,6 +196,7 @@ const handleCheckout = async () => {
             receiver_name: checkoutInfo.value.name,
             receiver_phone: checkoutInfo.value.phone,
             receiver_address: checkoutInfo.value.address,
+            note: checkoutInfo.value.note,
             items: displayCartItems.value.map(item => ({
                 food_id: item.food.id,
                 quantity: item.quantity,

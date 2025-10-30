@@ -44,7 +44,7 @@
             aria-expanded="false"
           >
             <i class="bi bi-person-circle fs-5"></i>
-            <span>Xin chào, {{ userName }}</span>
+            <span>Xin chào, {{ userStore.user?.name }}</span>
             <i class="bi bi-caret-down-fill small"></i>
           </button>
 
