@@ -7,9 +7,9 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FoodController;
 use App\Http\Controllers\Api\FoodOptionController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\OderController;
 use App\Http\Controllers\Api\OderDetailController;
 use App\Http\Controllers\Api\OderHistoryController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemOptionController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\UserController;
@@ -26,10 +26,11 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::apiResource('/users', UserController::class);
 Route::get('/users/{id}/profile', [UserController::class, 'profile']);
 
-Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
+Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
 Route::delete('/cart-items/{id}', [CartController::class, 'removeItem']);
+
 Route::get('/reviews', [ReviewController::class, 'index']);
 
 Route::get('/foods', [FoodController::class, 'index']);
@@ -46,12 +47,12 @@ Route::put('/categories/{id}', [CategoryController::class, 'update']);
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
 // Orders
-Route::get('/orders', [OderController::class, 'index']);
-Route::post('/orders', [OderController::class, 'store']);
-Route::get('/orders/{id}', [OderController::class, 'show']);
-Route::put('/orders/{id}', [OderController::class, 'update']);
-Route::delete('/orders/{id}', [OderController::class, 'destroy']);
-Route::get('/orders-stats', [OderController::class, 'stats']);
+Route::get('/orders', [OrderController::class, 'index']);
+Route::post('/orders', [OrderController::class, 'store']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
+Route::put('/orders/{id}', [OrderController::class, 'update']);
+Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+Route::get('/orders-stats', [OrderController::class, 'stats']);
 
 // Order Details
 Route::get('/order-details', [OderDetailController::class, 'index']); // expects order_id
@@ -72,10 +73,5 @@ Route::put('/reviews/{id}', [ReviewController::class, 'update']);
 Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 
 // Carts
-// Route::get('/carts', [CartController::class, 'index']);
-// Route::post('/carts', [CartController::class, 'store']);
-// Route::get('/carts/{id}', [CartController::class, 'show']);
-// Route::put('/carts/{id}', [CartController::class, 'update']);
-// Route::delete('/carts/{id}', [CartController::class, 'destroy']);
 Route::get('/cart-items/{id}/options', [CartItemOptionController::class, 'index']);
 Route::get('/order-details/{id}/options', [OrderItemOptionController::class, 'index']);

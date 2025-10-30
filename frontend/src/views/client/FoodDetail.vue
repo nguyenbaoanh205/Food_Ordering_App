@@ -202,7 +202,7 @@ const addToCart = async () => {
         console.log(payload);
 
         toast.success('Added to cart successfully!')
-        // router.push('/cart')
+        router.push('/cart')
 
     } catch (err) {
         console.error(err)

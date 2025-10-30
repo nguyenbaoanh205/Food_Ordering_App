@@ -7,86 +7,110 @@ use App\Models\Food;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderHistory;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class OderController extends Controller
+class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $orders = Order::with(['user','details.food', 'history'])
+        $orders = Order::with(['user', 'details.food', 'history'])
             ->orderByDesc('id')
-            ->paginate(10);
+            ->paginate(15);
+
         return response()->json($orders, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'payment_method' => 'nullable|in:cash,credit_card,paypal,momo,stripe',
+            'receiver_name' => 'required|string|max:255',
+            'receiver_phone' => 'required|string|max:20',
+            'receiver_address' => 'required|string|max:255',
             'items' => 'required|array|min:1',
             'items.*.food_id' => 'required|exists:foods,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+            'items.*.options' => 'array' 
         ]);
 
-        return DB::transaction(function () use ($validated) {
+        $order = DB::transaction(function () use ($validated) {
             $total = 0;
+
+            // 🧾 Tạo đơn hàng
             $order = Order::create([
                 'user_id' => $validated['user_id'],
+                'receiver_name' => $validated['receiver_name'],
+                'receiver_phone' => $validated['receiver_phone'],
+                'receiver_address' => $validated['receiver_address'],
                 'total' => 0,
                 'status' => 'pending',
                 'payment_method' => $validated['payment_method'] ?? 'cash',
                 'payment_status' => 'unpaid',
             ]);
 
+            // 🧩 Tạo chi tiết đơn hàng
             foreach ($validated['items'] as $item) {
-                $food = Food::findOrFail($item['food_id']);
-                $lineTotal = $food->price * $item['quantity'];
+                $lineTotal = $item['price'] * $item['quantity'];
                 $total += $lineTotal;
 
-                OrderDetail::create([
+                $detail = OrderDetail::create([
                     'order_id' => $order->id,
-                    'food_id' => $food->id,
+                    'food_id' => $item['food_id'],
                     'quantity' => $item['quantity'],
-                    'price' => $food->price,
+                    'price' => $item['price'],
                 ]);
+
+                // Nếu có tùy chọn (size/topping)
+                if (!empty($item['options'])) {
+                    foreach ($item['options'] as $opt) {
+                        DB::table('order_item_options')->insert([
+                            'order_detail_id' => $detail->id,
+                            'option_id' => $opt['option_id'],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
             }
 
+            // 🧮 Cập nhật tổng tiền
             $order->update(['total' => $total]);
 
+            // 🕒 Lưu lịch sử đơn hàng
             OrderHistory::create([
                 'order_id' => $order->id,
                 'status' => 'pending',
                 'note' => 'Order created',
             ]);
 
-            $order->load(['details.food', 'history']);
-            return response()->json(['message' => 'Order created', 'data' => $order], 201);
+            // 🧹 Xóa giỏ hàng
+            Cart::where('user_id', $validated['user_id'])->delete();
+
+            return $order->load(['details.food', 'history']);
         });
+
+        return response()->json([
+            'message' => 'Order created successfully',
+            'data' => $order
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
-        $order = Order::with(['user','details.food', 'history'])->find($id);
+        $order = Order::with(['user', 'details.food', 'history'])->find($id);
+
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
+
         return response()->json(['data' => $order], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $order = Order::find($id);
@@ -110,22 +134,22 @@ class OderController extends Controller
             ]);
         }
 
-        $order->load(['details.food', 'history']);
-        return response()->json(['message' => 'Order updated', 'data' => $order], 200);
+        return response()->json([
+            'message' => 'Order updated',
+            'data' => $order->load(['details.food', 'history'])
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $order = Order::find($id);
-        if (!$order) {
-            return response()->json(['message' => 'Order not found'], 404);
-        }
-        $order->delete();
-        return response()->json(['message' => 'Order deleted'], 200);
-    }
+    // public function destroy(string $id)
+    // {
+    //     $order = Order::find($id);
+    //     if (!$order) {
+    //         return response()->json(['message' => 'Order not found'], 404);
+    //     }
+
+    //     $order->delete();
+    //     return response()->json(['message' => 'Order deleted'], 200);
+    // }
 
     public function stats()
     {

@@ -23,7 +23,7 @@ class OderHistoryController extends Controller
         }
 
         // Phân trang, mặc định 10 bản ghi / trang
-        $perPage = (int) $request->query('per_page', 10);
+        $perPage = (int) $request->query('per_page', 15);
         $histories = $query->orderByDesc('id')->paginate($perPage);
 
         return response()->json([

@@ -61,7 +61,7 @@
 
         <div class="text-end mt-4">
           <h4>Tổng cộng: <span class="text-primary">{{ formatCurrency(totalPrice) }}</span></h4>
-          <!-- <RouterLink :to="{ name: 'Checkout' }" class="btn btn-warning mt-3">Thanh toán</RouterLink> -->
+          <RouterLink :to="{ name: 'Checkout' }" class="btn btn-warning mt-3">Thanh toán</RouterLink>
         </div>
       </div>
 
