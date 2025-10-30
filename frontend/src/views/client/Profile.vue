@@ -7,21 +7,21 @@
 
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <div class="card shadow-sm p-4" v-if="user">
+          <div class="card shadow-sm p-4" v-if="userStore.user">
             <div class="text-center mb-4">
               <i class="fa fa-user-circle fa-4x text-primary"></i>
-              <h4 class="mt-2">{{ user.name }}</h4>
-              <p class="text-muted">{{ user.email }}</p>
+              <h4 class="mt-2">{{ userStore.user.name }}</h4>
+              <p class="text-muted">{{ userStore.user.email }}</p>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Tên</label>
-              <input type="text" class="form-control" v-model="user.name">
+              <input type="text" class="form-control" v-model="userStore.user.name">
             </div>
 
             <div class="mb-3">
               <label class="form-label">Email</label>
-              <input type="email" class="form-control" v-model="user.email" disabled>
+              <input type="email" class="form-control" v-model="userStore.user.email" disabled>
             </div>
 
             <div class="mb-3">
@@ -51,9 +51,11 @@
 import { ref, onMounted } from 'vue'
 import api from '@/services/api'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-const user = ref(null)
+// const user = ref(null)
+const userStore = useUserStore()
 const password = ref('')
 
 // ✅ Lấy thông tin user từ API
@@ -68,7 +70,7 @@ const fetchProfile = async () => {
     const res = await api.get('/profile', {
       headers: { Authorization: `Bearer ${token}` }
     })
-    user.value = res.data.user
+    userStore.value = res.data.user
   } catch (error) {
     console.error(error)
     router.push('/login')
@@ -78,38 +80,31 @@ const fetchProfile = async () => {
 // ✅ Cập nhật thông tin
 const updateProfile = async () => {
   try {
-    const token = localStorage.getItem('token')
+    const token = userStore.token // dùng luôn token từ Pinia
+    const payload = { name: userStore.user.name }
+    if (password.value) payload.password = password.value
+
     const res = await api.post(
       '/update-profile',
-      { name: user.value.name, password: password.value },
+      payload,
       { headers: { Authorization: `Bearer ${token}` } }
     )
+
+    // Cập nhật Pinia
+    if (res.data.user) {
+      userStore.user = res.data.user
+      // Đồng bộ localStorage
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+    }
 
     alert(res.data.message)
     password.value = ''
   } catch (error) {
+    console.error(error.response?.data || error)
     alert('Cập nhật thất bại!')
   }
 }
 
-// ✅ Đăng xuất
-// const logout = async () => {
-//   try {
-//     // Gửi yêu cầu logout đến Laravel
-//     await api.post("/logout", {}, {
-//       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-//     });
-
-//     alert("Đăng xuất thành công!");
-//   } catch (error) {
-//     console.error("Lỗi khi gọi API logout:", error);
-//   } finally {
-//     // Xóa dữ liệu cục bộ
-//     localStorage.removeItem("token");
-//     localStorage.removeItem("user");
-//     window.location.href = "/login";
-//   }
-// };
 
 onMounted(fetchProfile)
 </script>

@@ -109,6 +109,9 @@ class AuthController extends Controller
     public function updateProfile(Request $request)
     {
         $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',

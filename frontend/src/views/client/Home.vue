@@ -299,7 +299,7 @@
                 </h2>
             </div>
             <div class="carousel-wrap row ">
-                <Carousel :items-to-show="3" :wrap-around="true" :autoplay="3000">
+                <Carousel :items-to-show="3" :wrap-around="true" :autoplay="0">
                     <Slide>
                         <div class="box">
                             <div class="detail-box">
