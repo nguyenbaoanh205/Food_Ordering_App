@@ -16,10 +16,12 @@
             </span>
           </RouterLink>
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
           </button>
+
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mx-auto">
@@ -68,11 +70,20 @@
                       <hr class="dropdown-divider" />
                     </li>
                     <li>
+                      <RouterLink class="dropdown-item py-2" :to="{ name: 'OrderHistoryClient' }">
+                        <i class="fas fa-history me-2 text-secondary"></i> Lịch sử đơn hàng
+                      </RouterLink>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+                    <li>
                       <button class="dropdown-item text-danger py-2" @click="logout">
                         <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
                       </button>
                     </li>
                   </template>
+
 
                   <template v-else>
                     <li>

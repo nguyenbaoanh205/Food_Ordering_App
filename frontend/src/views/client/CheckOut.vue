@@ -221,7 +221,7 @@ const handleCheckout = async () => {
 
         // 🧹 Dọn giỏ hàng và chuyển hướng
         cartItems.value = []
-        router.push('/')
+        router.push('/order-histories')
     } catch (err) {
         console.error(err)
         toast.error('Lỗi khi đặt hàng!')

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\OderDetailController;
 use App\Http\Controllers\Api\OderHistoryController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\OrderHistoryClientController;
 use App\Http\Controllers\Api\OrderItemOptionController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\UserController;
@@ -19,9 +20,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-Route::get('/profile', [AuthController::class, 'profile']);
-Route::post('/update-profile', [AuthController::class, 'updateProfile']);
-Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [AuthController::class, 'profile']);
+    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::get('/order-histories', [OrderHistoryClientController::class, 'index']);
+    Route::get('/order-histories/{id}', [OrderHistoryClientController::class, 'show']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 Route::apiResource('/users', UserController::class);
 Route::get('/users/{id}/profile', [UserController::class, 'profile']);
@@ -61,7 +64,7 @@ Route::get('/order-details/{id}', [OderDetailController::class, 'show']);
 Route::put('/order-details/{id}', [OderDetailController::class, 'update']);
 Route::delete('/order-details/{id}', [OderDetailController::class, 'destroy']);
 
-// Order History
+// Order History Admin
 Route::get('/order-history', [OderHistoryController::class, 'index']); // expects order_id
 Route::get('/order-history/{id}', [OderHistoryController::class, 'show']);
 

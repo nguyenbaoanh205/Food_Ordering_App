@@ -50,6 +50,11 @@ const routes = [
         component: () => import('@/views/client/Profile.vue')
       },
       {
+        path: 'order-histories',
+        name: 'OrderHistoryClient',
+        component: () => import('@/views/client/OrderHistory.vue'),
+      },
+      {
         path: '/food/:id',
         name: 'foodDetail',
         component: () => import('@/views/client/FoodDetail.vue'),
