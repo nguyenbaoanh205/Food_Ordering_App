@@ -29,7 +29,7 @@
                 <th class="col-status">Status</th>
                 <th class="col-note">Note</th>
                 <th>Created At</th>
-                <th class="text-nowrap text-center col-actions">Actions</th>
+                <!-- <th class="text-nowrap text-center col-actions">Actions</th> -->
               </tr>
             </thead>
             <tbody>
@@ -42,12 +42,12 @@
                 <td class="col-status">{{ history.status }}</td>
                 <td class="col-note text-truncate">{{ history.note }}</td>
                 <td>{{ formatDate(history.created_at) }}</td>
-                <td class="text-center col-actions">
+                <!-- <td class="text-center col-actions">
                   <RouterLink
                     class="btn btn-sm btn-outline-secondary me-2"
                     :to="{ name: 'OrderHistoryShow', params: { id: history.id } }"
                   >Details</RouterLink>
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </table>

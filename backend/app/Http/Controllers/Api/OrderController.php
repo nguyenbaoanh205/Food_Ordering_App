@@ -15,12 +15,35 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = Order::with(['user', 'details.food', 'details.options.option', 'history'])
-            ->orderByDesc('id')
-            ->paginate(15);
+        $query = Order::with(['user', 'details.food', 'details.options.option', 'history']);
 
-        return response()->json($orders, 200);
+        // 🔍 Lấy từ khóa tìm kiếm
+        $search = $request->query('q');
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                // Tìm theo mã đơn hàng (ID)
+                $q->where('id', 'like', "%{$search}%")
+                    // Hoặc theo tên người dùng (quan hệ user)
+                    ->orWhereHas('user', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // 📄 Phân trang, mặc định 15 đơn / trang
+        $perPage = (int) $request->query('per_page', 15);
+        $orders = $query->orderByDesc('id')->paginate($perPage);
+
+        // ✅ Trả về dữ liệu JSON
+        return response()->json([
+            'data' => $orders->items(),
+            'current_page' => $orders->currentPage(),
+            'last_page' => $orders->lastPage(),
+            'per_page' => $orders->perPage(),
+            'total' => $orders->total(),
+        ], 200);
     }
+
 
     public function store(Request $request)
     {
