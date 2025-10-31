@@ -6,7 +6,7 @@
                 <div class="input-group">
                     <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                     <input v-model="keyword" type="search" class="form-control"
-                        placeholder="Search by name, category..." @keydown.enter.prevent="applySearch" />
+                        placeholder="Search by user, order id..." @keydown.enter.prevent="applySearch" />
                 </div>
             </div>
         </div>

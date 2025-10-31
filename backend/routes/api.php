@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CartItemOptionController;
@@ -19,16 +20,20 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::get('/order-histories', [OrderHistoryClientController::class, 'index']);
     Route::get('/order-histories/{id}', [OrderHistoryClientController::class, 'show']);
+
+    // Carts
+    Route::get('/cart-items/{id}/options', [CartItemOptionController::class, 'index']);
+    Route::get('/order-details/{id}/options', [OrderItemOptionController::class, 'index']);
+
+    // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 Route::apiResource('/users', UserController::class);
-Route::get('/users/{id}/profile', [UserController::class, 'profile']);
-
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
 Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
@@ -70,11 +75,14 @@ Route::get('/order-history/{id}', [OderHistoryController::class, 'show']);
 
 // Reviews
 Route::get('/reviews', [ReviewController::class, 'index']);
-Route::post('/reviews', [ReviewController::class, 'store']);
-Route::get('/reviews/{id}', [ReviewController::class, 'show']);
-Route::put('/reviews/{id}', [ReviewController::class, 'update']);
-Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
+// Route::post('/reviews', [ReviewController::class, 'store']);
+// Route::get('/reviews/{id}', [ReviewController::class, 'show']);
+// Route::put('/reviews/{id}', [ReviewController::class, 'update']);
+// Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 
-// Carts
-Route::get('/cart-items/{id}/options', [CartItemOptionController::class, 'index']);
-Route::get('/order-details/{id}/options', [OrderItemOptionController::class, 'index']);
+
+
+// Routes Admin
+// Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/admin/dashboard/statistics', [DashboardController::class, 'statistics']);
+// });

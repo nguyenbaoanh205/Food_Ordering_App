@@ -29,7 +29,7 @@
                                 <th>Food</th>
                                 <th>Rating</th>
                                 <th>Comment</th>
-                                <th class="text-nowrap text-center col-actions">Actions</th>
+                                <!-- <th class="text-nowrap text-center col-actions">Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -51,14 +51,14 @@
                                 <td class="text-truncate" style="max-width: 250px;">
                                     {{ review.comment }}
                                 </td>
-                                <td class="text-center">
+                                <!-- <td class="text-center">
                                     <button
                                         @click="deleteReview(review.id)"
                                         class="btn btn-sm btn-danger"
                                     >
                                         Delete
                                     </button>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -139,16 +139,16 @@ const applySearch = () => {
     fetchReviews(1)
 }
 
-const deleteReview = async (id) => {
-    if (!confirm('Are you sure you want to delete this review?')) return
-    try {
-        await api.delete(`/reviews/${id}`)
-        fetchReviews(currentPage.value)
-        alert('Deleted successfully!')
-    } catch (err) {
-        alert('Failed to delete review!')
-    }
-}
+// const deleteReview = async (id) => {
+//     if (!confirm('Are you sure you want to delete this review?')) return
+//     try {
+//         await api.delete(`/reviews/${id}`)
+//         fetchReviews(currentPage.value)
+//         alert('Deleted successfully!')
+//     } catch (err) {
+//         alert('Failed to delete review!')
+//     }
+// }
 </script>
 
 <style scoped>

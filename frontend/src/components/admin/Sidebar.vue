@@ -9,12 +9,12 @@
     <!-- Navigation -->
     <ul class="nav flex-column">
       <!-- Dashboard -->
-      <!-- <li class="nav-item">
+      <li class="nav-item">
         <RouterLink to="/admin" class="nav-link text-white d-flex align-items-center" active-class="active">
           <i class="bi bi-house-door me-2"></i>
           <span>Dashboard</span>
         </RouterLink>
-      </li> -->
+      </li>
 
       <!-- Food Management -->
       <li class="nav-item mt-3 sidebar-section">Food Management</li>

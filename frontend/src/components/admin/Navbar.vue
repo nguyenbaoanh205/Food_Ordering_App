@@ -18,7 +18,7 @@
 
       <!-- Brand -->
       <span class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2">
-        <i class="bi bi-basket2-fill fs-4"></i>
+        <!-- <i class="bi bi-basket2-fill fs-4"></i> -->
         <span>Food Admin</span>
       </span>
 

@@ -2,7 +2,10 @@
 import Admin from '@/layouts/Admin.vue'
 import Client from '@/layouts/Client.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const routes = [
   {
     path: '/',
@@ -73,12 +76,13 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: Admin,
+    meta: { requiresAdmin: true },
     children: [
-      // {
-      //   path: '',
-      //   name: 'Dashboard',
-      //   component: () => import('@/views/admin/Dashboard.vue')
-      // },
+      {
+        path: '',
+        name: 'Dashboard',
+        component: () => import('@/views/admin/Dashboard.vue')
+      },
       {
         path: 'food',
         name: 'Food',
@@ -184,6 +188,18 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore()
+  const user = userStore.user
+
+  if (to.meta.requiresAdmin && (!user || user.role !== 1)) {
+    toast.error('Bạn không có quyền truy cập trang quản trị!')
+    return next('/')
+  }
+
+  next()
 })
 
 export default router
