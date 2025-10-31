@@ -20,6 +20,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-nowrap col-id">ID</th>
+                                <th class="col-order-id">Order ID</th>
                                 <th class="col-name">User</th>
                                 <th class="text-center col-price">Total</th>
                                 <th class="col-desc">Status</th>
@@ -34,8 +35,9 @@
                                 <td colspan="7" class="text-center text-muted py-4">No matching results</td>
                             </tr>
                             <tr v-for="(order, index) in orders" :key="order.id">
-                                <td class="col-id">#{{ (pagination.current_page - 1) * 10 + index + 1 }}</td>
-                                <td class="fw-500 col-name">{{ order.user.name }}</td>
+                                <td class="col-id">{{ (pagination.current_page - 1) * 10 + index + 1 }}</td>
+                                <td class="fw-500 col-name">#{{ order.id }}</td>
+                                <td class="fw-500 col-order-id">{{ order.user.name }}</td>
                                 <td class="text-center col-price">{{ formatCurrency(order.total) }}</td>
                                 <td class="text-truncate col-desc">{{ order.status }}</td>
                                 <td class="col-image">{{ order.payment_method }}</td>
@@ -197,5 +199,8 @@ table {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.col-order-id{
+    width: 6%;
 }
 </style>

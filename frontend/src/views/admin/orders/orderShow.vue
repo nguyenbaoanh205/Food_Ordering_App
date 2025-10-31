@@ -143,7 +143,9 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import api from '@/services/api'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const order = ref(null)
 const loading = ref(true)
 const error = ref(null)
@@ -194,10 +196,10 @@ const updateStatus = async () => {
     try {
         const res = await api.put(`/orders/${props.id}`, { status: status.value })
         order.value = res.data.data // cập nhật order mới từ response
-        alert('Cập nhật trạng thái thành công!')
+        toast.success('Cập nhật trạng thái thành công!')
     } catch (err) {
         console.error(err)
-        alert('Cập nhật thất bại!')
+        toast.error('Cập nhật thất bại!')
     } finally {
         updating.value = false
     }

@@ -27,10 +27,20 @@
                                 <span>Đơn #{{ order.id }}</span>
                                 <span>{{ formatDate(order.created_at) }}</span>
                                 <span class="text-success fw-bold">{{ formatPrice(order.total) }}</span>
-                                <span class="badge bg-info text-dark">{{ order.status }}</span>
+
+                                <!-- Badge màu động -->
+                                <span class="badge" :class="{
+                                    'bg-secondary': order.status === 'pending',
+                                    'bg-primary': order.status === 'confirmed',
+                                    'bg-success': order.status === 'completed',
+                                    'bg-danger': order.status === 'cancelled'
+                                }">
+                                    {{ order.status }}
+                                </span>
                             </div>
                         </button>
                     </h2>
+
 
                     <div :id="'collapse' + order.id" class="accordion-collapse collapse"
                         :aria-labelledby="'heading' + order.id" data-bs-parent="#orderAccordion">
@@ -58,35 +68,52 @@
                             <!-- Danh sách món -->
                             <ul class="list-group">
                                 <li v-for="item in order.details" :key="item.id"
-                                    class="list-group-item d-flex align-items-center gap-3">
-                                    <img :src="item.food.image || '/default-food.png'" alt="food image"
-                                        class="food-img" />
-                                    <div class="flex-grow-1">
-                                        <strong>{{ item.food.name }}</strong>
-                                        <div v-if="item.options.length" class="mt-1 small text-muted">
-                                            <div v-if="item.options.filter(o => o.option.type === 'size').length">
-                                                <strong>Size:</strong>
-                                                <span v-for="opt in item.options.filter(o => o.option.type === 'size')"
-                                                    :key="opt.id">
-                                                    {{ opt.option.name }} (+{{ formatPrice(opt.option.extra_price || 0)
-                                                    }})
-                                                </span>
-                                            </div>
-                                            <div v-if="item.options.filter(o => o.option.type === 'topping').length">
-                                                <strong>Topping:</strong>
-                                                <span
-                                                    v-for="opt in item.options.filter(o => o.option.type === 'topping')"
-                                                    :key="opt.id">
-                                                    {{ opt.option.name }} (+{{ formatPrice(opt.option.extra_price || 0)
-                                                    }})
-                                                </span>
+                                    class="list-group-item d-flex align-items-center">
+                                    <!-- Cột 1: Thông tin món -->
+                                    <div class="col-md-6 d-flex align-items-center gap-3">
+                                        <img :src="item.food.image || '/default-food.png'" alt="food image"
+                                            class="food-img"
+                                            style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" />
+                                        <div>
+                                            <strong>{{ item.food.name }}</strong>
+                                            <div v-if="item.options.length" class="mt-1 small text-muted">
+                                                <div v-if="item.options.filter(o => o.option.type === 'size').length">
+                                                    <strong>Size:</strong>
+                                                    <span
+                                                        v-for="opt in item.options.filter(o => o.option.type === 'size')"
+                                                        :key="opt.id">
+                                                        {{ opt.option.name }} (+{{ formatPrice(opt.option.extra_price ||
+                                                        0) }})
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    v-if="item.options.filter(o => o.option.type === 'topping').length">
+                                                    <strong>Topping:</strong>
+                                                    <span
+                                                        v-for="opt in item.options.filter(o => o.option.type === 'topping')"
+                                                        :key="opt.id">
+                                                        {{ opt.option.name }} (+{{ formatPrice(opt.option.extra_price ||
+                                                        0) }})
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <small class="d-block mt-1">Số lượng: {{ item.quantity }}</small>
                                     </div>
-                                    <div class="fw-bold text-danger">{{ formatPrice(item.price * item.quantity) }}</div>
+
+                                    <!-- Cột 2: Số lượng -->
+                                    <div class="col-md-3 text-center">
+                                        <span class="fw-semibold">Quantity: x{{ item.quantity }}</span>
+                                    </div>
+
+                                    <!-- Cột 3: Thành tiền -->
+                                    <div class="col-md-3 text-end">
+                                        <span class="fw-bold text-danger">
+                                            Total: {{ formatPrice(item.price * item.quantity) }}
+                                        </span>
+                                    </div>
                                 </li>
                             </ul>
+
                         </div>
                     </div>
                 </div>
