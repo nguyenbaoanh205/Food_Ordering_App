@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Models\Order;
@@ -10,6 +11,7 @@ use App\Models\OrderHistory;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -117,6 +119,10 @@ class OrderController extends Controller
 
             return $order->load(['details.food', 'history']);
         });
+
+        // 🔔 Gửi event realtime tới admin
+        // Log::info('🎯 About to broadcast order: ' . $order->id);
+        event(new OrderCreated($order));
 
         return response()->json([
             'message' => 'Order created successfully',

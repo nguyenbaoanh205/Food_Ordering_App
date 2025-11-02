@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import echo from './plugins/echo'
 import router from './router'
 import { createPinia } from 'pinia'
 import VueApexCharts from 'vue3-apexcharts'
@@ -16,6 +17,7 @@ import "vue-toastification/dist/index.css";
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
+app.config.globalProperties.$echo = echo
 app.use(VueApexCharts)
 app.component('apexchart', VueApexCharts)
 app.use(router)

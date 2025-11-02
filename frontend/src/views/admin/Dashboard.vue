@@ -55,8 +55,11 @@ import api from '@/services/api'
 import BarChart from '@/components/admin/charts/BarChart.vue'
 import PieChart from '@/components/admin/charts/PieChart.vue'
 import LineChart from '@/components/admin/charts/LineChart.vue'
-import TopFoodsChart from '@/components/admin/charts/TopFoodsChart.vue' // ✅ thêm import
+import TopFoodsChart from '@/components/admin/charts/TopFoodsChart.vue'
+import { useToast } from 'vue-toastification'
+import echo from '@/plugins/echo'
 
+const toast = useToast()
 // 🧾 Cards thống kê
 const stats = ref([
   { title: 'Tổng đơn hàng', value: '...' },
@@ -80,12 +83,11 @@ const pieLabels = ref(['Đang xử lý', 'Đã xác nhận', 'Hoàn thành', 'Đ
 const topFoodsSeries = ref([{ name: 'Số lượng bán', data: [] }])
 const topFoodsCategories = ref([])
 
-onMounted(async () => {
+async function loadStatistics() {
   try {
     const res = await api.get('/admin/dashboard/statistics')
     const data = res.data
 
-    // 💡 Cập nhật cards thống kê
     stats.value = [
       { title: 'Tổng đơn hàng', value: data.orders },
       { title: 'Doanh thu (₫)', value: data.revenue.toLocaleString('vi-VN') },
@@ -93,17 +95,9 @@ onMounted(async () => {
       { title: 'Đơn huỷ', value: data.ordersByStatus.cancelled },
     ]
 
-    // 💹 Biểu đồ doanh thu 6 tháng gần nhất
     barCategories.value = data.revenueByMonth.map(i => `Tháng ${i.month}`)
     barSeries.value = [{ name: 'Doanh thu', data: data.revenueByMonth.map(i => i.total) }]
 
-    // 📈 Biểu đồ line chart (số đơn hàng giả lập)
-    // lineSeries.value = [{
-    //   name: 'Đơn hàng (ước tính)',
-    //   data: data.revenueByMonth.map(i => Math.round(i.total / 100000)) // chia 100k giả lập số lượng
-    // }]
-
-    // // 🥧 Biểu đồ tỷ lệ đơn hàng theo trạng thái
     pieSeries.value = [
       data.ordersByStatus.pending,
       data.ordersByStatus.confirmed,
@@ -111,7 +105,6 @@ onMounted(async () => {
       data.ordersByStatus.cancelled
     ]
 
-    // 🍔 Biểu đồ cột: món ăn bán chạy nhất
     if (data.topFoods && data.topFoods.length > 0) {
       topFoodsCategories.value = data.topFoods.map(f => f.name)
       topFoodsSeries.value = [{
@@ -121,6 +114,55 @@ onMounted(async () => {
     }
   } catch (err) {
     console.error('❌ Lỗi khi tải thống kê:', err)
+  }
+}
+
+// 🧠 Gọi ban đầu
+onMounted(async () => {
+  // console.log('🚀 Dashboard mounted, loading statistics...')
+  
+  // Load statistics ban đầu
+  await loadStatistics()
+
+  // ✅ Kiểm tra và setup Pusher connection
+  // console.log('📡 Setting up Pusher listener...')
+  // console.log('Echo instance:', echo)
+  
+  try {
+    // Subscribe vào channel 'orders'
+    const channel = echo.channel('orders')
+    // console.log('✅ Subscribed to channel: orders')
+    
+    // Lắng nghe event 'order.created' (Laravel tự động thêm prefix với broadcastAs)
+    channel.listen('.order.created', (data) => {
+      // console.log('📦 Đơn hàng mới nhận được:', data)
+      toast.success(`🎉 Đơn hàng mới #${data.id} - ${data.receiver_name}`)
+      loadStatistics()
+    })
+    
+    // // Debug: Lắng nghe callback khi subscribe thành công
+    // channel.subscribed(() => {
+    //   console.log('✅ Successfully subscribed to orders channel')
+    // })
+    
+    // // Error handling - chỉ bind nếu pusher đã sẵn sàng
+    // if (echo.connector && echo.connector.pusher && echo.connector.pusher.connection) {
+    //   echo.connector.pusher.connection.bind('error', (err) => {
+    //     console.error('❌ Pusher connection error:', err)
+    //   })
+      
+    //   echo.connector.pusher.connection.bind('connected', () => {
+    //     console.log('✅ Pusher connected successfully')
+    //   })
+      
+    //   echo.connector.pusher.connection.bind('disconnected', () => {
+    //     console.warn('⚠️ Pusher disconnected')
+    //   })
+    // }
+    
+  } catch (error) {
+    console.error('❌ Error setting up Pusher listener:', error)
+    toast.error('Không thể kết nối Pusher realtime: ' + error.message)
   }
 })
 </script>
