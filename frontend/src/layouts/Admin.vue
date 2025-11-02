@@ -17,34 +17,44 @@
 import { ref } from 'vue'
 import Sidebar from '@/components/admin/Sidebar.vue'
 import Navbar from '@/components/admin/Navbar.vue'
+import { onMounted } from 'vue'
+import { useToast } from 'vue-toastification'
+import echo from '@/plugins/echo'
 
+const toast = useToast()
 const isSidebarCollapsed = ref(false)
 
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value
 }
+onMounted(() => {
+  console.log('📡 Listening for order.created event...')
+
+  echo.channel('orders')
+    .listen('.order.created', (e) => {
+      console.log('📦 Nhận được đơn hàng mới:', e)
+      toast.success(`Đơn hàng mới #${e.id} - ${e.receiver_name}`)
+    })
+});
+
 </script>
 
-<style scoped>
-/* Default desktop spacing when sidebar is expanded */
+<style scoped lang="css">
 .content {
   margin-left: 240px;
   width: 88%;
   transition: margin-left 0.3s ease;
 }
 
-/* When sidebar is collapsed, reduce left margin for main content */
 .main-content-collapsed .content {
   margin-left: 70px;
 }
 
 @media (max-width: 991px) {
-  /* On tablet/mobile, default to compact sidebar width */
   .content {
     margin-left: 70px;
   }
 
-  /* If sidebar is toggled (collapsed on mobile), use full width */
   .main-content-collapsed .content {
     margin-left: 0;
   }

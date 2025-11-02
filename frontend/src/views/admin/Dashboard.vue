@@ -136,7 +136,7 @@ onMounted(async () => {
     // Lắng nghe event 'order.created' (Laravel tự động thêm prefix với broadcastAs)
     channel.listen('.order.created', (data) => {
       // console.log('📦 Đơn hàng mới nhận được:', data)
-      toast.success(`🎉 Đơn hàng mới #${data.id} - ${data.receiver_name}`)
+      // toast.success(`🎉 Đơn hàng mới #${data.id} - ${data.receiver_name}`)
       loadStatistics()
     })
     
