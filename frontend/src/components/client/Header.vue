@@ -9,10 +9,10 @@
     <!-- header section strats -->
     <header class="header_section">
       <div class="container">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <nav class="navbar navbar-expand-lg custom_nav-container p-0">
           <RouterLink class="navbar-brand" :to="{ name: 'Home' }">
             <span>
-              Feane
+              <img :src="Logo" style="width: 150px;" alt="">
             </span>
           </RouterLink>
 
@@ -36,30 +36,40 @@
                 </RouterLink>
               </li>
               <li class="nav-item">
+                <RouterLink class="nav-link" :to="{ name: 'Contact' }" active-class="active">
+                  Contact
+                </RouterLink>
+              </li>
+              <li class="nav-item">
                 <RouterLink class="nav-link" :to="{ name: 'About' }" active-class="active">
                   About
                 </RouterLink>
               </li>
-              <!-- <li class="nav-item">
-                <RouterLink class="nav-link" :to="{ name: 'Book' }" active-class="active">
-                  Book Table
-                </RouterLink>
-              </li> -->
             </ul>
 
             <div class="user_option d-flex align-items-center gap-3">
 
+              <!-- 🔍 Search -->
+              <div class="d-flex align-items-center bg-dark rounded-pill px-2" style="border: 1px #ffffff4d solid;">
+                <input style="width: 125px;" type="text" class="form-control place bg-transparent border-0 text-light"
+                  placeholder="Tìm món ăn..." name="food" />
+                <button class="icon-btn text-light d-flex align-items-center justify-content-center hover-bright"
+                  type="button">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+
               <!-- 👤 Profile dropdown -->
-              <div class="dropdown">
+              <div class="dropdown dropdown-center ">
                 <button
                   class="btn btn-transparent text-light d-flex align-items-center px-2 py-1 rounded-3 hover-bright"
                   type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fas fa-user me-2"></i>
-                  <span>{{ userStore.user?.name || 'Tài khoản' }}</span>
-                  <i class="fas fa-chevron-down ms-2 small opacity-75"></i>
+                  <span>{{ userStore.user?.name}}</span>
+                  <i class="fas fa-chevron-down ms-2 small opacity-75" style="margin-left: 0px !important;"></i>
                 </button>
 
-                <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0 mt-2">
+                <ul class="dropdown-menu shadow-lg rounded-3 border-0 mt-2">
                   <template v-if="userStore.user">
                     <li>
                       <RouterLink class="dropdown-item py-2" :to="{ name: 'Profile' }">
@@ -106,12 +116,6 @@
                 <i class="fas fa-shopping-cart"></i>
               </RouterLink>
 
-              <!-- 🔍 Search -->
-              <button class="icon-btn text-light d-flex align-items-center justify-content-center hover-bright"
-                type="button">
-                <i class="fas fa-search"></i>
-              </button>
-
             </div>
 
 
@@ -125,6 +129,7 @@
 </template>
 <script setup>
 import Image1 from '@/assets/images/hero-bg.jpg';
+import Logo from '@/assets/images/logo_food_order.png';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Banner from './Banner.vue';
 import { useUserStore } from '@/stores/user';
@@ -137,13 +142,13 @@ const userStore = useUserStore();
 
 const heights = {
   Home: '1000px',
-  Menu: '95px',
-  About: '95px',
-  Book: '95px',
-  Login: '95px',
-  Register: '95px',
-  Profile: '95px',
-  Cart: '95px',
+  Menu: '110px',
+  About: '110px',
+  Book: '110px',
+  Login: '110px',
+  Register: '110px',
+  Profile: '110px',
+  Cart: '110px',
 };
 
 const positions = {
@@ -221,5 +226,33 @@ const logout = async () => {
 .dropdown-menu {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+}
+
+.form-control::placeholder {
+  color: #ccc;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.icon-btn:hover {
+  color: #ffcc00;
+  /* Màu vàng sáng khi hover */
+}
+
+.place::placeholder {
+  color: white !important;
+  opacity: 1; /* Giữ màu rõ, tránh mờ */
+  font-size: 0.9rem;
+}
+
+.dropdown-center .dropdown-menu {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  right: auto !important;
 }
 </style>

@@ -31,6 +31,11 @@ const routes = [
         path: 'menu',
         name: 'Menu',
         component: () => import('@/views/client/Menu.vue')
+      },    
+      {
+        path: 'conact',
+        name: 'Contact',
+        component: () => import('@/views/client/Contact.vue')
       },
       {
         path: 'about',
@@ -63,13 +68,6 @@ const routes = [
         component: () => import('@/views/client/FoodDetail.vue'),
         props: true
       }
-
-
-      // {
-      //   path: 'book',
-      //   name: 'Book',
-      //   component: () => import('@/views/client/Book.vue')
-      // }
     ]
   },
   {

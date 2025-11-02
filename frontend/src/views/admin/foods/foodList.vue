@@ -22,7 +22,7 @@
                             <tr>
                                 <th class="text-nowrap col-id">ID</th>
                                 <th class="col-name">Name</th>
-                                <th class="text-end col-price">Price</th>
+                                <th class="col-price">Price</th>
                                 <th class="col-desc">Description</th>
                                 <th class="col-image">Image</th>
                                 <th class="col-category">Category</th>
@@ -37,7 +37,7 @@
                             <tr v-for="(food, index) in foods" :key="food.id">
                                 <td class="col-id">{{ (pagination.current_page - 1) * 10 + index + 1 }}</td>
                                 <td class="fw-500 col-name">{{ food.name }}</td>
-                                <td class="text-end col-price">{{ formatCurrency(food.price) }}</td>
+                                <td class="col-price">{{ formatCurrency(food.price) }}</td>
                                 <td class="text-truncate col-desc">{{ food.description }}</td>
                                 <td class="col-image">
                                     <img :src="food.image" alt="" class="rounded shadow-sm food-thumb">
@@ -188,7 +188,7 @@ const formatCurrency = (value) => {
 }
 
 .col-price {
-    width: 12%;
+    width: 7%;
 }
 
 .col-category {
@@ -199,7 +199,7 @@ const formatCurrency = (value) => {
     width: 13%;
 }
 .col-name {
-    width: 7%;
+    width: 13%;
 }
 
 .col-desc {

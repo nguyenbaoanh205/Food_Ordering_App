@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid py-4">
-    <h2 class="fw-bold text-primary mb-4">📊 Thống kê tổng quan</h2>
+    <h2 class="fw-bold mb-0">Dashboard</h2>
 
     <!-- Cards thống kê -->
     <div class="row g-4 mb-4">
@@ -120,46 +120,46 @@ async function loadStatistics() {
 // 🧠 Gọi ban đầu
 onMounted(async () => {
   // console.log('🚀 Dashboard mounted, loading statistics...')
-  
+
   // Load statistics ban đầu
   await loadStatistics()
 
   // ✅ Kiểm tra và setup Pusher connection
   // console.log('📡 Setting up Pusher listener...')
   // console.log('Echo instance:', echo)
-  
+
   try {
     // Subscribe vào channel 'orders'
     const channel = echo.channel('orders')
     // console.log('✅ Subscribed to channel: orders')
-    
+
     // Lắng nghe event 'order.created' (Laravel tự động thêm prefix với broadcastAs)
     channel.listen('.order.created', (data) => {
       // console.log('📦 Đơn hàng mới nhận được:', data)
       // toast.success(`🎉 Đơn hàng mới #${data.id} - ${data.receiver_name}`)
       loadStatistics()
     })
-    
+
     // // Debug: Lắng nghe callback khi subscribe thành công
     // channel.subscribed(() => {
     //   console.log('✅ Successfully subscribed to orders channel')
     // })
-    
+
     // // Error handling - chỉ bind nếu pusher đã sẵn sàng
     // if (echo.connector && echo.connector.pusher && echo.connector.pusher.connection) {
     //   echo.connector.pusher.connection.bind('error', (err) => {
     //     console.error('❌ Pusher connection error:', err)
     //   })
-      
+
     //   echo.connector.pusher.connection.bind('connected', () => {
     //     console.log('✅ Pusher connected successfully')
     //   })
-      
+
     //   echo.connector.pusher.connection.bind('disconnected', () => {
     //     console.warn('⚠️ Pusher disconnected')
     //   })
     // }
-    
+
   } catch (error) {
     console.error('❌ Error setting up Pusher listener:', error)
     toast.error('Không thể kết nối Pusher realtime: ' + error.message)

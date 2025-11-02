@@ -175,7 +175,7 @@ const formatCurrency = (value) => {
 }
 
 .col-name {
-    width: 13%;
+    width: 10%;
 }
 
 .col-desc {
