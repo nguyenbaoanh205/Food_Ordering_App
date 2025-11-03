@@ -63,7 +63,7 @@ const toast = useToast()
 // 🧾 Cards thống kê
 const stats = ref([
   { title: 'Tổng đơn hàng', value: '...' },
-  { title: 'Doanh thu (₫)', value: '...' },
+  { title: 'Doanh thu ($)', value: '...' },
   { title: 'Người dùng', value: '...' },
   { title: 'Đơn huỷ', value: '...' },
 ])
@@ -90,7 +90,7 @@ async function loadStatistics() {
 
     stats.value = [
       { title: 'Tổng đơn hàng', value: data.orders },
-      { title: 'Doanh thu (₫)', value: data.revenue.toLocaleString('vi-VN') },
+      { title: 'Doanh thu ($)', value: data.revenue.toLocaleString('vi-VN') },
       { title: 'Người dùng', value: data.users },
       { title: 'Đơn huỷ', value: data.ordersByStatus.cancelled },
     ]

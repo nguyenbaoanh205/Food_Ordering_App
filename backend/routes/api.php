@@ -33,14 +33,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-Route::apiResource('/users', UserController::class);
+
+// Carts [Client]
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
 Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
 Route::delete('/cart-items/{id}', [CartController::class, 'removeItem']);
 
+// Reviews [Admin, Client]
 Route::get('/reviews', [ReviewController::class, 'index']);
 
+// Foods [Admin, Client]
 Route::get('/foods', [FoodController::class, 'index']);
 Route::post('/foods', [FoodController::class, 'store']);
 Route::get('/foods/{id}', [FoodController::class, 'show']);
@@ -48,13 +51,14 @@ Route::put('/foods/{id}', [FoodController::class, 'update']);
 Route::delete('/foods/{id}', [FoodController::class, 'destroy']);
 Route::apiResource('/food-options', FoodOptionController::class);
 
+// Categories [Admin, Client]
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/categories', [CategoryController::class, 'store']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::put('/categories/{id}', [CategoryController::class, 'update']);
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
-// Orders
+// Orders [Admin, Client]
 Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'store']);
 Route::get('/orders/{id}', [OrderController::class, 'show']);
@@ -62,27 +66,19 @@ Route::put('/orders/{id}', [OrderController::class, 'update']);
 Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 Route::get('/orders-stats', [OrderController::class, 'stats']);
 
-// Order Details
+// Users [Admin]
+Route::apiResource('/users', UserController::class);
+
+// Order Details [Admin]
 Route::get('/order-details', [OderDetailController::class, 'index']); // expects order_id
 Route::post('/order-details', [OderDetailController::class, 'store']);
 Route::get('/order-details/{id}', [OderDetailController::class, 'show']);
 Route::put('/order-details/{id}', [OderDetailController::class, 'update']);
 Route::delete('/order-details/{id}', [OderDetailController::class, 'destroy']);
 
-// Order History Admin
+// Order History [Admin]
 Route::get('/order-history', [OderHistoryController::class, 'index']); // expects order_id
 Route::get('/order-history/{id}', [OderHistoryController::class, 'show']);
 
-// Reviews
-Route::get('/reviews', [ReviewController::class, 'index']);
-// Route::post('/reviews', [ReviewController::class, 'store']);
-// Route::get('/reviews/{id}', [ReviewController::class, 'show']);
-// Route::put('/reviews/{id}', [ReviewController::class, 'update']);
-// Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
-
-
-
-// Routes Admin
-// Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-    Route::get('/admin/dashboard/statistics', [DashboardController::class, 'statistics']);
-// });
+// Dashboard [Admin]
+Route::get('/admin/dashboard/statistics', [DashboardController::class, 'statistics']);
