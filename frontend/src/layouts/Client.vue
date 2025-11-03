@@ -1,7 +1,7 @@
 <template>
-    <Header />
-    <router-view />
-    <Footer />
+  <Header />
+  <router-view />
+  <Footer />
 </template>
 <script setup>
 import Header from '@/components/client/Header.vue';
@@ -27,10 +27,7 @@ let channel = null
 function listenRealtime(userId) {
   channel = echo.channel(`user.${userId}`)
   channel.listen('.order.status.updated', (data) => {
-    toast.info(`📦 Đơn hàng #${data.id} đã chuyển trạng thái: ${data.status}`, {
-      position: 'top-right',
-      timeout: 5000,
-    })
+    toast.info(`📦 Đơn hàng #${data.id} đã chuyển trạng thái: ${data.status}`)
   })
 }
 
