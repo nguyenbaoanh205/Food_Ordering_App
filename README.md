@@ -64,63 +64,64 @@ food-ordering-app/
 ## 🚀 Cài đặt & Chạy dự án  
 
 ### 1️⃣ Backend (Laravel)
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan serve
+- cd backend
+- composer install
+- cp .env.example .env
+- php artisan key:generate
+- php artisan migrate --seed
+- php artisan serve
 
 ### 2️⃣ Frontend (Vue.js)
-cd frontend
-npm install
-npm run dev
+- cd frontend
+- npm install
+- npm run dev
 
 ---
 
 🔑 Chức năng chính
 
 👤 Người dùng
-Đăng ký / Đăng nhập (Laravel Sanctum)
-Xem danh sách món ăn
-Tìm kiếm và lọc món ăn theo danh mục
-Thêm món vào giỏ hàng
-Thanh toán và đặt hàng
-Đánh giá, bình luận món ăn
-Xem lịch sử & trạng thái đơn hàng realtime
+- Đăng ký / Đăng nhập (Laravel Sanctum)
+- Xem danh sách món ăn
+- Tìm kiếm và lọc món ăn theo danh mục
+- Thêm món vào giỏ hàng
+- Thanh toán và đặt hàng
+- Đánh giá, bình luận món ăn
+- Xem lịch sử & trạng thái đơn hàng realtime
 
 🛠️ Quản trị viên (Admin)
-Quản lý danh mục & sản phẩm
-Quản lý người dùng
-Quản lý đơn hàng (duyệt, giao hàng, hủy)
-Nhận thông báo realtime khi có đơn hàng mới
-Thống kê doanh thu, đơn hàng, sản phẩm bán chạy
+- Quản lý danh mục & sản phẩm
+- Quản lý người dùng
+- Quản lý đơn hàng (duyệt, giao hàng, hủy)
+- Nhận thông báo realtime khi có đơn hàng mới
+- Thống kê doanh thu, đơn hàng, sản phẩm bán chạy
 
 ---
 
 📡 API Chính
-Method	Endpoint	Mô tả
-POST	/api/register	Đăng ký tài khoản
-POST	/api/login	Đăng nhập
-GET	/api/foods	Lấy danh sách món ăn
-POST	/api/orders	Tạo đơn hàng
-GET	/api/orders/{id}	Xem chi tiết đơn hàng
-PUT	/api/orders/{id}	Cập nhật trạng thái đơn hàng (Admin)
+- Method	Endpoint	Mô tả
+- POST	/api/register	Đăng ký tài khoản
+- POST	/api/login	Đăng nhập
+- GET	/api/foods	Lấy danh sách món ăn
+- POST	/api/orders	Tạo đơn hàng
+- GET	/api/orders/{id}	Xem chi tiết đơn hàng
+- PUT	/api/orders/{id}	Cập nhật trạng thái đơn hàng (Admin)
 
 ---
 
 🔔 Tính năng Realtime
-Khi admin cập nhật trạng thái đơn hàng, người dùng nhận được thông báo ngay lập tức.
-Khi có đơn hàng mới, admin cũng được thông báo realtime qua Pusher + Laravel Echo.
+- Khi admin cập nhật trạng thái đơn hàng, người dùng nhận được thông báo ngay lập tức.
+- Khi có đơn hàng mới, admin cũng được thông báo realtime qua Pusher + Laravel Echo.
 
 ---
 
 🧪 Môi trường phát triển
-Công cụ	Phiên bản khuyến nghị
-PHP	8.2+
-Laravel	12x
-Node.js	22+
-MySQL	8.0+
-Composer	2.8+
-NPM	10+
+- Công cụ	Phiên bản khuyến nghị
+- PHP	8.2+
+- Laravel	12x
+- Node.js	22+
+- MySQL	8.0+
+- Composer	2.8+
+- NPM	10+
+
 
