@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\OrderCreated;
+use App\Events\OrderStatusUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Models\Order;
@@ -144,7 +145,7 @@ class OrderController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $order = Order::with(['user', 'details.food', 'history'])->find($id);
+        $order = Order::with(['user', 'details.food', 'details.options.option', 'history'])->find($id);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
@@ -182,6 +183,9 @@ class OrderController extends Controller
         }
 
         $order->update($validated);
+
+        // 🛰️ Bắn event realtime cho client
+        event(new OrderStatusUpdated($order));
 
         return response()->json([
             'message' => 'Order updated',

@@ -83,7 +83,7 @@
                                                         v-for="opt in item.options.filter(o => o.option.type === 'size')"
                                                         :key="opt.id">
                                                         {{ opt.option.name }} (+{{ formatPrice(opt.option.extra_price ||
-                                                        0) }})
+                                                            0) }})
                                                     </span>
                                                 </div>
                                                 <div
@@ -93,7 +93,7 @@
                                                         v-for="opt in item.options.filter(o => o.option.type === 'topping')"
                                                         :key="opt.id">
                                                         {{ opt.option.name }} (+{{ formatPrice(opt.option.extra_price ||
-                                                        0) }})
+                                                            0) }})
                                                     </span>
                                                 </div>
                                             </div>
@@ -123,20 +123,26 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import api from '@/services/api'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
+import echo from '@/plugins/echo'
 
 const userStore = useUserStore()
 const router = useRouter()
+const toast = useToast()
+
 const orders = ref([])
 const loading = ref(true)
+let channel = null
 
 const formatPrice = (val) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(parseFloat(val))
 const formatDate = (dateStr) => new Date(dateStr).toLocaleString()
 
+// 🟢 Fetch danh sách order ban đầu
 const fetchOrders = async () => {
     if (!userStore.isLoggedIn) return router.push('/login')
     loading.value = true
@@ -153,8 +159,46 @@ const fetchOrders = async () => {
     }
 }
 
-onMounted(fetchOrders)
+// 🟢 Lắng nghe realtime trạng thái order
+function listenRealtime(userId) {
+    channel = echo.channel(`user.${userId}`)
+    channel.listen('.order.status.updated', (data) => {
+        // toast.info(`📦 Đơn hàng #${data.id} đã chuyển trạng thái: ${data.status}`)
+
+        // Update trực tiếp badge trạng thái và thời gian cập nhật
+        const idx = orders.value.findIndex(o => o.id === data.id)
+        if (idx !== -1) {
+            orders.value[idx].status = data.status
+            orders.value[idx].updated_at = data.updated_at
+        }
+    })
+}
+
+function stopListening(userId) {
+    if (channel) {
+        echo.leave(`user.${userId}`)
+        channel = null
+    }
+}
+
+// 🔄 Mounted: fetch và đăng ký realtime
+onMounted(() => {
+    fetchOrders()
+    if (userStore.user?.id) listenRealtime(userStore.user.id)
+})
+
+// 🔄 Trước khi unmount: hủy lắng nghe
+onBeforeUnmount(() => {
+    if (userStore.user?.id) stopListening(userStore.user.id)
+})
+
+// 🔄 Watch userStore.user để tự động hủy/lắng nghe khi login/logout
+watch(() => userStore.user, (newUser, oldUser) => {
+    if (oldUser?.id) stopListening(oldUser.id)
+    if (newUser?.id) listenRealtime(newUser.id)
+})
 </script>
+
 
 <style scoped>
 .order_history_section {
