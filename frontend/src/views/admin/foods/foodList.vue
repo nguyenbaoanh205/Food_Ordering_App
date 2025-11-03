@@ -92,7 +92,9 @@
 import { ref, onMounted } from 'vue'
 import api from '../../../services/api'
 import { RouterLink } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const foods = ref([])
 const loading = ref(true)
 const error = ref(null)
@@ -147,9 +149,9 @@ const deleteFood = async (id) => {
     try {
         await api.delete(`/foods/${id}`)
         fetchFoods(currentPage.value)
-        alert('Deleted successfully!')
+        toast.success('Deleted successfully!')
     } catch (err) {
-        alert('Failed to delete!')
+        toast.error('Failed to delete!')
     }
 }
 

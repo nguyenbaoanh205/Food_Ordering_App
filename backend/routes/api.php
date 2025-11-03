@@ -5,7 +5,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CartItemOptionController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\FoodController;
+use App\Http\Controllers\Api\Admin\FoodController;
+use App\Http\Controllers\Api\FoodController as ApiFoodController;
 use App\Http\Controllers\Api\FoodOptionController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\OderDetailController;
@@ -34,6 +35,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
+// Foods [Client]
+Route::get('/foods-client', [ApiFoodController::class, 'index']);
+Route::get('/categories-client', [CategoryController::class, 'getAllClient']);
+
 // Carts [Client]
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
 Route::post('/cart/add', [CartController::class, 'addToCart']);
@@ -43,13 +48,6 @@ Route::delete('/cart-items/{id}', [CartController::class, 'removeItem']);
 // Reviews [Admin, Client]
 Route::get('/reviews', [ReviewController::class, 'index']);
 
-// Foods [Admin, Client]
-Route::get('/foods', [FoodController::class, 'index']);
-Route::post('/foods', [FoodController::class, 'store']);
-Route::get('/foods/{id}', [FoodController::class, 'show']);
-Route::put('/foods/{id}', [FoodController::class, 'update']);
-Route::delete('/foods/{id}', [FoodController::class, 'destroy']);
-Route::apiResource('/food-options', FoodOptionController::class);
 
 // Categories [Admin, Client]
 Route::get('/categories', [CategoryController::class, 'index']);
@@ -82,3 +80,11 @@ Route::get('/order-history/{id}', [OderHistoryController::class, 'show']);
 
 // Dashboard [Admin]
 Route::get('/admin/dashboard/statistics', [DashboardController::class, 'statistics']);
+
+// Foods [Admin]
+Route::get('/foods', [FoodController::class, 'index']);
+Route::post('/foods', [FoodController::class, 'store']);
+Route::get('/foods/{id}', [FoodController::class, 'show']);
+Route::put('/foods/{id}', [FoodController::class, 'update']);
+Route::delete('/foods/{id}', [FoodController::class, 'destroy']);
+Route::apiResource('/food-options', FoodOptionController::class);

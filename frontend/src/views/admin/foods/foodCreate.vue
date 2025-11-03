@@ -53,7 +53,9 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const router = useRouter()
 
 const form = ref({
@@ -74,10 +76,10 @@ onMounted(async () => {
 const createFood = async () => {
     try {
         await api.post('/foods', form.value)
-        alert('Created successfully!')
+        toast.success('Created successfully!')
         router.push('/admin/food')
     } catch (err) {
-        alert('Failed to create food')
+        toast.error('Failed to create food')
     }
 }
 </script>

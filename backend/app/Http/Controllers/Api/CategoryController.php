@@ -70,4 +70,13 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json(["data" => $category], 200);
     }
+
+    public function getAllClient()
+    {
+        $categories = Category::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($categories);
+    }
 }

@@ -51,10 +51,10 @@
 
               <!-- 🔍 Search -->
               <div class="d-flex align-items-center bg-dark rounded-pill px-2" style="border: 1px #ffffff4d solid;">
-                <input style="width: 125px;" type="text" class="form-control place bg-transparent border-0 text-light"
-                  placeholder="Tìm món ăn..." name="food" />
+                <input v-model="searchQuery" @keyup.enter="searchFood" style="width: 125px;" type="text"
+                  class="form-control place bg-transparent border-0 text-light" placeholder="Tìm món ăn..." />
                 <button class="icon-btn text-light d-flex align-items-center justify-content-center hover-bright"
-                  type="button">
+                  type="button" @click="searchFood">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
@@ -65,7 +65,7 @@
                   class="btn btn-transparent text-light d-flex align-items-center px-2 py-1 rounded-3 hover-bright"
                   type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fas fa-user me-2"></i>
-                  <span>{{ userStore.user?.name}}</span>
+                  <span>{{ userStore.user?.name }}</span>
                   <i class="fas fa-chevron-down ms-2 small opacity-75" style="margin-left: 0px !important;"></i>
                 </button>
 
@@ -131,6 +131,7 @@
 import Image1 from '@/assets/images/hero-bg.jpg';
 import Logo from '@/assets/images/logo_food_order.png';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { ref } from 'vue';
 import Banner from './Banner.vue';
 import { useUserStore } from '@/stores/user';
 import { useToast } from "vue-toastification";
@@ -139,6 +140,7 @@ const toast = useToast();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const searchQuery = ref('')
 
 const heights = {
   Home: '1000px',
@@ -160,6 +162,13 @@ const positions = {
   Profile: 'top center',
   Cart: 'top center',
 };
+
+const searchFood = () => {
+  if (searchQuery.value.trim() !== '') {
+    // Chuyển hướng sang trang danh sách món ăn có query
+    router.push({ name: 'Menu', query: { q: searchQuery.value } })
+  }
+}
 
 const logout = async () => {
   await userStore.logout();
@@ -246,7 +255,8 @@ const logout = async () => {
 
 .place::placeholder {
   color: white !important;
-  opacity: 1; /* Giữ màu rõ, tránh mờ */
+  opacity: 1;
+  /* Giữ màu rõ, tránh mờ */
   font-size: 0.9rem;
 }
 
