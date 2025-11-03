@@ -39,25 +39,25 @@
 
 ## 📁 Cấu trúc thư mục  
 
-food-ordering-app/
-│
-├── backend/ # Laravel API
-│ ├── app/
-│ ├── database/
-│ ├── routes/
-│ ├── config/
-│ └── ...
-│
-├── frontend/ # Vue.js App
-│ ├── src/
-│ │ ├── components/
-│ │ ├── views/
-│ │ ├── router/
-│ │ ├── store/
-│ │ └── plugins/
-│ └── ...
-│
-└── README.md
+- food-ordering-app/
+- │
+- ├── backend/ # Laravel API
+- │ ├── app/
+- │ ├── database/
+- │ ├── routes/
+- │ ├── config/
+- │ └── ...
+- │
+- ├── frontend/ # Vue.js App
+- │ ├── src/
+- │ │ ├── components/
+- │ │ ├── views/
+- │ │ ├── router/
+- │ │ ├── store/
+- │ │ └── plugins/
+- │ └── ...
+- │
+- └── README.md
 
 ---
 
@@ -123,5 +123,6 @@ food-ordering-app/
 - MySQL	8.0+
 - Composer	2.8+
 - NPM	10+
+
 
 
