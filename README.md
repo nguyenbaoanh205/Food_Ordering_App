@@ -19,7 +19,6 @@
 ---
 
 ## ⚙️ Công nghệ sử dụng  
-
 ### 🧩 Frontend (Client)
 - [Vue.js 3](https://vuejs.org/)  
 - [Vue Router](https://router.vuejs.org/)  
@@ -124,3 +123,4 @@ Node.js	22+
 MySQL	8.0+
 Composer	2.8+
 NPM	10+
+
