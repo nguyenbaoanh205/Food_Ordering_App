@@ -23,7 +23,6 @@ export const useUserStore = defineStore("user", {
                 localStorage.setItem("user", JSON.stringify(user));
                 localStorage.setItem("token", token);
 
-                // alert("Đăng nhập thành công!");
                 return redirect;
             } catch (err) {
                 throw (

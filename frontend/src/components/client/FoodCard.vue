@@ -9,7 +9,7 @@
             </RouterLink>
             <div class="detail-box">
                 <h5>{{ food.name }}</h5>
-                <p>{{ food.description.slice(0, 100) }}{{ food.description.length > 100 ? '...' : '' }}</p>
+                <p>{{ food.description.slice(0, 90) }}{{ food.description.length > 90 ? '...' : '' }}</p>
                 <div class="options">
                     <h6>${{ food.price }}</h6>
                     <button @click="$emit('add-to-cart', food)" class="btn btn-sm btn-warning rounded-5">

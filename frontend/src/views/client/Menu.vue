@@ -1,5 +1,5 @@
 <template>
-    <section class="food_section layout_padding-bottom">
+    <section class="food_section mt-5 layout_padding-bottom">
         <div class="container">
             <div class="heading_container heading_center">
                 <h2>Our Menu</h2>
@@ -61,13 +61,13 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/services/api'
 import FoodCard from '@/components/client/FoodCard.vue'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
-
+const router = useRouter()
 // ⚙️ Dữ liệu chính
 const foods = ref([])
 const categories = ref([])
@@ -150,7 +150,8 @@ const changePage = (page) => {
 
 // 🛒 **Thêm món vào giỏ hàng**
 const addToCart = (food) => {
-    toast.success(`Đã thêm ${food.name} vào giỏ hàng!`)
+    // toast.success(`Đã thêm ${food.name} vào giỏ hàng!`)
+    router.push({ name: 'foodDetail', params: { id: food.id } })
 }
 
 // 🚀 **Tự động gọi API khi trang load hoặc khi query thay đổi**

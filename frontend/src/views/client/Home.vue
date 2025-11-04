@@ -379,12 +379,13 @@ import api from '@/services/api'
 import FoodCard from '@/components/client/FoodCard.vue'
 import { useToast } from 'vue-toastification'
 import { RouterLink } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const toast = useToast()
 const foods = ref([])
 const categories = ref([])
 const activeFilter = ref('all')
-
+const router = useRouter()
 // 🧠 Hiển thị 9 sản phẩm (và vẫn lọc được theo danh mục)
 const filteredFoods = computed(() => {
     let result = foods.value
@@ -411,7 +412,8 @@ const fetchFoods = async () => {
 }
 
 const addToCart = (food) => {
-    toast.success(`Đã thêm ${food.name} vào giỏ hàng!`)
+    // toast.success(`Đã thêm ${food.name} vào giỏ hàng!`)
+    router.push({ name: 'foodDetail', params: { id: food.id } })
 }
 
 onMounted(fetchFoods)

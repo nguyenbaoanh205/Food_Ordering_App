@@ -3,7 +3,7 @@
     <div class="bg-box">
       <img :src="Image1" alt="" :style="{
         objectFit: 'cover',
-        objectPosition: positions[route.name] || 'center center'
+        objectPosition: positions[route.name] || 'top center'
       }">
     </div>
     <!-- header section strats -->
@@ -144,13 +144,15 @@ const searchQuery = ref('')
 
 const heights = {
   Home: '1000px',
-  Menu: '110px',
-  About: '110px',
-  Book: '110px',
-  Login: '110px',
-  Register: '110px',
-  Profile: '110px',
-  Cart: '110px',
+  Menu: '114px',
+  About: '114px',
+  Book: '114px',
+  Login: '114px',
+  Register: '114px',
+  FoodDetail: '114px',
+  Profile: '114px',
+  Contact: '114px',
+  Cart: '114px',
 };
 
 const positions = {
@@ -159,7 +161,9 @@ const positions = {
   Book: 'top center',
   Login: 'top center',
   Register: 'top center',
+  FoodDetail: 'top center',
   Profile: 'top center',
+  Contact: 'top center',
   Cart: 'top center',
 };
 

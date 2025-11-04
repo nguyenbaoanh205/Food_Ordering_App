@@ -25,7 +25,7 @@
       <!-- Right side -->
       <div class="d-flex align-items-center ms-auto gap-3">
         <!-- Notification bell -->
-        <button class="btn btn-light position-relative">
+        <!-- <button class="btn btn-light position-relative">
           <i class="bi bi-bell fs-5"></i>
           <span
             class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
@@ -33,7 +33,7 @@
           >
             3
           </span>
-        </button>
+        </button> -->
 
         <!-- User dropdown -->
         <div class="dropdown">
@@ -49,8 +49,8 @@
           </button>
 
           <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
-            <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+            <!-- <li><a class="dropdown-item" href="#">Trang cá nhân</a></li> -->
+            <!-- <li><a class="dropdown-item" href="#">Cài đặt</a></li> -->
             <li><hr class="dropdown-divider" /></li>
             <li>
               <button class="dropdown-item text-danger d-flex align-items-center gap-2" @click="handleLogout">
@@ -72,6 +72,7 @@ import { useToast } from "vue-toastification";
 const router = useRouter();
 const userStore = useUserStore();
 const toast = useToast();
+
 
 const handleLogout = async () => {
     await userStore.logout(); // xóa token + user
