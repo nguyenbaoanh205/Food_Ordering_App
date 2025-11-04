@@ -182,6 +182,11 @@ const totalPrice = computed(() => {
 // ✅ Thêm vào giỏ hàng
 const addToCart = async () => {
     try {
+        if (!userStore.user || !userStore.user.id) {
+            toast.info('Please log in to add items to your cart')
+            router.push({ name: 'Login', query: { redirect: route.fullPath } })
+            return
+        }
         const userId = userStore.user.id
         const basePrice = Number(food.value.price) || 0
         const sizeExtra = selectedSize.value ? Number(selectedSize.value.extra_price) : 0

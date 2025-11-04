@@ -1,10 +1,11 @@
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user"; // ✅ import Pinia store
 import { useToast } from "vue-toastification";
 const toast = useToast();
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 
 const form = ref({
@@ -17,9 +18,15 @@ const error = ref("");
 const handleLogin = async () => {
   error.value = "";
   try {
-    const redirect = await userStore.login(form.value); // ✅ Gọi Pinia login
+    const redirectRole = await userStore.login(form.value); // ✅ Gọi Pinia login
     toast.success("Đăng nhập thành công!");
-    if (redirect === "admin") {
+
+    // 🟢 Nếu có query redirect => quay lại đó
+    const redirectPath = route.query.redirect;
+
+    if (redirectPath) {
+      router.push(redirectPath);
+    } else if (redirectRole === "admin") {
       router.push("/admin");
     } else {
       router.push("/");

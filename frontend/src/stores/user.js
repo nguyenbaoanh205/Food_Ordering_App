@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import api from "@/services/api"; // ← bạn đã có sẵn file này
+import api from "@/services/api";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
@@ -68,6 +68,12 @@ export const useUserStore = defineStore("user", {
                 localStorage.removeItem("user");
                 localStorage.removeItem("token");
             }
+        },
+        checkAuth() {
+            if (!this.token || !this.user) {
+                return false;
+            }
+            return true;
         },
     },
 });
