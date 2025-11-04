@@ -175,8 +175,8 @@
             <!-- Danh sách món ăn -->
             <div class="filters-content">
                 <div class="row grid">
-                    <MotionGroup tag="div" class="d-flex flex-wrap" :initial="{ opacity: 0, y: 30 }"
-                        :enter="{ opacity: 1, y: 0 }" :leave="{ opacity: 0, y: -30 }" transition="ease-in-out">
+                    <MotionGroup :initial="{ opacity: 0, y: 30 }"
+                        :enter="{ opacity: 1, y: 0 }" :leave="{ opacity: 0, y: -30 }">
                         <FoodCard v-for="foodChildren in filteredFoods" :key="foodChildren.id" :food="foodChildren"
                             @add-to-cart="addToCart" class="col-sm-6 col-lg-4" />
                     </MotionGroup>
@@ -229,157 +229,83 @@
 
     <!-- end about section -->
 
-    <!-- book section -->
-    <!-- <section class="book_section layout_padding">
-        <div class="container">
-            <div class="heading_container">
-                <h2>
-                    Book A Table
-                </h2>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form_container">
-                        <form action="">
-                            <div>
-                                <input type="text" class="form-control" placeholder="Your Name" />
-                            </div>
-                            <div>
-                                <input type="text" class="form-control" placeholder="Phone Number" />
-                            </div>
-                            <div>
-                                <input type="email" class="form-control" placeholder="Your Email" />
-                            </div>
-                            <div>
-                                <select class="form-control nice-select wide">
-                                    <option value="" disabled selected>
-                                        How many persons?
-                                    </option>
-                                    <option value="">
-                                        2
-                                    </option>
-                                    <option value="">
-                                        3
-                                    </option>
-                                    <option value="">
-                                        4
-                                    </option>
-                                    <option value="">
-                                        5
-                                    </option>
-                                </select>
-                            </div>
-                            <div>
-                                <input type="date" class="form-control">
-                            </div>
-                            <div class="btn_box">
-                                <button>
-                                    Book Now
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="map_container ">
-                        <div id="googleMap"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!-- end book section -->
-
     <!-- client section -->
 
     <section class="client_section layout_padding-bottom mt-5">
         <div class="container">
             <div class="heading_container heading_center psudo_white_primary mb_45">
-                <h2>
-                    What Says Our Customers
-                </h2>
+                <h2>What Says Our Customers</h2>
             </div>
-            <div class="carousel-wrap row ">
-                <Carousel :items-to-show="3" :wrap-around="true" :autoplay="0">
-                    <Slide>
-                        <div class="box">
-                            <div class="detail-box">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-                                </p>
-                                <h6>
-                                    Moana Michell
-                                </h6>
-                                <p>
-                                    magna aliqua
-                                </p>
-                            </div>
-                            <div class="img-box">
-                                <img :src="Img13" alt="" class="box-img">
-                            </div>
+
+            <Splide :options="splideOptions" class="client-carousel">
+                <SplideSlide v-for="(item, index) in testimonials" :key="index">
+                    <div class="box">
+                        <div class="detail-box">
+                            <p>{{ item.text }}</p>
+                            <h6>{{ item.name }}</h6>
+                            <p>{{ item.subtitle }}</p>
                         </div>
-                    </Slide>
-                    <Slide>
-                        <div class="box">
-                            <div class="detail-box">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-                                </p>
-                                <h6>
-                                    Mike Hamell
-                                </h6>
-                                <p>
-                                    magna aliqua
-                                </p>
-                            </div>
-                            <div class="img-box">
-                                <img :src="Img14" alt="" class="box-img">
-                            </div>
+                        <div class="img-box">
+                            <img :src="item.image" alt="" class="box-img" />
                         </div>
-                    </Slide>
-                    <Slide>
-                        <div class="box">
-                            <div class="detail-box">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-                                </p>
-                                <h6>
-                                    nnba
-                                </h6>
-                                <p>
-                                    magna aliqua
-                                </p>
-                            </div>
-                            <div class="img-box">
-                                <img :src="Img14" alt="" class="box-img">
-                            </div>
-                        </div>
-                    </Slide>
-                </Carousel>
-            </div>
+                    </div>
+                </SplideSlide>
+            </Splide>
         </div>
     </section>
+
 
     <!-- end client section -->
 </template>
 <script setup>
-import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide } from 'vue3-carousel';
+import { Splide, SplideSlide } from '@splidejs/vue-splide'
+import '@splidejs/vue-splide/css' // CSS mặc định
 import Img1 from '@/assets/images/o1.jpg';
 import Img2 from '@/assets/images/o2.jpg';
 import Img12 from '@/assets/images/about-img.png';
-import Img13 from '@/assets/images/client1.jpg';
-import Img14 from '@/assets/images/client2.jpg';
-
+import Img13 from '@/assets/images/client1.jpg'
+import Img14 from '@/assets/images/client2.jpg'
 import { ref, computed, onMounted } from 'vue'
 import api from '@/services/api'
 import FoodCard from '@/components/client/FoodCard.vue'
 import { useToast } from 'vue-toastification'
 import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
+const testimonials = [
+  {
+    text: 'Lorem ipsum dolor sit amet...',
+    name: 'Moana Michell',
+    subtitle: 'magna aliqua',
+    image: Img13,
+  },
+  {
+    text: 'Sed do eiusmod tempor incididunt...',
+    name: 'Mike Hamell',
+    subtitle: 'magna aliqua',
+    image: Img14,
+  },
+  {
+    text: 'Ut enim ad minim veniam...',
+    name: 'Nnba',
+    subtitle: 'magna aliqua',
+    image: Img14,
+  },
+]
+const splideOptions = {
+  type: 'loop',
+  perPage: 3,
+  autoplay: true,
+  interval: 2500,
+  pauseOnHover: false,
+  pauseOnFocus: false,
+  arrows: false,
+  pagination: false,
+  gap: '1rem',
+  breakpoints: {
+    992: { perPage: 2 },
+    768: { perPage: 1 },
+  },
+}
 
 const toast = useToast()
 const foods = ref([])

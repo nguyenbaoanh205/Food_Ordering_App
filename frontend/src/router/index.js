@@ -31,7 +31,7 @@ const routes = [
         path: 'menu',
         name: 'Menu',
         component: () => import('@/views/client/Menu.vue')
-      },    
+      },
       {
         path: 'conact',
         name: 'Contact',
@@ -177,7 +177,24 @@ const routes = [
         path: 'review',
         name: 'Review',
         component: () => import('@/views/admin/reviews/reviewList.vue'),
+      },
+      {
+        path: 'banners',
+        name: 'Banner',
+        component: () => import('@/views/admin/banners/bannerList.vue')
+      },
+      {
+        path: 'banners/create',
+        name: 'bannerCreate',
+        component: () => import('@/views/admin/banners/bannerCreate.vue')
+      },
+      {
+        path: 'banners/edit/:id',
+        name: 'bannerEdit',
+        component: () => import('@/views/admin/banners/bannerEdit.vue'),
+        props: true
       }
+
 
     ]
   }

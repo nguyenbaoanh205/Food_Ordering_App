@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CartItemOptionController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Admin\FoodController;
+use App\Http\Controllers\Api\Admin\BannerController;
+use App\Http\Controllers\Api\BannerController as ApiBannerController;
 use App\Http\Controllers\Api\FoodController as ApiFoodController;
 use App\Http\Controllers\Api\FoodOptionController;
 use Illuminate\Http\Request;
@@ -38,6 +40,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Foods [Client]
 Route::get('/foods-client', [ApiFoodController::class, 'index']);
 Route::get('/categories-client', [CategoryController::class, 'getAllClient']);
+
+// Banner [Client]
+Route::get('/banners-client', [ApiBannerController::class, 'index']);
 
 // Carts [Client]
 Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
@@ -88,3 +93,10 @@ Route::get('/foods/{id}', [FoodController::class, 'show']);
 Route::put('/foods/{id}', [FoodController::class, 'update']);
 Route::delete('/foods/{id}', [FoodController::class, 'destroy']);
 Route::apiResource('/food-options', FoodOptionController::class);
+
+// Banners [Admin]
+Route::get('/banners', [BannerController::class, 'index']);
+Route::post('/banners', [BannerController::class, 'store']);
+Route::get('/banners/{id}', [BannerController::class, 'show']);
+Route::put('/banners/{id}', [BannerController::class, 'update']);
+Route::delete('/banners/{id}', [BannerController::class, 'destroy']);

@@ -19,7 +19,6 @@ const pinia = createPinia()
 app.use(pinia)
 app.config.globalProperties.$echo = echo
 app.use(VueApexCharts)
-app.component('apexchart', VueApexCharts)
 app.use(router)
 app.use(MotionPlugin)
 app.mount('#app')

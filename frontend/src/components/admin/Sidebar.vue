@@ -29,7 +29,8 @@
         </RouterLink>
       </li>
       <li class="nav-item">
-        <RouterLink :to="{ name: 'Food' }" class="nav-link text-white d-flex align-items-center" exact-active-class="active">
+        <RouterLink :to="{ name: 'Food' }" class="nav-link text-white d-flex align-items-center"
+          exact-active-class="active">
           <i class="bi bi-basket me-2"></i> <!-- Thay đổi icon ở đây -->
           <span>Foods</span>
         </RouterLink>
@@ -46,7 +47,8 @@
       <li class="nav-item mt-3 sidebar-section">Order Management</li>
 
       <li class="nav-item">
-        <RouterLink :to="{ name: 'Order' }" class="nav-link text-white d-flex align-items-center" exact-active-class="active">
+        <RouterLink :to="{ name: 'Order' }" class="nav-link text-white d-flex align-items-center"
+          exact-active-class="active">
           <i class="bi bi-cart me-2"></i>
           <span>Orders</span>
         </RouterLink>
@@ -64,7 +66,8 @@
       <li class="nav-item mt-3 sidebar-section">User & Review Management</li>
 
       <li class="nav-item">
-        <RouterLink :to="{ name: 'User' }" class="nav-link text-white d-flex align-items-center" exact-active-class="active">
+        <RouterLink :to="{ name: 'User' }" class="nav-link text-white d-flex align-items-center"
+          exact-active-class="active">
           <i class="bi bi-people me-2"></i>
           <span>Users</span>
         </RouterLink>
@@ -75,6 +78,14 @@
           exact-active-class="active">
           <i class="bi bi-chat-dots me-2"></i>
           <span>Reviews</span>
+        </RouterLink>
+      </li>
+
+      <li class="nav-item">
+        <RouterLink :to="{ name: 'Banner' }" class="nav-link text-white d-flex align-items-center"
+          exact-active-class="active">
+          <i class="bi bi-image me-2"></i>
+          <span>Banners</span>
         </RouterLink>
       </li>
     </ul>
