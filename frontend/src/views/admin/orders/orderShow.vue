@@ -41,19 +41,21 @@
 
                     <!-- Update Status -->
                     <div class="col-md-4 d-flex">
-                        <div class="card shadow-sm flex-fill p-3">
-                            <label class="form-label fw-bold">Update Order Status</label>
-                            <div class="d-flex align-items-center gap-2">
-                                <select v-model="status" class="form-select w-auto">
-                                    <option value="pending">Pending</option>
-                                    <option value="confirmed">Confirmed</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                                <button class="btn btn-primary" @click="updateStatus" :disabled="updating">
-                                    <span v-if="updating" class="spinner-border spinner-border-sm me-1"></span>
-                                    Update
-                                </button>
+                        <div class="card shadow-sm flex-fill">
+                            <div class="card-header bg-light fw-bold">Update Order Status</div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center gap-2">
+                                    <select v-model="status" class="form-select w-auto">
+                                        <option value="pending">Pending</option>
+                                        <option value="confirmed">Confirmed</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                    <button class="btn btn-primary" @click="updateStatus" :disabled="updating">
+                                        <span v-if="updating" class="spinner-border spinner-border-sm me-1"></span>
+                                        Update
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
