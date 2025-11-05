@@ -204,7 +204,7 @@ const addToCart = async () => {
         }
 
         await api.post('/cart/add', payload)
-        console.log(payload);
+        // console.log(payload);
 
         toast.success('Added to cart successfully!')
         router.push('/cart')
