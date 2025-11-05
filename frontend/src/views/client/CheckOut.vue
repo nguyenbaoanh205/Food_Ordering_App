@@ -163,7 +163,7 @@ const formatPrice = val =>
 const fetchCart = async () => {
     try {
         const res = await api.get(`/users/${userStore.user.id}/cart`)
-        console.log('🧾 Cart items:', res.data.items)
+        // console.log('🧾 Cart items:', res.data.items)
         cartItems.value = res.data.items || []
     } catch (err) {
         console.error(err)

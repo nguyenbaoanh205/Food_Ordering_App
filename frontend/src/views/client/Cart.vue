@@ -35,8 +35,6 @@
                   </li>
                 </ul>
               </td>
-              {{ console.log(item.options) }}
-
 
               <td>{{ formatCurrency(item.price) }}</td>
 
