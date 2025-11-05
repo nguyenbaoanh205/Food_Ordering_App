@@ -6,18 +6,10 @@
       <div class="d-flex align-items-center gap-2">
         <div class="input-group">
           <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-          <input
-            v-model="keyword"
-            type="search"
-            class="form-control"
-            placeholder="Search by option name or food name..."
-            @keydown.enter.prevent="applySearch"
-          />
+          <input v-model="keyword" type="search" class="form-control"
+            placeholder="Search by option name or food name..." @keydown.enter.prevent="applySearch" />
         </div>
-        <RouterLink
-          :to="{ name: 'foodOptionCreate' }"
-          class="btn btn-success w-50"
-        >
+        <RouterLink :to="{ name: 'foodOptionCreate' }" class="btn btn-success w-50">
           Add Option
         </RouterLink>
       </div>
@@ -44,36 +36,25 @@
                 <td colspan="6" class="text-center text-muted py-4">No matching results</td>
               </tr>
 
-              <tr
-                v-for="(option, index) in foodOptions"
-                :key="option.id"
-              >
+              <tr v-for="(option, index) in foodOptions" :key="option.id">
                 <td>{{ (pagination.current_page - 1) * (pagination.per_page || 10) + index + 1 }}</td>
                 <td class="fw-500">{{ option.name }}</td>
                 <td>
-                  <span
-                    class="badge"
-                    :class="{
-                      'bg-info': option.type === 'size',
-                      'bg-warning text-dark': option.type === 'topping'
-                    }"
-                  >
+                  <span class="badge" :class="{
+                    'bg-info': option.type === 'size',
+                    'bg-warning text-dark': option.type === 'topping'
+                  }">
                     {{ option.type }}
                   </span>
                 </td>
                 <td>{{ formatCurrency(option.extra_price) }}</td>
                 <td>{{ option.food?.name || '—' }}</td>
                 <td class="text-center col-actions">
-                  <RouterLink
-                    class="btn btn-sm btn-primary me-2"
-                    :to="{ name: 'foodOptionEdit', params: { id: option.id } }"
-                  >
+                  <RouterLink class="btn btn-sm btn-primary me-2"
+                    :to="{ name: 'foodOptionEdit', params: { id: option.id } }">
                     Edit
                   </RouterLink>
-                  <button
-                    @click="deleteOption(option.id)"
-                    class="btn btn-sm btn-danger"
-                  >
+                  <button @click="deleteOption(option.id)" class="btn btn-sm btn-danger">
                     Delete
                   </button>
                 </td>
@@ -90,12 +71,8 @@
           <button class="page-link" @click="changePage(pagination.current_page - 1)">«</button>
         </li>
 
-        <li
-          v-for="page in pagination.last_page"
-          :key="page"
-          class="page-item"
-          :class="{ active: page === pagination.current_page }"
-        >
+        <li v-for="page in pagination.last_page" :key="page" class="page-item"
+          :class="{ active: page === pagination.current_page }">
           <button class="page-link" @click="changePage(page)">{{ page }}</button>
         </li>
 
@@ -127,11 +104,11 @@ const fetchOptions = async (page = 1) => {
   try {
     const q = keyword.value ? `&q=${encodeURIComponent(keyword.value)}` : ''
     const res = await api.get(`/food-options?page=${page}${q}`)
-    foodOptions.value = res.data.data
+    foodOptions.value = res.data.data.data
     pagination.value = {
-      current_page: res.data.current_page || 1,
-      last_page: res.data.last_page || 1,
-      per_page: res.data.per_page || 10
+      current_page: res.data.data.current_page || 1,
+      last_page: res.data.data.last_page || 1,
+      per_page: res.data.data.per_page || 10
     }
   } catch (err) {
     error.value = err.response?.data?.message || 'Failed to load options'
@@ -159,12 +136,12 @@ const applySearch = () => {
 
 // Định dạng tiền tệ
 const formatCurrency = (value) => {
-    if (value == null) return ''
-    try {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value))
-    } catch (e) {
-        return value
-    }
+  if (value == null) return ''
+  try {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value))
+  } catch (e) {
+    return value
+  }
 }
 
 const deleteOption = async (id) => {
@@ -180,16 +157,28 @@ const deleteOption = async (id) => {
 </script>
 
 <style scoped>
-.fw-500 { font-weight: 500; }
+.fw-500 {
+  font-weight: 500;
+}
 
 .table td,
 .table th {
   vertical-align: middle;
 }
 
-.col-id { width: 72px; }
-.col-actions { width: 200px; }
-.col-name { width: 20%; }
+.col-id {
+  width: 72px;
+}
 
-table { table-layout: fixed; }
+.col-actions {
+  width: 200px;
+}
+
+.col-name {
+  width: 20%;
+}
+
+table {
+  table-layout: fixed;
+}
 </style>

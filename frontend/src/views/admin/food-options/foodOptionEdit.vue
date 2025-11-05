@@ -88,7 +88,7 @@ const foods = ref([])
 // 📥 Lấy danh sách món ăn
 const fetchFoods = async () => {
   try {
-    const res = await api.get('/foods')
+    const res = await api.get('/foods/select')
     foods.value = res.data.data || res.data
   } catch (err) {
     console.error(err)

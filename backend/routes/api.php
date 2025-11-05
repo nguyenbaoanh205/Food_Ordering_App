@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CartItemOptionController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Admin\FoodController;
 use App\Http\Controllers\Api\Admin\BannerController;
+use App\Http\Controllers\Api\Admin\FoodOptionSelectController;
 use App\Http\Controllers\Api\BannerController as ApiBannerController;
 use App\Http\Controllers\Api\FoodController as ApiFoodController;
 use App\Http\Controllers\Api\FoodOptionController;
@@ -89,6 +90,7 @@ Route::get('/admin/dashboard/statistics', [DashboardController::class, 'statisti
 // Foods [Admin]
 Route::get('/foods', [FoodController::class, 'index']);
 Route::post('/foods', [FoodController::class, 'store']);
+Route::get('/foods/select', [FoodOptionSelectController::class, 'index']);
 Route::get('/foods/{id}', [FoodController::class, 'show']);
 Route::put('/foods/{id}', [FoodController::class, 'update']);
 Route::delete('/foods/{id}', [FoodController::class, 'destroy']);

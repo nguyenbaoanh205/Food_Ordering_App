@@ -86,8 +86,10 @@ const form = ref({
 // 📥 Lấy danh sách món ăn
 const fetchFoods = async () => {
   try {
-    const res = await api.get('/foods')
-    foods.value = res.data.data || res.data // Tùy API trả về
+    const res = await api.get('/foods/select')
+    console.log(res.data.data);
+    
+    foods.value = res.data.data
   } catch (err) {
     alert('Failed to load food list')
   }

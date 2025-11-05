@@ -13,15 +13,25 @@ class FoodOptionController extends Controller
     {
         $query = FoodOption::query()->with('food:id,name');
 
-        if ($request->has('food_id')) {
-            $query->where('food_id', $request->food_id);
+        $search = $request->query('q');
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('food', function ($subQuery) use ($search) {
+                        $subQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
         }
+
+        $perPage = (int) $request->query('per_page', 20);
+        $foodOptions = $query->orderBy('food_id')->paginate($perPage);
 
         return response()->json([
             'status' => true,
-            'data' => $query->orderBy('food_id')->get()
+            'data' => $foodOptions
         ], 200);
     }
+
 
     // 🔹 Tạo mới tùy chọn món ăn
     public function store(Request $request)
