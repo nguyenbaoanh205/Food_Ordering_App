@@ -34,11 +34,11 @@ const options = {
   type: 'loop',
   perPage: 1,
   autoplay: true,
-  interval: 4000,
+  interval: 3000,
   pauseOnHover: true,
   arrows: false,
   pagination: false,
-  speed: 800,
+  speed: 700,
 }
 
 onMounted(async () => {
