@@ -26,7 +26,7 @@ export const useCartStore = defineStore("cart", {
                 this.items = [];
             }
         },
-        
+
         // 🛒 Thêm vào giỏ hàng (có topping, size)
         async addToCart(userId, foodId, quantity = 1, price = 0, sizeOptionId = null, toppingOptionIds = []) {
             try {
@@ -44,7 +44,7 @@ export const useCartStore = defineStore("cart", {
             }
         },
 
-    async clearCart() {
+        async clearCart() {
             this.items = [];
         },
     },
