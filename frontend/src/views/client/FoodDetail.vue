@@ -123,11 +123,13 @@ import { useRoute, useRouter } from 'vue-router'
 import api from '@/services/api'
 import { useToast } from 'vue-toastification'
 import { useUserStore } from '@/stores/user'
+import { useCartStore } from '@/stores/cart'
 
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
+const cartStore = useCartStore()
 const food = ref({})
 const relatedFoods = ref([])
 const feedbacks = ref([])
@@ -191,20 +193,16 @@ const addToCart = async () => {
         const basePrice = Number(food.value.price) || 0
         const sizeExtra = selectedSize.value ? Number(selectedSize.value.extra_price) : 0
         const toppingsExtra = selectedToppings.value.reduce((sum, t) => sum + Number(t.extra_price || 0), 0)
-
         const totalItemPrice = basePrice + sizeExtra + toppingsExtra
 
-        const payload = {
-            user_id: userId,
-            food_id: food.value.id,
-            quantity: quantity.value,
-            price: totalItemPrice, // ✅ Gửi đúng field backend cần
-            size_option_id: selectedSize.value ? selectedSize.value.id : null, // 🟢 thêm dòng này
-            topping_option_ids: selectedToppings.value.map(t => t.id),
-        }
-
-        await api.post('/cart/add', payload)
-        // console.log(payload);
+        await cartStore.addToCart(
+            userId,
+            food.value.id,
+            quantity.value,
+            totalItemPrice,
+            selectedSize.value ? selectedSize.value.id : null,
+            selectedToppings.value.map(t => t.id)
+        );
 
         toast.success('Added to cart successfully!')
         router.push('/cart')

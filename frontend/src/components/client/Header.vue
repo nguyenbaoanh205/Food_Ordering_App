@@ -3,7 +3,7 @@
     <div class="bg-box">
       <img :src="Image1" alt="" :style="{
         objectFit: 'cover',
-        objectPosition: positions[route.name] || 'top center'
+        objectPosition: 'top center'
       }">
     </div>
     <!-- header section strats -->
@@ -114,6 +114,10 @@
               <RouterLink :to="{ name: 'Cart' }"
                 class="icon-btn text-light d-flex align-items-center justify-content-center hover-bright text-decoration-none">
                 <i class="fas fa-shopping-cart"></i>
+                <span v-if="cartStore.cartCount > 0" class="position-absolute badge rounded-pill bg-danger"
+                  style="font-size: 0.7rem;">
+                  {{ cartStore.cartCount }}
+                </span>
               </RouterLink>
 
             </div>
@@ -131,55 +135,51 @@
 import Image1 from '@/assets/images/hero-bg.jpg';
 import Logo from '@/assets/images/logo_food_order.png';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { onMounted, watch, ref } from "vue";
 import Banner from './Banner.vue';
 import { useUserStore } from '@/stores/user';
+import { useCartStore } from '@/stores/cart'; // ✅ import store giỏ hàng
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const searchQuery = ref('')
+const cartStore = useCartStore(); // ✅ sử dụng store
+const searchQuery = ref('');
 
 const heights = {
   Home: '1000px',
-  Menu: '114px',
   About: '114px',
-  Book: '114px',
-  Login: '114px',
-  Register: '114px',
   FoodDetail: '114px',
-  Profile: '114px',
-  Contact: '114px',
-  Cart: '114px',
-};
-
-const positions = {
-  Menu: 'top center',
-  About: 'top center',
-  Book: 'top center',
-  Login: 'top center',
-  Register: 'top center',
-  FoodDetail: 'top center',
-  Profile: 'top center',
-  Contact: 'top center',
-  Cart: 'top center',
 };
 
 const searchFood = () => {
   if (searchQuery.value.trim() !== '') {
-    // Chuyển hướng sang trang danh sách món ăn có query
-    router.push({ name: 'Menu', query: { q: searchQuery.value } })
+    router.push({ name: 'Menu', query: { q: searchQuery.value } });
   }
-}
+};
 
 const logout = async () => {
   await userStore.logout();
   toast.success("Đăng xuất thành công!");
-  router.push("/"); // chuyển trang mà toast vẫn hiển thị
+  router.push("/");
 };
+
+// 🔄 Khi component mount hoặc user thay đổi
+onMounted(() => {
+  if (userStore.user?.id) cartStore.fetchCart(userStore.user.id);
+});
+
+watch(
+  () => userStore.user?.id,
+  (id) => {
+    if (id) cartStore.fetchCart(id);
+    else cartStore.clearCart();
+  }
+);
 </script>
+
 
 <style>
 .hero_area {
@@ -213,10 +213,9 @@ const logout = async () => {
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.btn-transparent:hover {
-  /* color: #0d6efd; */
+/* .btn-transparent:hover {
   transform: translateY(-1px);
-}
+} */
 
 .icon-btn {
   background: transparent;
@@ -226,14 +225,10 @@ const logout = async () => {
   height: 40px;
   transition: color 0.2s ease, transform 0.2s ease;
 }
-
+/* 
 .icon-btn:hover {
   color: #0d6efd;
   transform: scale(1.1);
-}
-
-/* .hover-bright:hover {
-  color: #0d6efd !important;
 } */
 
 .dropdown-menu {
@@ -254,13 +249,11 @@ const logout = async () => {
 
 .icon-btn:hover {
   color: #ffcc00;
-  /* Màu vàng sáng khi hover */
 }
 
 .place::placeholder {
   color: white !important;
   opacity: 1;
-  /* Giữ màu rõ, tránh mờ */
   font-size: 0.9rem;
 }
 
@@ -268,5 +261,24 @@ const logout = async () => {
   left: 50% !important;
   transform: translateX(-50%) !important;
   right: auto !important;
+}
+
+.badge {
+  min-width: 20px;
+  height: 20px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 0.75rem;
+  padding: 0;
+  border-radius: 50%;
+  right: -5px;
+  top: 20px;
+}
+
+@media (max-width: 768px) {
+  .header_section {
+    padding: 5px 0 !important;
+  }
+
 }
 </style>
