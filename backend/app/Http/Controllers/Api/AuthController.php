@@ -11,9 +11,6 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * 📝 Đăng ký tài khoản mới
-     */
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -30,20 +27,13 @@ class AuthController extends Controller
         // Tạo user
         $user = User::create($validated);
 
-        // Tạo token truy cập
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
             'status'  => true,
-            'message' => 'Đăng ký thành công',
+            'message' => 'Đăng ký thành công, vui lòng đăng nhập để tiếp tục.',
             'user'    => $user,
-            'token'   => $token,
         ], 201);
     }
 
-    /**
-     * 🔑 Đăng nhập
-     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -59,13 +49,18 @@ class AuthController extends Controller
             ]);
         }
 
-        // Xóa token cũ (nếu bạn muốn chỉ 1 phiên đăng nhập)
+        // ✅ Xóa token cũ (nếu muốn chỉ 1 phiên đăng nhập)
         $user->tokens()->delete();
 
-        // Tạo token mới
+        // ✅ Tạo token mới
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // Kiểm tra vai trò
+        // ✅ Lấy token vừa tạo (để cập nhật thời gian hết hạn)
+        $personalToken = $user->tokens()->latest()->first();
+        $personalToken->expires_at = now()->addHours(2); // token sống 2 tiếng
+        $personalToken->save();
+
+        // ✅ Kiểm tra vai trò để điều hướng
         $redirect = $user->role == 1 ? 'admin' : 'client';
 
         return response()->json([
@@ -73,13 +68,11 @@ class AuthController extends Controller
             'message'  => 'Đăng nhập thành công',
             'user'     => $user,
             'token'    => $token,
+            'expires_at' => $personalToken->expires_at->toDateTimeString(), // Gửi thời gian hết hạn về FE
             'redirect' => $redirect,
         ], 200);
     }
 
-    /**
-     * 🚪 Đăng xuất
-     */
     public function logout(Request $request)
     {
         if ($request->user()) {
@@ -92,9 +85,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * 🙍‍♂️ Lấy thông tin user hiện tại
-     */
     public function profile(Request $request)
     {
         return response()->json([
@@ -103,9 +93,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * ✏️ Cập nhật thông tin người dùng
-     */
     public function updateProfile(Request $request)
     {
         $user = $request->user();

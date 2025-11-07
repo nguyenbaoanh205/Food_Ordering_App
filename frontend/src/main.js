@@ -4,6 +4,7 @@ import echo from './plugins/echo'
 import router from './router'
 import { createPinia } from 'pinia'
 import VueApexCharts from 'vue3-apexcharts'
+import { useUserStore } from "@/stores/user";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
@@ -17,6 +18,11 @@ import "vue-toastification/dist/index.css";
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
+
+const userStore = useUserStore();
+if (!userStore.checkAuth()) {
+    userStore.logout();
+}
 app.config.globalProperties.$echo = echo
 app.use(VueApexCharts)
 app.use(router)
