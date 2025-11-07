@@ -4,23 +4,23 @@
       <!-- Tiêu đề -->
       <div class="heading_container text-center mb-4">
         <h2 class="fw-bold text-dark">
-          <i class="fa fa-shopping-basket me-2 text-warning"></i> Giỏ hàng
+          <i class="fa fa-shopping-basket me-2 text-warning"></i> Cart
+          <span class="text-muted fs-4" v-if="cartItems.length > 0">({{ cartItems.length }})</span>
         </h2>
       </div>
 
-      <!-- Nếu có sản phẩm -->
       <div v-if="cartItems.length > 0">
         <!-- Desktop layout -->
         <div class="table-responsive cart-desktop d-none d-md-block bg-white p-3 rounded-4 shadow-sm border">
-          <table class="table align-middle text-center mb-0">
+          <table class="table align-middle text-center mb-0 fixed-desktop">
             <thead class="table-light">
               <tr>
-                <th>Ảnh</th>
-                <th class="text-start">Sản phẩm</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
-                <th>Tổng</th>
-                <th>Hành động</th>
+                <th>Image</th>
+                <th class="text-start">Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -100,7 +100,7 @@
             </div>
             <div class="border-top px-3 py-2 text-end">
               <span class="fw-bold text-dark">
-                Tổng: {{ formatCurrency(getItemTotal(item)) }}
+                Total: {{ formatCurrency(getItemTotal(item)) }}
               </span>
             </div>
           </div>
@@ -109,12 +109,12 @@
         <!-- Tổng cộng -->
         <div class="text-end mt-4 cart-summary">
           <h4 class="fw-bold text-dark" style="text-align: right">
-            Tổng cộng:
+            Total Amount:
             <span class="text-danger">{{ formatCurrency(totalPrice) }}</span>
           </h4>
           <RouterLink :to="{ name: 'Checkout' }"
             class="btn btn-warning btn-lg rounded-pill shadow px-5 mt-3 text-dark fw-semibold">
-            <i class="fa fa-credit-card me-2"></i> Thanh toán
+            <i class="fa fa-credit-card me-2"></i> Check Out
           </RouterLink>
         </div>
       </div>
@@ -123,9 +123,9 @@
       <div v-else class="text-center py-5">
         <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Cart" class="img-fluid mb-3"
           style="width: 120px;" />
-        <h5 class="fw-bold text-dark mb-3">Giỏ hàng của bạn đang trống</h5>
+        <h5 class="fw-bold text-dark mb-3">Your Cart is Empty</h5>
         <RouterLink :to="{ name: 'Menu' }" class="btn btn-outline-dark rounded-pill px-4">
-          <i class="fa fa-utensils me-2"></i> Xem Menu
+          <i class="fa fa-utensils me-2"></i> View Menu
         </RouterLink>
       </div>
     </div>
@@ -136,7 +136,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import api from '@/services/api'
+import { useCartStore } from '@/stores/cart';
 
+const cartStore = useCartStore();
 const userStore = useUserStore()
 const userId = userStore.user?.id
 
@@ -263,6 +265,26 @@ onMounted(fetchCart)
 
   .btn-lg {
     width: 60%;
+  }
+}
+
+@media (min-width: 768px) {
+  .fixed-desktop {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .fixed-desktop th:nth-child(1) { width: 100px; }  /* Image */
+  .fixed-desktop th:nth-child(2) { width: 210px; }  /* Product */
+  .fixed-desktop th:nth-child(3) { width: 120px; }  /* Price */
+  .fixed-desktop th:nth-child(4) { width: 140px; }  /* Quantity */
+  .fixed-desktop th:nth-child(5) { width: 120px; }  /* Total */
+  .fixed-desktop th:nth-child(6) { width: 100px; }  /* Action */
+
+  /* Giúp nội dung không tràn */
+  .fixed-desktop td, 
+  .fixed-desktop th {
+    word-wrap: break-word;
   }
 }
 </style>

@@ -2,19 +2,19 @@
     <section class="order_history_section layout_padding">
         <div class="container">
             <div class="heading_container heading_center mb-4">
-                <h2>Lịch sử đơn hàng</h2>
+                <h2>Order History</h2>
             </div>
 
             <div v-if="loading" class="text-center py-5">
                 <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <p class="mt-3">Đang tải đơn hàng...</p>
+                <p class="mt-3">Loading orders...</p>
             </div>
 
             <div v-else-if="orders.length === 0" class="text-center py-5">
-                <p>Bạn chưa có đơn hàng nào.</p>
-                <router-link to="/menu" class="btn btn-primary">Đặt món ngay</router-link>
+                <p>You have no orders yet.</p>
+                <router-link to="/menu" class="btn btn-primary">Order now</router-link>
             </div>
 
             <div v-else class="accordion" id="orderAccordion">
@@ -24,7 +24,7 @@
                             :data-bs-target="'#collapse' + order.id" aria-expanded="false"
                             :aria-controls="'collapse' + order.id">
                             <div class="d-flex justify-content-between w-100">
-                                <span>Đơn #{{ order.id }}</span>
+                                <span><strong>Order #{{ order.id }}</strong></span>
                                 <span>{{ formatDate(order.created_at) }}</span>
                                 <span class="text-success fw-bold">{{ formatPrice(order.total) }}</span>
 
@@ -47,12 +47,12 @@
                         <div class="accordion-body">
                             <!-- Thông tin người dùng -->
                             <div class="mb-3 p-3 border rounded bg-light">
-                                <h5>Thông tin người dùng</h5>
-                                <p><strong>Tên:</strong> {{ order.receiver_name }}</p>
-                                <p><strong>Điện thoại:</strong> {{ order.receiver_phone }}</p>
-                                <p v-if="order.receiver_address"><strong>Địa chỉ:</strong> {{ order.receiver_address }}
+                                <h5>Information User</h5>
+                                <p><strong>Full Name:</strong> {{ order.receiver_name }}</p>
+                                <p><strong>Phone:</strong> {{ order.receiver_phone }}</p>
+                                <p v-if="order.receiver_address"><strong>Address:</strong> {{ order.receiver_address }}
                                 </p>
-                                <p><strong>Ghi chú:</strong> {{ order.note || 'Không có' }}</p>
+                                <p><strong>Note:</strong> {{ order.note || 'Không có' }}</p>
                             </div>
 
                             <!-- Thông tin người đặt -->
@@ -77,7 +77,7 @@
                                             <strong>{{ item.food.name }}</strong>
                                             <div v-if="item.options.length" class="mt-1 small text-muted">
                                                 <div v-if="item.options.filter(o => o.option.type === 'size').length">
-                                                    <strong>Size:</strong>
+                                                    <strong>Size: </strong>
                                                     <span
                                                         v-for="opt in item.options.filter(o => o.option.type === 'size')"
                                                         :key="opt.id">
@@ -87,7 +87,7 @@
                                                 </div>
                                                 <div
                                                     v-if="item.options.filter(o => o.option.type === 'topping').length">
-                                                    <strong>Topping:</strong>
+                                                    <strong>Topping: </strong>
                                                     <span
                                                         v-for="opt in item.options.filter(o => o.option.type === 'topping')"
                                                         :key="opt.id">
@@ -287,7 +287,7 @@ watch(() => userStore.user, (newUser, oldUser) => {
     /* Badge thu nhỏ */
     .accordion-button .badge {
         font-size: 0.75rem;
-        padding: 0.3em 0.5em;
+        padding: 0.2em 0.7em;
     }
 }
 </style>

@@ -52,7 +52,7 @@
               <!-- 🔍 Search -->
               <div class="d-flex align-items-center bg-dark rounded-pill px-2" style="border: 1px #ffffff4d solid;">
                 <input v-model="searchQuery" @keyup.enter="searchFood" style="width: 125px;" type="text"
-                  class="form-control place bg-transparent border-0 text-light" placeholder="Tìm món ăn..." />
+                  class="form-control place bg-transparent border-0 text-light" placeholder="Search dish..." />
                 <button class="icon-btn text-light d-flex align-items-center justify-content-center hover-bright"
                   type="button" @click="searchFood">
                   <i class="fas fa-search"></i>
@@ -73,7 +73,7 @@
                   <template v-if="userStore.user">
                     <li>
                       <RouterLink class="dropdown-item py-2" :to="{ name: 'Profile' }">
-                        <i class="fas fa-id-card me-2 text-secondary"></i> Hồ sơ của tôi
+                        <i class="fas fa-id-card me-2 text-secondary"></i> My profile
                       </RouterLink>
                     </li>
                     <li>
@@ -81,7 +81,7 @@
                     </li>
                     <li>
                       <RouterLink class="dropdown-item py-2" :to="{ name: 'OrderHistoryClient' }">
-                        <i class="fas fa-history me-2 text-secondary"></i> Lịch sử đơn hàng
+                        <i class="fas fa-history me-2 text-secondary"></i> Order history
                       </RouterLink>
                     </li>
                     <li>
@@ -89,7 +89,7 @@
                     </li>
                     <li>
                       <button class="dropdown-item text-danger py-2" @click="logout">
-                        <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                        <i class="fas fa-sign-out-alt me-2"></i> Sign out
                       </button>
                     </li>
                   </template>
@@ -98,12 +98,12 @@
                   <template v-else>
                     <li>
                       <RouterLink class="dropdown-item py-2" :to="{ name: 'Login' }">
-                        <i class="fas fa-sign-in-alt me-2 text-success"></i> Đăng nhập
+                        <i class="fas fa-sign-in-alt me-2 text-success"></i> Log in
                       </RouterLink>
                     </li>
                     <li>
                       <RouterLink class="dropdown-item py-2" :to="{ name: 'Register' }">
-                        <i class="fas fa-user-plus me-2 text-primary"></i> Đăng ký
+                        <i class="fas fa-user-plus me-2 text-primary"></i> Register
                       </RouterLink>
                     </li>
                   </template>
@@ -138,14 +138,14 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { onMounted, watch, ref } from "vue";
 import Banner from './Banner.vue';
 import { useUserStore } from '@/stores/user';
-import { useCartStore } from '@/stores/cart'; // ✅ import store giỏ hàng
+import { useCartStore } from '@/stores/cart';
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const cartStore = useCartStore(); // ✅ sử dụng store
+const cartStore = useCartStore(); 
 const searchQuery = ref('');
 
 const heights = {

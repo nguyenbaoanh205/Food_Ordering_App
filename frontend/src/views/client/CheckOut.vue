@@ -2,16 +2,15 @@
     <section class="checkout_section py-5">
         <div class="container">
             <div class="heading_container heading_center mb-4">
-                <h2 class="fw-bold text-dark">Thanh toán đơn hàng</h2>
-                <p class="text-muted">Kiểm tra thông tin trước khi xác nhận nhé!</p>
+                <h2 class="fw-bold text-dark">Order Payment</h2>
+                <p class="text-muted">Check the information before confirming!</p>
             </div>
 
             <div v-if="cartItems.length > 0" class="row g-4">
-                <!-- 🧾 Danh sách món -->
                 <div class="col-lg-7">
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                         <div class="card-header bg-warning text-dark fw-semibold py-3">
-                            <i class="fa fa-utensils me-2"></i> Danh sách món
+                            <i class="fa fa-utensils me-2"></i> List of dishes
                         </div>
 
                         <ul class="list-group list-group-flush">
@@ -24,7 +23,7 @@
                                         <h6 class="fw-semibold mb-1">{{ item.food.name }}</h6>
                                         <ul class="small text-muted mb-1 ps-3" v-if="item.options?.length">
                                             <li v-for="opt in item.options" :key="opt.id">
-                                                {{ opt.option.type.charAt(0).toUpperCase() + opt.option.type.slice(1)}}:
+                                                {{ opt.option.type.charAt(0).toUpperCase() + opt.option.type.slice(1) }}:
                                                 {{ opt.option.name }}
                                                 <!-- (+{{ formatPrice(opt.option.extra_price) }}) -->
                                             </li>
@@ -42,67 +41,60 @@
                     </div>
                 </div>
 
-                <!-- 💳 Thông tin thanh toán -->
                 <div class="col-lg-5">
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                         <div class="card-header bg-success text-white fw-semibold py-3">
-                            <i class="fa fa-receipt me-2"></i> Thông tin thanh toán
+                            <i class="fa fa-receipt me-2"></i> Payment information
                         </div>
 
                         <div class="card-body">
-                            <!-- Họ tên -->
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Họ và tên</label>
+                                <label class="form-label fw-semibold">Full name</label>
                                 <input v-model="checkoutInfo.name" type="text" class="form-control"
-                                    placeholder="Nhập họ tên người nhận" />
+                                    placeholder="Enter recipient's full name" />
                             </div>
 
-                            <!-- SĐT -->
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Số điện thoại</label>
+                                <label class="form-label fw-semibold">Phone</label>
                                 <input v-model="checkoutInfo.phone" type="tel" class="form-control"
-                                    placeholder="VD: 0987 654 321" />
+                                    placeholder="Example: 0987 654 321" />
                             </div>
 
-                            <!-- Địa chỉ -->
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Địa chỉ nhận hàng</label>
+                                <label class="form-label fw-semibold">Delivery address</label>
                                 <textarea v-model="checkoutInfo.address" rows="2" class="form-control"
-                                    placeholder="Nhập địa chỉ giao hàng cụ thể"></textarea>
+                                    placeholder="Enter detailed delivery address"></textarea>
                             </div>
 
-                            <!-- Ghi chú -->
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Ghi chú (tùy chọn)</label>
+                                <label class="form-label fw-semibold">Notes (optional)</label>
                                 <textarea v-model="checkoutInfo.note" rows="2" class="form-control"
-                                    placeholder="VD: Không hành, ít cay, giao giờ hành chính..."></textarea>
+                                    placeholder="Example: No onions, less spicy, deliver during office hours..."></textarea>
                             </div>
 
-                            <!-- Phương thức thanh toán -->
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Phương thức thanh toán</label>
+                                <label class="form-label fw-semibold">Payment method</label>
                                 <select v-model="paymentMethod" class="form-select">
-                                    <option value="cash">💵 Tiền mặt khi nhận hàng</option>
+                                    <option value="cash">💵 Cash on delivery</option>
                                     <option value="momo">📱 Momo</option>
-                                    <option value="credit_card">💳 Thẻ tín dụng</option>
+                                    <option value="credit_card">💳 Credit card</option>
                                     <option value="paypal">🅿️ Paypal</option>
                                     <option value="stripe">💠 Stripe</option>
                                 </select>
                             </div>
 
-                            <!-- Tổng cộng -->
                             <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-3">
-                                <h5 class="m-0 fw-bold text-dark">Tổng cộng:</h5>
+                                <h5 class="m-0 fw-bold text-dark">Total:</h5>
                                 <h5 class="m-0 text-danger fw-bold">{{ formatPrice(totalAmount) }}</h5>
                             </div>
 
-                            <!-- Nút đặt hàng -->
                             <button class="btn btn-success w-100 py-3 fw-semibold rounded-pill shadow-sm"
                                 @click="handleCheckout" :disabled="loading">
-                                <span v-if="loading"><i class="fa fa-spinner fa-spin me-2"></i>Đang xử lý...</span>
-                                <span v-else><i class="fa fa-check-circle me-2"></i>Đặt hàng ngay</span>
+                                <span v-if="loading"><i class="fa fa-spinner fa-spin me-2"></i>Processing...</span>
+                                <span v-else><i class="fa fa-check-circle me-2"></i>Place order now</span>
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>
