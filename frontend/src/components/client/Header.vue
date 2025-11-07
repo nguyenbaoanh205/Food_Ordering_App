@@ -7,7 +7,7 @@
       }">
     </div>
     <!-- header section strats -->
-    <header class="header_section">
+    <header class="header_section" style="z-index: 9999 !important;">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container p-0">
           <RouterLink class="navbar-brand" :to="{ name: 'Home' }">

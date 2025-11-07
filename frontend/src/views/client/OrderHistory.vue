@@ -52,7 +52,6 @@
                                 <p><strong>Điện thoại:</strong> {{ order.receiver_phone }}</p>
                                 <p v-if="order.receiver_address"><strong>Địa chỉ:</strong> {{ order.receiver_address }}
                                 </p>
-                                <!-- Ghi chú -->
                                 <p><strong>Ghi chú:</strong> {{ order.note || 'Không có' }}</p>
                             </div>
 
@@ -222,6 +221,73 @@ watch(() => userStore.user, (newUser, oldUser) => {
 }
 
 .list-group-item {
-    gap: 12px;
+    gap: 8px;
+}
+
+.badge {
+    border-radius: 45px;
+}
+
+/* Mobile chỉnh lại layout */
+@media (max-width: 768px) {
+    .list-group-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        padding: 0.7rem;
+    }
+
+    .list-group-item .col-md-6,
+    .list-group-item .col-md-3 {
+        width: 100%;
+    }
+
+    /* Ảnh và thông tin món xếp hàng ngang, nhưng nhỏ hơn */
+    .list-group-item .col-md-6 {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .list-group-item img.food-img {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 6px;
+    }
+
+    /* Thông tin size + topping nhỏ gọn */
+    .list-group-item .small.text-muted {
+        font-size: 0.85rem;
+        line-height: 1.3;
+    }
+
+    /* Quantity hiển thị rõ hơn, đặt gần giá */
+    .list-group-item .col-md-3.text-center {
+        text-align: left !important;
+        margin-top: 0.5rem;
+    }
+
+    /* Giá tổng làm nổi bật */
+    .list-group-item .col-md-3.text-end {
+        width: 100%;
+        text-align: right;
+        margin-top: 0.25rem;
+    }
+
+    /* Accordion title gọn lại */
+    .accordion-button {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+
+    .accordion-button>.d-flex span {
+        font-size: 0.9rem;
+    }
+
+    /* Badge thu nhỏ */
+    .accordion-button .badge {
+        font-size: 0.75rem;
+        padding: 0.3em 0.5em;
+    }
 }
 </style>

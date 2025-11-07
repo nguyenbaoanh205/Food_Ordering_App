@@ -1,34 +1,41 @@
 <template>
-    <section class="checkout_section layout_padding">
+    <section class="checkout_section py-5">
         <div class="container">
             <div class="heading_container heading_center mb-4">
-                <h2>Thanh toán đơn hàng</h2>
+                <h2 class="fw-bold text-dark">Thanh toán đơn hàng</h2>
+                <p class="text-muted">Kiểm tra thông tin trước khi xác nhận nhé!</p>
             </div>
 
-            <div v-if="cartItems.length > 0" class="row">
-                <!-- 🧾 Thông tin đơn hàng -->
-                <div class="col-md-7">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">Danh sách món</h5>
+            <div v-if="cartItems.length > 0" class="row g-4">
+                <!-- 🧾 Danh sách món -->
+                <div class="col-lg-7">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-header bg-warning text-dark fw-semibold py-3">
+                            <i class="fa fa-utensils me-2"></i> Danh sách món
                         </div>
+
                         <ul class="list-group list-group-flush">
-                            <li v-for="item in displayCartItems" :key="item.id" class="list-group-item">
-                                <div class="d-flex justify-content-between align-items-center">
+                            <li v-for="item in displayCartItems" :key="item.id"
+                                class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div class="d-flex align-items-start">
+                                    <img :src="item.food.image || '/images/default-food.jpg'"
+                                        class="rounded-3 me-3 food-img" alt="Food" />
                                     <div>
-                                        <strong>{{ item.food.name }}</strong>
-                                        <ul class="mb-1 small text-muted ps-3">
+                                        <h6 class="fw-semibold mb-1">{{ item.food.name }}</h6>
+                                        <ul class="small text-muted mb-1 ps-3" v-if="item.options?.length">
                                             <li v-for="opt in item.options" :key="opt.id">
+                                                {{ opt.option.type.charAt(0).toUpperCase() + opt.option.type.slice(1)}}:
                                                 {{ opt.option.name }}
-                                                (+{{ formatPrice(opt.option.extra_price) }})
+                                                <!-- (+{{ formatPrice(opt.option.extra_price) }}) -->
                                             </li>
                                         </ul>
-                                        <small>Số lượng: {{ item.quantity }}</small>
+                                        <small class="text-muted">Quantity: x{{ item.quantity }}</small>
                                     </div>
-                                    <div class="text-end">
-                                        <div>{{ formatPrice(item.displayPrice) }}/món</div>
-                                        <div class="fw-bold text-danger">{{ formatPrice(item.totalPrice) }}</div>
-                                    </div>
+                                </div>
+
+                                <div class="text-end">
+                                    <!-- <div class="text-secondary small">{{ formatPrice(item.displayPrice) }}/món</div> -->
+                                    <div class="fw-bold text-danger">{{ formatPrice(item.totalPrice) }}</div>
                                 </div>
                             </li>
                         </ul>
@@ -36,65 +43,64 @@
                 </div>
 
                 <!-- 💳 Thông tin thanh toán -->
-                <div class="col-md-5">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0">Thông tin thanh toán</h5>
+                <div class="col-lg-5">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-header bg-success text-white fw-semibold py-3">
+                            <i class="fa fa-receipt me-2"></i> Thông tin thanh toán
                         </div>
 
                         <div class="card-body">
-                            <!-- 🧍‍♂️ Thông tin người nhận -->
+                            <!-- Họ tên -->
                             <div class="mb-3">
-                                <label class="form-label">Họ và tên</label>
+                                <label class="form-label fw-semibold">Họ và tên</label>
                                 <input v-model="checkoutInfo.name" type="text" class="form-control"
-                                    placeholder="Nhập họ và tên người nhận" />
+                                    placeholder="Nhập họ tên người nhận" />
                             </div>
 
+                            <!-- SĐT -->
                             <div class="mb-3">
-                                <label class="form-label">Số điện thoại</label>
+                                <label class="form-label fw-semibold">Số điện thoại</label>
                                 <input v-model="checkoutInfo.phone" type="tel" class="form-control"
-                                    placeholder="VD: 0987654321" />
+                                    placeholder="VD: 0987 654 321" />
                             </div>
 
+                            <!-- Địa chỉ -->
                             <div class="mb-3">
-                                <label class="form-label">Địa chỉ nhận hàng</label>
-                                <textarea v-model="checkoutInfo.address" class="form-control" rows="2"
-                                    placeholder="Nhập địa chỉ giao hàng"></textarea>
+                                <label class="form-label fw-semibold">Địa chỉ nhận hàng</label>
+                                <textarea v-model="checkoutInfo.address" rows="2" class="form-control"
+                                    placeholder="Nhập địa chỉ giao hàng cụ thể"></textarea>
                             </div>
 
+                            <!-- Ghi chú -->
                             <div class="mb-3">
-                                <label class="form-label">Ghi chú (tùy chọn)</label>
-                                <textarea v-model="checkoutInfo.note" class="form-control" rows="2"
-                                    placeholder="VD: Không ăn cay, giao giờ hành chính…">
-                                </textarea>
+                                <label class="form-label fw-semibold">Ghi chú (tùy chọn)</label>
+                                <textarea v-model="checkoutInfo.note" rows="2" class="form-control"
+                                    placeholder="VD: Không hành, ít cay, giao giờ hành chính..."></textarea>
                             </div>
 
-                            <!-- 💰 Phương thức thanh toán -->
+                            <!-- Phương thức thanh toán -->
                             <div class="mb-3">
-                                <label class="form-label">Phương thức thanh toán</label>
+                                <label class="form-label fw-semibold">Phương thức thanh toán</label>
                                 <select v-model="paymentMethod" class="form-select">
-                                    <option value="cash">💵 Tiền mặt</option>
+                                    <option value="cash">💵 Tiền mặt khi nhận hàng</option>
+                                    <option value="momo">📱 Momo</option>
                                     <option value="credit_card">💳 Thẻ tín dụng</option>
                                     <option value="paypal">🅿️ Paypal</option>
-                                    <option value="momo">📱 Momo</option>
                                     <option value="stripe">💠 Stripe</option>
                                 </select>
                             </div>
 
-                            <!-- Tổng tiền -->
-                            <div class="border-top pt-3 mb-3">
-                                <h5 class="text-end mb-0">
-                                    Tổng cộng:
-                                    <span class="text-danger fw-bold">
-                                        {{ formatPrice(totalAmount) }}
-                                    </span>
-                                </h5>
+                            <!-- Tổng cộng -->
+                            <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-3">
+                                <h5 class="m-0 fw-bold text-dark">Tổng cộng:</h5>
+                                <h5 class="m-0 text-danger fw-bold">{{ formatPrice(totalAmount) }}</h5>
                             </div>
 
                             <!-- Nút đặt hàng -->
-                            <button class="btn btn-success w-100" @click="handleCheckout" :disabled="loading">
-                                <span v-if="loading">Đang xử lý...</span>
-                                <span v-else>Đặt hàng ngay</span>
+                            <button class="btn btn-success w-100 py-3 fw-semibold rounded-pill shadow-sm"
+                                @click="handleCheckout" :disabled="loading">
+                                <span v-if="loading"><i class="fa fa-spinner fa-spin me-2"></i>Đang xử lý...</span>
+                                <span v-else><i class="fa fa-check-circle me-2"></i>Đặt hàng ngay</span>
                             </button>
                         </div>
                     </div>
@@ -103,8 +109,12 @@
 
             <!-- 🚫 Giỏ hàng trống -->
             <div v-else class="text-center mt-5">
-                <p>Giỏ hàng của bạn đang trống.</p>
-                <router-link to="/menu" class="btn btn-primary">Quay lại menu</router-link>
+                <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty" width="180"
+                    class="mb-3" />
+                <h5>Giỏ hàng của bạn đang trống.</h5>
+                <router-link to="/menu" class="btn btn-warning rounded-pill mt-3 px-4">
+                    <i class="fa fa-utensils me-2"></i> Quay lại menu
+                </router-link>
             </div>
         </div>
     </section>
@@ -238,25 +248,54 @@ onMounted(() => {
 </script>
 
 
+
 <style scoped>
 .checkout_section {
-    padding: 40px 0;
+    background: #fff;
+    color: #222;
+}
+
+.food-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
 }
 
 .card {
+    border-radius: 15px !important;
+}
+
+.form-control,
+.form-select,
+textarea {
     border-radius: 12px;
-    overflow: hidden;
+    padding: 10px 14px;
 }
 
-.card-header {
-    font-weight: 600;
+.btn {
+    transition: all 0.2s ease;
 }
 
-.form-label {
-    font-weight: 500;
+.btn:hover {
+    transform: translateY(-2px);
 }
 
-textarea.form-control {
-    resize: none;
+@media (max-width: 768px) {
+    .food-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    .card-header {
+        font-size: 1rem;
+    }
+
+    .checkout_section {
+        padding: 1rem;
+    }
 }
 </style>
