@@ -27,6 +27,11 @@ class AdminMiddleware
             return response()->json(['message' => 'Không có quyền truy cập.'], 403);
         }
 
+        // Nếu là admin nhưng không ở trong khu vực /admin → chặn
+        if (!$request->is('admin/*')) {
+            return response()->json(['message' => 'Admin không được truy cập khu vực khách hàng.'], 403);
+        }
+
         // Nếu hợp lệ
         return $next($request);
     }

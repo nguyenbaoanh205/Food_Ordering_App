@@ -2,16 +2,16 @@
   <footer class="footer_section">
     <div class="container">
       <div class="row g-5">
-        <!-- Cột 1: Liên hệ -->
+        <!-- Column 1: Contact -->
         <div class="col-lg-4 col-md-6 footer-col">
-          <div class="footer_contact">
+          <div class="footer_contact p-2">
             <h4 class="footer-title">
-              <i class="fas fa-headset me-2"></i> Liên Hệ Chúng Tôi
+              <i class="fas fa-headset me-2"></i> Contact Us
             </h4>
             <div class="contact_link_box">
               <a href="#" class="contact-item">
                 <i class="fas fa-map-marker-alt"></i>
-                <span>123 Đường Ẩm Thực, Q.1, TP.HCM</span>
+                <span>123 Food Street, District 1, Ho Chi Minh City</span>
               </a>
               <a href="tel:+841234567890" class="contact-item">
                 <i class="fas fa-phone-alt"></i>
@@ -25,50 +25,53 @@
           </div>
         </div>
 
-        <!-- Cột 2: Thương hiệu & Mô tả -->
+        <!-- Column 2: Brand & Description -->
         <div class="col-lg-4 col-md-6 footer-col text-center text-md-start">
-          <div class="footer_detail">
+          <div class="footer_detail p-2">
             <a href="#" class="footer-logo">
-              <span class="brand-name">Feane</span>
+              <span class="brand-name">Order Food</span>
               <i class="fas fa-utensils ms-2"></i>
             </a>
             <p class="footer-desc">
-              Giao món ăn nóng hổi, nhanh chóng trong vòng 30 phút. 
-              Tươi ngon mỗi ngày – từ bếp đến tay bạn!
+              Delivering hot and fresh meals within 30 minutes.
+              Fresh every day – from the kitchen to your hands!
             </p>
             <div class="footer_social">
               <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" aria-label="Zalo"><i class="fab fa-facebook-messenger"></i></a>
+              <a href="#" aria-label="Messenger"><i class="fab fa-facebook-messenger"></i></a>
               <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
               <a href="#" aria-label="Tiktok"><i class="fab fa-tiktok"></i></a>
             </div>
           </div>
         </div>
 
-        <!-- Cột 3: Giờ mở cửa -->
-        <div class="col-lg-4 col-md-12 footer-col">
-          <h4 class="footer-title">
-            <i class="fas fa-clock me-2"></i> Giờ Mở Cửa
-          </h4>
-          <div class="opening-hours">
-            <p><strong>Hằng ngày:</strong> 10:00 - 22:00</p>
-            <p class="text-success"><i class="fas fa-check-circle"></i> Đang mở cửa</p>
-            <p class="mt-3">
-              <a href="#" class="btn-order-now">
-                <i class="fas fa-shopping-cart me-1"></i> Đặt Ngay
-              </a>
-            </p>
+        <!-- Column 3: Opening Hours -->
+        <div class="col-lg-4  col-md-12 footer-col">
+          <div class="footer_order p-2">
+            <h4 class="footer-title">
+              <i class="fas fa-clock me-2"></i> Opening Hours
+            </h4>
+            <div class="opening-hours">
+              <p><strong>Every day:</strong> 10:00 AM - 10:00 PM</p>
+              <p class="text-success"><i class="fas fa-check-circle"></i> Now Open</p>
+              <p class="mt-3">
+                <a href="#" class="btn-order-now">
+                  <i class="fas fa-shopping-cart me-1"></i> Order Now
+                </a>
+              </p>
+            </div>
           </div>
+
         </div>
       </div>
 
       <!-- Footer Bottom -->
       <div class="footer-info text-center mt-5">
         <p class="mb-0">
-          &copy; <span id="displayYear"></span> 
-          <strong> Feane</strong> – Tất cả quyền được bảo lưu.<br>
+          &copy; <span id="displayYear"></span>
+          <strong> Order Food</strong> – All rights reserved.<br>
           <small>
-            Phát triển bởi 
+            Developed by
             <a href="#" target="_blank" class="text-decoration-underline">
               Nguyen Bao Anh
             </a>
@@ -81,8 +84,9 @@
 
 <script setup>
 import { onMounted } from 'vue'
+import Logo from '@/assets/images/logo_food_order.png';
 
-// Cập nhật năm tự động
+// Auto-update year
 onMounted(() => {
   document.getElementById('displayYear').textContent = new Date().getFullYear()
 })
@@ -216,13 +220,16 @@ onMounted(() => {
   .footer-title {
     font-size: 1.2rem;
   }
+
   .footer-logo {
     font-size: 1.8rem;
     justify-content: center;
   }
+
   .footer_social {
     justify-content: center;
   }
+
   .btn-order-now {
     width: 100%;
     justify-content: center;

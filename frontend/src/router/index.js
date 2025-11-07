@@ -209,9 +209,16 @@ router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
   const user = userStore.user
 
+  // Nếu route yêu cầu admin mà user không phải admin → chặn
   if (to.meta.requiresAdmin && (!user || user.role !== 1)) {
     toast.error('Bạn không có quyền truy cập trang quản trị!')
     return next('/')
+  }
+
+  // Nếu là admin mà cố vào trang client (không có meta.requiresAdmin) → chặn luôn
+  if (user && user.role === 1 && !to.meta.requiresAdmin) {
+    toast.warning('Admin không thể truy cập khu vực khách hàng!')
+    return next('/admin')
   }
 
   next()

@@ -145,7 +145,7 @@ const toast = useToast();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const cartStore = useCartStore(); 
+const cartStore = useCartStore();
 const searchQuery = ref('');
 
 const heights = {
@@ -225,6 +225,7 @@ watch(
   height: 40px;
   transition: color 0.2s ease, transform 0.2s ease;
 }
+
 /* 
 .icon-btn:hover {
   color: #0d6efd;
