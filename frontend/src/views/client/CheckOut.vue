@@ -23,7 +23,8 @@
                                         <h6 class="fw-semibold mb-1">{{ item.food.name }}</h6>
                                         <ul class="small text-muted mb-1 ps-3" v-if="item.options?.length">
                                             <li v-for="opt in item.options" :key="opt.id">
-                                                {{ opt.option.type.charAt(0).toUpperCase() + opt.option.type.slice(1) }}:
+                                                {{ opt.option.type.charAt(0).toUpperCase() + opt.option.type.slice(1)
+                                                }}:
                                                 {{ opt.option.name }}
                                                 <!-- (+{{ formatPrice(opt.option.extra_price) }}) -->
                                             </li>
@@ -119,6 +120,9 @@ import { useUserStore } from '@/stores/user'
 import { useToast } from 'vue-toastification'
 import Swal from 'sweetalert2'
 import { useRouter, useRoute } from 'vue-router'
+import { useCartStore } from '@/stores/cart'
+
+const cartStore = useCartStore()
 const toast = useToast()
 const userStore = useUserStore()
 const router = useRouter()
@@ -169,24 +173,24 @@ const fetchCart = async () => {
         cartItems.value = res.data.items || []
     } catch (err) {
         console.error(err)
-        toast.error('Không thể tải giỏ hàng!')
+        toast.error('Unable to load cart!')
     }
 }
 
 // 💰 Xử lý đặt hàng
 const handleCheckout = async () => {
     if (!userStore.user) {
-        toast.error('Vui lòng đăng nhập trước khi thanh toán!')
+        toast.error('Please login before payment!')
         return
     }
 
     if (!checkoutInfo.value.name || !checkoutInfo.value.phone || !checkoutInfo.value.address) {
-        toast.warning('Vui lòng nhập đầy đủ thông tin người nhận!')
+        toast.warning('Please enter complete recipient information!')
         return
     }
 
     if (cartItems.value.length === 0) {
-        toast.warning('Giỏ hàng trống!')
+        toast.warning('Cart is empty!')
         return
     }
 
@@ -212,17 +216,17 @@ const handleCheckout = async () => {
 
         await api.post('/orders', payload)
 
-        // 🩵 Hiện popup cảm ơn
         await Swal.fire({
             icon: 'success',
-            title: 'Cảm ơn bạn!',
-            text: 'Thanh toán thành công. Đơn hàng của bạn đang được xử lý!',
+            title: 'Thank you!',
+            text: 'Payment successful. Your order is being processed!',
             confirmButtonText: 'OK',
             confirmButtonColor: '#3085d6'
         })
 
-        // 🧹 Dọn giỏ hàng và chuyển hướng
+        await cartStore.clearCart()
         cartItems.value = []
+        
         router.push('/order-histories')
     } catch (err) {
         console.error(err)

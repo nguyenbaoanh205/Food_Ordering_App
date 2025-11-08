@@ -26,7 +26,7 @@
                             <div class="d-flex justify-content-between w-100">
                                 <span><strong>Order #{{ order.id }}</strong></span>
                                 <span>{{ formatDate(order.created_at) }}</span>
-                                <span class="text-success fw-bold">{{ formatPrice(order.total) }}</span>
+                                <span class="fw-bold">{{ formatPrice(order.total) }}</span>
 
                                 <!-- Badge màu động -->
                                 <span class="badge" :class="{
