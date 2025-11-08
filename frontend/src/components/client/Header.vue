@@ -162,7 +162,7 @@ const searchFood = () => {
 
 const logout = async () => {
   await userStore.logout();
-  toast.success("Đăng xuất thành công!");
+  toast.success("Logout successfully!");
   router.push("/");
 };
 

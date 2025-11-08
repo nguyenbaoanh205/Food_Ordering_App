@@ -63,8 +63,8 @@ const handleLogin = async () => {
 
       <p class="text-center mt-4">
         <span class="text-muted">Don't have an account?</span>
-        <router-link to="/register" class="fw-bold text-decoration-none ms-1">
-          Sign up now
+        <router-link :to="{ name: 'Register' }" class="fw-bold text-decoration-none ms-1">
+          Register
         </router-link>
       </p>
 
