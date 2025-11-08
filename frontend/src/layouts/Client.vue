@@ -27,7 +27,7 @@ let channel = null
 function listenRealtime(userId) {
   channel = echo.channel(`user.${userId}`)
   channel.listen('.order.status.updated', (data) => {
-    toast.info(`📦 Đơn hàng #${data.id} đã chuyển trạng thái: ${data.status}`)
+    toast.info(`📦 Order #${data.id} has changed status: ${data.status}`)
   })
 }
 

@@ -98,7 +98,7 @@
                   <template v-else>
                     <li>
                       <RouterLink class="dropdown-item py-2" :to="{ name: 'Login' }">
-                        <i class="fas fa-sign-in-alt me-2 text-success"></i> Log in
+                        <i class="fas fa-sign-in-alt me-2 text-success"></i> Login
                       </RouterLink>
                     </li>
                     <li>

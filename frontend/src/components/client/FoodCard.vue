@@ -32,7 +32,4 @@ defineProps({
 </script>
 
 <style scoped>
-/* .detail-box {
-    height: 200px;
-} */
 </style>
