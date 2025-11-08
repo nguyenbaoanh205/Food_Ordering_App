@@ -117,59 +117,48 @@
 import { ref, computed, onMounted } from 'vue'
 import api from '@/services/api'
 import { useUserStore } from '@/stores/user'
+import { useCartStore } from '@/stores/cart'
 import { useToast } from 'vue-toastification'
 import Swal from 'sweetalert2'
-import { useRouter, useRoute } from 'vue-router'
-import { useCartStore } from '@/stores/cart'
+import { useRouter } from 'vue-router'
+import { loadStripe } from '@stripe/stripe-js'
 
+// Stores
+const userStore = useUserStore()
 const cartStore = useCartStore()
 const toast = useToast()
-const userStore = useUserStore()
 const router = useRouter()
+
+// State
 const cartItems = ref([])
-const paymentMethod = ref('cash')
 const loading = ref(false)
+const paymentMethod = ref('cash')
+const checkoutInfo = ref({ name: '', phone: '', address: '', note: '' })
 
-const checkoutInfo = ref({
-    name: '',
-    phone: '',
-    address: '',
-    note: ''
-})
-
-// 🧮 Tính tổng giá có size + topping
+// 🧮 Tính giá có options
 const displayCartItems = computed(() => {
     return cartItems.value.map(item => {
-        const optionTotal = item.options?.reduce((sum, o) => {
-            const extra = parseFloat(o.option?.extra_price || 0)
-            return sum + extra
-        }, 0) || 0
-
-        const foodPrice = parseFloat(item.food.price || 0)
-        const finalPrice = foodPrice + optionTotal
-        const total = finalPrice * item.quantity
-
-        return {
-            ...item,
-            displayPrice: finalPrice,
-            totalPrice: total
-        }
+        const optionTotal = item.options?.reduce((sum, o) => sum + parseFloat(o.option?.extra_price || 0), 0) || 0
+        const basePrice = parseFloat(item.food.price || 0)
+        const displayPrice = basePrice + optionTotal
+        const totalPrice = displayPrice * item.quantity
+        return { ...item, displayPrice, totalPrice }
     })
 })
 
+// Tổng đơn hàng
 const totalAmount = computed(() =>
-    displayCartItems.value.reduce((sum, i) => sum + i.totalPrice, 0)
+    displayCartItems.value.reduce((sum, item) => sum + item.totalPrice, 0)
 )
 
-// 💵 Định dạng tiền tệ USD
-const formatPrice = val =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(parseFloat(val))
+// Định dạng tiền tệ USD
+const formatPrice = val => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val)
 
-// 🛒 Lấy giỏ hàng từ DB
+// Lấy giỏ hàng
 const fetchCart = async () => {
+    if (!userStore.user) return
     try {
         const res = await api.get(`/users/${userStore.user.id}/cart`)
-        // console.log('🧾 Cart items:', res.data.items)
         cartItems.value = res.data.items || []
     } catch (err) {
         console.error(err)
@@ -177,7 +166,7 @@ const fetchCart = async () => {
     }
 }
 
-// 💰 Xử lý đặt hàng
+// 💰 Checkout
 const handleCheckout = async () => {
     if (!userStore.user) {
         toast.error('Please login before payment!')
@@ -189,60 +178,81 @@ const handleCheckout = async () => {
         return
     }
 
-    if (cartItems.value.length === 0) {
+    if (!cartItems.value.length) {
         toast.warning('Cart is empty!')
         return
     }
 
     loading.value = true
     try {
-        const payload = {
-            user_id: userStore.user.id,
-            payment_method: paymentMethod.value,
-            receiver_name: checkoutInfo.value.name,
-            receiver_phone: checkoutInfo.value.phone,
-            receiver_address: checkoutInfo.value.address,
-            note: checkoutInfo.value.note,
-            items: displayCartItems.value.map(item => ({
-                food_id: item.food.id,
-                quantity: item.quantity,
-                price: item.displayPrice,
-                options: item.options?.map(o => ({
-                    option_id: o.option.id,
-                    extra_price: o.option.extra_price
-                })) || []
-            }))
+        if (paymentMethod.value === 'stripe') {
+            const res = await api.post('/stripe/create-checkout-session', {
+                user_id: userStore.user.id,
+                receiver_name: checkoutInfo.value.name,
+                receiver_phone: checkoutInfo.value.phone,
+                receiver_address: checkoutInfo.value.address,
+                note: checkoutInfo.value.note,
+                items: displayCartItems.value.map(item => ({
+                    id: item.food.id,
+                    name: item.food.name,
+                    quantity: item.quantity,
+                    price: item.displayPrice, // phải là tổng = base + topping + size
+                    options: item.options?.map(o => ({
+                        option_id: o.option.id,
+                        extra_price: o.option.extra_price
+                    })) || []
+                }))
+            });
+
+            window.location.href = res.data.url; // redirect sang Stripe Checkout page
+            return;
+        } else {
+            // Các phương thức khác (cash, momo, paypal)
+            const payload = {
+                user_id: userStore.user.id,
+                payment_method: paymentMethod.value,
+                receiver_name: checkoutInfo.value.name,
+                receiver_phone: checkoutInfo.value.phone,
+                receiver_address: checkoutInfo.value.address,
+                note: checkoutInfo.value.note,
+                items: displayCartItems.value.map(item => ({
+                    food_id: item.food.id,
+                    quantity: item.quantity,
+                    price: item.displayPrice,
+                    options: item.options?.map(o => ({
+                        option_id: o.option.id,
+                        extra_price: o.option.extra_price
+                    })) || []
+                }))
+            }
+
+            await api.post('/orders', payload)
+
+            await cartStore.clearCart()
+            cartItems.value = []
+
+            await Swal.fire({
+                icon: 'success',
+                title: 'Thank you!',
+                text: 'Payment successful. Your order is being processed!',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            })
         }
 
-        await api.post('/orders', payload)
-
-        await Swal.fire({
-            icon: 'success',
-            title: 'Thank you!',
-            text: 'Payment successful. Your order is being processed!',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#3085d6'
-        })
-
-        await cartStore.clearCart()
-        cartItems.value = []
-        
+        // await cartStore.clearCart()
+        // cartItems.value = []
         router.push('/order-histories')
     } catch (err) {
         console.error(err)
-        toast.error('Lỗi khi đặt hàng!')
+        toast.error('Error placing order!')
     } finally {
         loading.value = false
     }
 }
 
-onMounted(() => {
-    if (userStore.user) {
-        fetchCart()
-    }
-})
+onMounted(() => fetchCart())
 </script>
-
 
 
 <style scoped>

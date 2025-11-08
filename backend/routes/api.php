@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderHistoryClientController;
 use App\Http\Controllers\Api\OrderItemOptionController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\StripeController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,10 +34,15 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Carts
     Route::get('/cart-items/{id}/options', [CartItemOptionController::class, 'index']);
     Route::get('/order-details/{id}/options', [OrderItemOptionController::class, 'index']);
+    Route::post('/cart/clear', [CartController::class, 'clear']);
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+// Stripe Payment
+Route::post('/stripe/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
+Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
 
 // Foods [Client]
 Route::get('/foods-client', [ApiFoodController::class, 'index']);

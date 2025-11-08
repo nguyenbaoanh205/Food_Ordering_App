@@ -108,4 +108,17 @@ class CartController extends Controller
 
         return response()->json(['message' => 'Item removed']);
     }
+
+    public function clear(Request $request)
+    {
+        $user = $request->user(); // phải tồn tại
+
+        if (!$user || !$user->cart) {
+            return response()->json(['message' => 'No cart found'], 404);
+        }
+
+        $user->cart->items()->delete();
+
+        return response()->json(['message' => 'Cart cleared']);
+    }
 }

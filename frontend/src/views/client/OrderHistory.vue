@@ -125,12 +125,15 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import api from '@/services/api'
 import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import { useCartStore } from '@/stores/cart'
 import echo from '@/plugins/echo'
 
 const userStore = useUserStore()
 const router = useRouter()
+const route = useRoute()
+const cartStore = useCartStore()
 const toast = useToast()
 
 const orders = ref([])
@@ -181,9 +184,21 @@ function stopListening(userId) {
 }
 
 // 🔄 Mounted: fetch và đăng ký realtime
-onMounted(() => {
-    fetchOrders()
+onMounted(async () => {
+    await fetchOrders()
     if (userStore.user?.id) listenRealtime(userStore.user.id)
+
+    if (route.query.success === 'true') {
+        try {
+            await api.post('/cart/clear', {}, {
+                headers: { Authorization: `Bearer ${userStore.token}` }
+            })
+
+            cartStore.clearCart()
+        } catch (err) {
+            console.error(err)
+        }
+    }
 })
 
 // 🔄 Trước khi unmount: hủy lắng nghe
