@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PaymentMethod;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -107,15 +107,15 @@ class StripeController extends Controller
     }
 
     // Webhook Stripe (tuỳ chọn)
-    public function handleWebhook(Request $request)
-    {
-        // Nếu có webhook secret
-        // $payload = $request->getContent();
-        // $sigHeader = $request->header('Stripe-Signature');
-        // $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, env('STRIPE_WEBHOOK_SECRET'));
+    // public function handleWebhook(Request $request)
+    // {   
+    //     Nếu có webhook secret
+    //     $payload = $request->getContent();
+    //     $sigHeader = $request->header('Stripe-Signature');
+    //     $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, env('STRIPE_WEBHOOK_SECRET'));
 
-        // Khi checkout.session.completed
-        // $session = $event->data->object;
-        // Cập nhật order payment_status = paid
-    }
+    //     Khi checkout.session.completed
+    //     $session = $event->data->object;
+    //     Cập nhật order payment_status = paid
+    // }
 }

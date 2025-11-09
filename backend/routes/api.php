@@ -18,7 +18,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderHistoryClientController;
 use App\Http\Controllers\Api\OrderItemOptionController;
 use App\Http\Controllers\Api\ReviewController;
-use App\Http\Controllers\Api\StripeController;
+use App\Http\Controllers\Api\PaymentMethod\StripeController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
