@@ -81,10 +81,6 @@ const routes = [
       {
         path: '/paypal/success',
         component: () => import('@/views/client/PaymentSuccess.vue')
-      },
-      {
-        path: '/payment-cancel',
-        component: () => import('@/views/client/PaymentCancel.vue')
       }
 
     ]
