@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\OderHistoryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderHistoryClientController;
 use App\Http\Controllers\Api\OrderItemOptionController;
+use App\Http\Controllers\Api\PaymentMethod\PayPalController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\PaymentMethod\StripeController;
 use App\Http\Controllers\Api\UserController;
@@ -34,7 +35,11 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Carts
     Route::get('/cart-items/{id}/options', [CartItemOptionController::class, 'index']);
     Route::get('/order-details/{id}/options', [OrderItemOptionController::class, 'index']);
-    Route::post('/cart/clear', [CartController::class, 'clear']);
+    Route::delete('/cart/clear', [CartController::class, 'clear']);
+
+    // PayPal Payment
+    Route::post('/paypal/create-payment', [PayPalController::class, 'createPayment']);
+    Route::post('/paypal/capture-payment', [PayPalController::class, 'capturePayment']);
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -42,7 +47,7 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 
 // Stripe Payment
 Route::post('/stripe/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
-Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
+
 
 // Foods [Client]
 Route::get('/foods-client', [ApiFoodController::class, 'index']);

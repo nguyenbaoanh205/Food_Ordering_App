@@ -36,6 +36,20 @@ export const useUserStore = defineStore("user", {
       }
     },
 
+    async register(form) {
+      try {
+        const res = await api.post("/register", form);
+        return res.data.message;
+      } catch (err) {
+        throw (
+          err.response?.data?.message ||
+          "Đăng ký thất bại!"
+        );
+      }
+    },
+
+
+
     async logout() {
       try {
         if (this.token) {
@@ -60,21 +74,21 @@ export const useUserStore = defineStore("user", {
 
     // ✅ Kiểm tra token còn hợp lệ không
     checkAuth() {
-  const MAX_AGE = 2 * 60 * 60 * 1000; // 2 tiếng
-  const tokenTime = parseInt(localStorage.getItem("tokenTime")) || 0;
-  
-  if (!this.token || !this.user) return false;
+      const MAX_AGE = 2 * 60 * 60 * 1000; // 2 tiếng
+      const tokenTime = parseInt(localStorage.getItem("tokenTime")) || 0;
 
-  const now = Date.now();
-  if (now - tokenTime > MAX_AGE) {
-    this.logout();
-    return false;
-  } else {
-    // reset thời gian hoạt động (sliding session)
-    localStorage.setItem("tokenTime", now);
-    return true;
-  }
-}
+      if (!this.token || !this.user) return false;
+
+      const now = Date.now();
+      if (now - tokenTime > MAX_AGE) {
+        this.logout();
+        return false;
+      } else {
+        // reset thời gian hoạt động (sliding session)
+        localStorage.setItem("tokenTime", now);
+        return true;
+      }
+    }
 
   },
 });

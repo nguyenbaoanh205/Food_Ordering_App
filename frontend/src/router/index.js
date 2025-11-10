@@ -77,7 +77,16 @@ const routes = [
         name: 'foodDetail',
         component: () => import('@/views/client/FoodDetail.vue'),
         props: true
+      },
+      {
+        path: '/paypal/success',
+        component: () => import('@/views/client/PaymentSuccess.vue')
+      },
+      {
+        path: '/payment-cancel',
+        component: () => import('@/views/client/PaymentCancel.vue')
       }
+
     ]
   },
   {
@@ -225,9 +234,7 @@ const routes = [
         component: () => import('@/views/admin/banners/bannerEdit.vue'),
         meta: { title: 'Edit banner' },
         props: true
-      }
-
-
+      },
     ]
   }
 ]

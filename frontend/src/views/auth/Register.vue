@@ -20,8 +20,8 @@ const handleRegister = async () => {
   error.value = "";
   try {
     const redirect = await userStore.register(form.value);
-    toast.success("Đăng ký thành công!");
-    redirect === "admin" ? router.push("/admin") : router.push("/");
+    toast.success("Register successfully!");
+    redirect === "admin" ? router.push("/admin") : router.push("/login");
   } catch (errMsg) {
     toast.error(errMsg);
   }

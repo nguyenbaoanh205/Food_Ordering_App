@@ -77,8 +77,6 @@
                                 <label class="form-label fw-semibold">Payment method</label>
                                 <select v-model="paymentMethod" class="form-select">
                                     <option value="cash">💵 Cash on delivery</option>
-                                    <option value="momo">📱 Momo</option>
-                                    <option value="credit_card">💳 Credit card</option>
                                     <option value="paypal">🅿️ Paypal</option>
                                     <option value="stripe">💠 Stripe</option>
                                 </select>
@@ -114,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, toRaw } from 'vue'
 import api from '@/services/api'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
@@ -206,6 +204,35 @@ const handleCheckout = async () => {
 
             window.location.href = res.data.url; // redirect sang Stripe Checkout page
             return;
+        } else if (paymentMethod.value === 'paypal') {
+            try {
+                localStorage.setItem('paypal_checkout_items', JSON.stringify(displayCartItems.value))
+                localStorage.setItem('paypal_checkout_info', JSON.stringify(checkoutInfo.value))
+
+                const res = await api.post('/paypal/create-payment', {
+                    user_id: userStore.user.id,
+                    total: totalAmount.value.toFixed(2),
+                    currency: 'USD',
+                    receiver_name: checkoutInfo.value.name,
+                    receiver_phone: checkoutInfo.value.phone,
+                    receiver_address: checkoutInfo.value.address,
+                    note: checkoutInfo.value.note,
+                    items: cartStore.items.map(item => ({
+                        food_id: item.food.id,
+                        quantity: item.quantity,
+                        price: item.displayPrice,
+                        options: item.options?.map(o => ({
+                            option_id: o.option.id,
+                            extra_price: o.option.extra_price
+                        })) || []
+                    }))
+                })
+
+                window.location.href = res.data.approval_url
+            } catch (error) {
+                console.error(error)
+                toast.error('Không thể tạo thanh toán PayPal.')
+            }
         } else {
             // Các phương thức khác (cash, momo, paypal)
             const payload = {

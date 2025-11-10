@@ -32,7 +32,7 @@ onMounted(() => {
 
   echo.channel('orders')
     .listen('.order.created', (e) => {
-      // console.log('📦 Nhận được đơn hàng mới:', e)
+      console.log('📦 Nhận được đơn hàng mới:', e)
       toast.info(`New Order #${e.id} - ${e.receiver_name}`)
     })
 });
