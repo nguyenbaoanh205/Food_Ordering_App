@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\PaymentMethod;
 
+use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
@@ -133,6 +134,8 @@ class PayPalController extends Controller
 
                     return $order;
                 });
+
+                event(new OrderCreated($order));
 
                 return response()->json([
                     'message' => 'Thanh toán PayPal thành công',
