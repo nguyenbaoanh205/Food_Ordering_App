@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\PaymentMethod;
 
+use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
@@ -96,12 +97,14 @@ class StripeController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => $line_items,
             'mode' => 'payment',
-            'success_url' => env('APP_URL') . '/order-histories?success=true&order_id=' . $order->id,
-            'cancel_url' => env('APP_URL') . '/checkout?order_id=' . $order->id . '&canceled=true',
+            'success_url' => env('FRONTEND_URL') . '/order-histories?success=true&order_id=' . $order->id,
+            'cancel_url' => env('FRONTEND_URL') . '/checkout?order_id=' . $order->id . '&canceled=true',
             'metadata' => [
                 'order_id' => $order->id,
             ],
         ]);
+
+        event(new OrderCreated($order));
 
         return response()->json(['url' => $session->url]);
     }

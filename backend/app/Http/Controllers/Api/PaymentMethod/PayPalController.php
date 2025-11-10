@@ -102,8 +102,8 @@ class PayPalController extends Controller
                         'note' => $request->note ?? '',
                         'total' => $request->total,
                         'payment_method' => 'paypal',
-                        'payment_status' => 'paid',       // chữ thường
-                        'status' => 'confirmed',          // chữ thường
+                        'payment_status' => 'paid',
+                        'status' => 'confirmed',
                     ]);
 
                     foreach ($request->items as $item) {
@@ -128,7 +128,7 @@ class PayPalController extends Controller
 
                     OrderHistory::create([
                         'order_id' => $order->id,
-                        'status' => 'confirmed',            // chữ thường
+                        'status' => 'confirmed',
                         'note' => 'Thanh toán PayPal thành công',
                     ]);
 
@@ -139,7 +139,7 @@ class PayPalController extends Controller
 
                 return response()->json([
                     'message' => 'Thanh toán PayPal thành công',
-                    'status' => 'completed'               // chữ thường
+                    'status' => 'completed'
                 ]);
             }
 

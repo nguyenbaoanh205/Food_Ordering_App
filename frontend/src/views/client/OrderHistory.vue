@@ -190,7 +190,7 @@ onMounted(async () => {
 
     if (route.query.success === 'true') {
         try {
-            await api.post('/cart/clear', {}, {
+            await api.delete('/cart/clear', {}, {
                 headers: { Authorization: `Bearer ${userStore.token}` }
             })
 
