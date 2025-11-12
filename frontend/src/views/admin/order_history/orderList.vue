@@ -127,9 +127,7 @@ const applySearch = () => {
   fetchHistories(1)
 }
 
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' })
-}
+const formatDate = (dateString) => new Date(dateString).toLocaleString('en-US')
 </script>
 
 <style scoped>

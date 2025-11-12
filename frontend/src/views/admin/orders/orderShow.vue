@@ -193,9 +193,7 @@ const fetchOrderDetail = async () => {
 onMounted(fetchOrderDetail)
 
 // Hàm format ngày
-const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' })
-}
+const formatDate = (dateString) => new Date(dateString).toLocaleString('en-US')
 
 // Hàm format tiền
 const formatCurrency = (value) => {

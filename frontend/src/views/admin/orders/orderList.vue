@@ -128,9 +128,7 @@ const applySearch = () => {
     fetchOrders(1)
 }
 
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' });
-};
+const formatDate = (dateString) => new Date(dateString).toLocaleString('en-US')
 
 // Định dạng tiền tệ
 const formatCurrency = (value) => {

@@ -104,9 +104,7 @@ const fetchOrderDetail = async () => {
 
 onMounted(fetchOrderDetail)
 
-const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' })
-}
+const formatDate = (dateString) => new Date(dateString).toLocaleString('en-US')
 
 const formatCurrency = (value) => {
     if (value == null) return ''

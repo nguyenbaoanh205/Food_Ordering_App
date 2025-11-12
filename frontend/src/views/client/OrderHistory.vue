@@ -198,7 +198,7 @@ const reviews = ref([])
 
 const formatPrice = (val) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(parseFloat(val))
-const formatDate = (dateStr) => new Date(dateStr).toLocaleString()
+const formatDate = (dateStr) => new Date(dateStr).toLocaleString('en-US')
 
 const fetchOrders = async () => {
     if (!userStore.isLoggedIn) return router.push('/login')
