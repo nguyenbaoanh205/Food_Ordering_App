@@ -18,22 +18,34 @@ class OrderHistoryClientController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Lấy đơn hàng kèm chi tiết món và options
+        // Lấy đơn hàng kèm chi tiết món, options, lịch sử
         $orders = Order::with([
             'user',
             'details.food',
             'details.options.option',
-            'history' // lấy ghi chú từ lịch sử nếu cần
+            'history',
+            'reviews' // thêm relation reviews
         ])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        // Gắn thông tin reviewed cho từng món
+        $orders->each(function ($order) use ($user) {
+            $order->details->each(function ($item) use ($user, $order) {
+                $item->reviewed = $order->reviews()
+                    ->where('user_id', $user->id)
+                    ->where('food_id', $item->food_id)
+                    ->exists();
+            });
+        });
 
         return response()->json([
             'status' => true,
             'data' => $orders
         ], 200);
     }
+
 
     /**
      * Lấy chi tiết 1 đơn hàng của user hiện tại

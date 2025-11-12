@@ -151,16 +151,19 @@ class OrderController extends Controller
         }
 
         $validated = $request->validate([
-            'status' => 'nullable|in:pending,confirmed,completed,cancelled',
+            'status' => 'nullable|in:pending,confirmed,preparing,shipping,delivered,completed,cancelled',
             'payment_status' => 'nullable|in:unpaid,paid,refunded',
             'payment_method' => 'nullable|in:cash,credit_card,paypal,momo,stripe',
         ]);
 
-        // ✅ Kiểm tra trạng thái mới hợp lệ
+
         if (isset($validated['status'])) {
             $validTransitions = [
-                'pending' => ['confirmed', 'cancelled'],
-                'confirmed' => ['completed', 'cancelled'],
+                'pending'   => ['confirmed', 'cancelled'],
+                'confirmed' => ['preparing', 'cancelled'],
+                'preparing' => ['shipping', 'cancelled'],
+                'shipping'  => ['delivered', 'cancelled'],
+                'delivered' => ['completed'], // auto hoặc admin kích hoạt
                 'completed' => [],
                 'cancelled' => [],
             ];
@@ -170,16 +173,35 @@ class OrderController extends Controller
 
             if (!in_array($newStatus, $validTransitions[$current] ?? [])) {
                 return response()->json([
-                    'message' => 'Invalid status transition.'
+                    'message' => "Không thể chuyển trạng thái từ '$current' sang '$newStatus'."
                 ], 400);
             }
 
             // Tạo lịch sử trạng thái
             OrderHistory::create([
                 'order_id' => $order->id,
-                'status' => $newStatus,
-                'note' => 'Status updated',
+                'status'   => $newStatus,
+                'note'     => "Trạng thái đơn hàng thay đổi từ $current → $newStatus",
             ]);
+
+            // if ($newStatus === 'delivered') {
+            //     // Tự động chuyển completed (ví dụ sau 60s)
+            //     dispatch(function () use ($order) {
+            //         sleep(20); // có thể đổi thành phút nếu cần
+            //         if ($order->fresh()->status === 'delivered') {
+            //             $order->update(['status' => 'completed']);
+
+            //             OrderHistory::create([
+            //                 'order_id' => $order->id,
+            //                 'status'   => 'completed',
+            //                 'note'     => 'Tự động hoàn tất đơn hàng sau khi giao xong.',
+            //             ]);
+
+            //             // Có thể bắn event realtime nếu cần
+            //             event(new OrderStatusUpdated($order->fresh()));
+            //         }
+            //     });
+            // }
         }
 
         $order->update($validated);
@@ -192,29 +214,4 @@ class OrderController extends Controller
             'data' => $order->load(['details.food', 'history'])
         ], 200);
     }
-
-
-    // public function destroy(string $id)
-    // {
-    //     $order = Order::find($id);
-    //     if (!$order) {
-    //         return response()->json(['message' => 'Order not found'], 404);
-    //     }
-
-    //     $order->delete();
-    //     return response()->json(['message' => 'Order deleted'], 200);
-    // }
-
-    // public function stats()
-    // {
-    //     $totalOrders = Order::count();
-    //     $totalRevenue = Order::where('status', 'completed')->sum('total');
-    //     $customers = Order::distinct('user_id')->count('user_id');
-
-    //     return response()->json([
-    //         'total_orders' => (int) $totalOrders,
-    //         'total_revenue' => (float) $totalRevenue,
-    //         'customers' => (int) $customers,
-    //     ], 200);
-    // }
 }

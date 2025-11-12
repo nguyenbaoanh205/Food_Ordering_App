@@ -41,4 +41,32 @@ class ReviewController extends Controller
 
         return response()->json($reviews, 200);
     }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'order_id' => 'required|exists:orders,id',
+            'food_id' => 'required|exists:foods,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string',
+        ]);
+
+        // Kiểm tra nếu đã đánh giá món này trong đơn này rồi
+        $exists = Review::where('user_id', $validated['user_id'])
+            ->where('order_id', $validated['order_id'])
+            ->where('food_id', $validated['food_id'])
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['message' => 'Bạn đã đánh giá món này rồi!'], 400);
+        }
+
+        $review = Review::create($validated);
+
+        return response()->json([
+            'message' => 'Đánh giá thành công!',
+            'data' => $review
+        ], 201);
+    }
 }

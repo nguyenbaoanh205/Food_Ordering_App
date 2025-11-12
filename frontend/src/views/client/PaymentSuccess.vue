@@ -66,8 +66,52 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="paypal-success text-center mt-10">
+  <div class="paypal-success">
+    <div class="loader"></div>
     <h2>Đang xử lý thanh toán PayPal...</h2>
     <p>Vui lòng đợi trong giây lát...</p>
   </div>
 </template>
+
+<style scoped>
+.paypal-success {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  text-align: center;
+  gap: 20px;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #0070ba;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #111827;
+  margin: 0;
+}
+
+p {
+  color: #6b7280;
+  margin: 0;
+}
+</style>

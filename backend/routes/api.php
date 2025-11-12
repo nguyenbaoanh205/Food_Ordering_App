@@ -43,6 +43,10 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Reviews [Client]
+    Route::post('/reviews', [ReviewController::class, 'store']);
+
 });
 
 // Stripe Payment
@@ -62,7 +66,7 @@ Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
 Route::delete('/cart-items/{id}', [CartController::class, 'removeItem']);
 
-// Reviews [Admin, Client]
+// Reviews [Admin]
 Route::get('/reviews', [ReviewController::class, 'index']);
 
 

@@ -30,13 +30,17 @@
 
                                 <!-- Badge màu động -->
                                 <span class="badge" :class="{
-                                    'bg-secondary': order.status === 'pending',
-                                    'bg-primary': order.status === 'confirmed',
-                                    'bg-success': order.status === 'completed',
-                                    'bg-danger': order.status === 'cancelled'
+                                    'bg-secondary': order.status === 'pending',    // chờ xử lý
+                                    'bg-primary': order.status === 'confirmed',    // đã xác nhận
+                                    'bg-info': order.status === 'preparing',       // đang chuẩn bị
+                                    'bg-warning': order.status === 'shipping',     // đang giao
+                                    'bg-dark': order.status === 'delivered',       // đã giao
+                                    'bg-success': order.status === 'completed',    // hoàn tất
+                                    'bg-danger': order.status === 'cancelled'      // hủy
                                 }">
                                     {{ order.status }}
                                 </span>
+
                             </div>
                         </button>
                     </h2>
@@ -109,16 +113,60 @@
                                         <span class="fw-bold text-danger">
                                             Total: {{ formatPrice(item.price * item.quantity) }}
                                         </span>
+
+                                        <div v-if="['delivered', 'completed'].includes(order.status) && !reviews.includes(item.food.id)"
+                                            class="mt-2">
+                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                                data-bs-target="#reviewModal"
+                                                @click="prepareReview(order.id, item.food.id, item.food.name)">
+                                                Đánh giá
+                                            </button>
+                                        </div>
+
                                     </div>
                                 </li>
                             </ul>
-
+                            <!-- Nút đánh giá -->
+                            <!-- <div class="mt-3 text-end" v-if="order.status === 'completed' && !order.has_review">
+                                <button class="btn btn-outline-success btn-sm" @click="openReviewModal(order)">
+                                    ⭐ Đánh giá đơn hàng
+                                </button>
+                            </div>
+                            <div class="mt-3 text-end" v-else-if="order.status === 'completed' && order.has_review">
+                                <span class="badge bg-success">✅ Đã đánh giá</span>
+                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <!-- Modal đánh giá -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewModalLabel">Đánh giá món: {{ selectedFoodName }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Chọn số sao:</label>
+                    <select v-model="review.rating" class="form-select">
+                        <option v-for="i in 5" :key="i" :value="i">{{ i }} ⭐</option>
+                    </select>
+
+                    <label class="form-label mt-3">Nhận xét:</label>
+                    <textarea v-model="review.comment" class="form-control" rows="3"
+                        placeholder="Viết cảm nhận của bạn..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" @click="submitReview">Gửi đánh giá</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script setup>
@@ -129,6 +177,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { useCartStore } from '@/stores/cart'
 import echo from '@/plugins/echo'
+// import { Modal } from 'bootstrap'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -139,12 +188,18 @@ const toast = useToast()
 const orders = ref([])
 const loading = ref(true)
 let channel = null
+let reviewModal = null
+
+const selectedOrderId = ref(null)
+const selectedFoodId = ref(null)
+const selectedFoodName = ref('')
+const review = ref({ rating: 5, comment: '' })
+const reviews = ref([])
 
 const formatPrice = (val) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(parseFloat(val))
 const formatDate = (dateStr) => new Date(dateStr).toLocaleString()
 
-// 🟢 Fetch danh sách order ban đầu
 const fetchOrders = async () => {
     if (!userStore.isLoggedIn) return router.push('/login')
     loading.value = true
@@ -153,6 +208,13 @@ const fetchOrders = async () => {
             headers: { Authorization: `Bearer ${userStore.token}` }
         })
         orders.value = res.data.data || []
+
+        reviews.value = []
+        orders.value.forEach(order => {
+            order.details.forEach(item => {
+                if (item.reviewed) reviews.value.push(item.food.id)
+            })
+        })
     } catch (err) {
         console.error(err)
         orders.value = []
@@ -161,13 +223,40 @@ const fetchOrders = async () => {
     }
 }
 
-// 🟢 Lắng nghe realtime trạng thái order
+function prepareReview(orderId, foodId, foodName) {
+    selectedOrderId.value = orderId
+    selectedFoodId.value = foodId
+    selectedFoodName.value = foodName
+    review.value = { rating: 5, comment: '' }
+}
+
+async function submitReview() {
+    try {
+        await api.post('/reviews', {
+            user_id: userStore.user.id,
+            order_id: selectedOrderId.value,
+            food_id: selectedFoodId.value,
+            rating: review.value.rating,
+            comment: review.value.comment,
+        }, {
+            headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+
+        reviews.value.push(selectedFoodId.value)
+        toast.success('🎉 Cảm ơn bạn đã đánh giá!')
+        // Đóng modal bằng JS bootstrap
+        const modalEl = document.getElementById('reviewModal')
+        const modal = bootstrap.Modal.getInstance(modalEl)
+        modal.hide()
+    } catch (err) {
+        console.error(err)
+        toast.error(err.response?.data?.message || 'Gửi đánh giá thất bại!')
+    }
+}
+
 function listenRealtime(userId) {
     channel = echo.channel(`user.${userId}`)
     channel.listen('.order.status.updated', (data) => {
-        // toast.info(`📦 Đơn hàng #${data.id} đã chuyển trạng thái: ${data.status}`)
-
-        // Update trực tiếp badge trạng thái và thời gian cập nhật
         const idx = orders.value.findIndex(o => o.id === data.id)
         if (idx !== -1) {
             orders.value[idx].status = data.status
@@ -183,17 +272,18 @@ function stopListening(userId) {
     }
 }
 
-// 🔄 Mounted: fetch và đăng ký realtime
+// 🔄 Mounted: fetch, modal, realtime
 onMounted(async () => {
     await fetchOrders()
+
     if (userStore.user?.id) listenRealtime(userStore.user.id)
 
+    // Nếu vừa thanh toán xong
     if (route.query.success === 'true') {
         try {
-            await api.delete('/cart/clear', {}, {
+            await api.delete('/cart/clear', {
                 headers: { Authorization: `Bearer ${userStore.token}` }
             })
-
             cartStore.clearCart()
         } catch (err) {
             console.error(err)
@@ -206,12 +296,13 @@ onBeforeUnmount(() => {
     if (userStore.user?.id) stopListening(userStore.user.id)
 })
 
-// 🔄 Watch userStore.user để tự động hủy/lắng nghe khi login/logout
+// 🔄 Watch user login/logout để lắng nghe realtime
 watch(() => userStore.user, (newUser, oldUser) => {
     if (oldUser?.id) stopListening(oldUser.id)
     if (newUser?.id) listenRealtime(newUser.id)
 })
 </script>
+
 
 
 <style scoped>

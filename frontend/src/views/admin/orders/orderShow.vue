@@ -30,7 +30,17 @@
                         <div class="card shadow-sm flex-fill">
                             <div class="card-header bg-light fw-bold">Order Summary</div>
                             <div class="card-body">
-                                <p><strong>Status:</strong> {{ order.status }}</p>
+                                <p><strong>Status:</strong> <span class="badge" :class="{
+                                    'bg-secondary': order.status === 'pending',
+                                    'bg-primary': order.status === 'confirmed',
+                                    'bg-info': order.status === 'preparing',
+                                    'bg-warning text-dark': order.status === 'shipping',
+                                    'bg-success': order.status === 'delivered',
+                                    'bg-success': order.status === 'completed',
+                                    'bg-danger': order.status === 'cancelled'
+                                }">
+                                        {{ order.status }}
+                                    </span></p>
                                 <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
                                 <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
                                 <p><strong>Created At:</strong> {{ formatDate(order.created_at) }}</p>
@@ -48,6 +58,9 @@
                                     <select v-model="status" class="form-select w-auto">
                                         <option value="pending">Pending</option>
                                         <option value="confirmed">Confirmed</option>
+                                        <option value="preparing">Preparing</option>
+                                        <option value="shipping">Shipping</option>
+                                        <option value="delivered">Delivered</option>
                                         <option value="completed">Completed</option>
                                         <option value="cancelled">Cancelled</option>
                                     </select>
@@ -194,18 +207,40 @@ const formatCurrency = (value) => {
 const updateStatus = async () => {
     if (!status.value || status.value === order.value.status) return
 
+    // ✅ Kiểm tra transition hợp lệ
+    const validTransitions = {
+        pending: ['confirmed', 'cancelled'],
+        confirmed: ['preparing', 'cancelled'],
+        preparing: ['shipping', 'cancelled'],
+        shipping: ['delivered', 'cancelled'],
+        delivered: ['completed'],
+        completed: [],
+        cancelled: []
+    }
+
+    if (!validTransitions[order.value.status]?.includes(status.value)) {
+        toast.error(`Invalid status transition: ${order.value.status} → ${status.value}`)
+        return
+    }
+
     updating.value = true
     try {
+        // Gọi API update
         const res = await api.put(`/orders/${props.id}`, { status: status.value })
-        order.value = res.data.data // cập nhật order mới từ response
-        toast.success('Cập nhật trạng thái thành công!')
+
+        // Cập nhật order mới từ response
+        order.value = res.data.data
+
+        toast.success(`Cập nhật trạng thái thành công: ${status.value}`)
+
     } catch (err) {
         console.error(err)
-        toast.error('Cập nhật thất bại!')
+        toast.error(err.response?.data?.message || 'Cập nhật thất bại!')
     } finally {
         updating.value = false
     }
 }
+
 </script>
 
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     protected $table = 'reviews';
-    protected $fillable = ['user_id', 'food_id', 'rating', 'comment'];
+    protected $fillable = ['user_id', 'order_id', 'food_id', 'rating', 'comment'];
 
     public function user()
     {
@@ -17,5 +17,10 @@ class Review extends Model
     public function food()
     {
         return $this->belongsTo(Food::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }
