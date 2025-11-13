@@ -188,7 +188,6 @@ const toast = useToast()
 const orders = ref([])
 const loading = ref(true)
 let channel = null
-let reviewModal = null
 
 const selectedOrderId = ref(null)
 const selectedFoodId = ref(null)
@@ -231,7 +230,7 @@ function prepareReview(orderId, foodId, foodName) {
 }
 
 async function submitReview() {
-    try {
+    // try {
         await api.post('/reviews', {
             user_id: userStore.user.id,
             order_id: selectedOrderId.value,
@@ -244,14 +243,13 @@ async function submitReview() {
 
         reviews.value.push(selectedFoodId.value)
         toast.success('🎉 Cảm ơn bạn đã đánh giá!')
-        // Đóng modal bằng JS bootstrap
         const modalEl = document.getElementById('reviewModal')
         const modal = bootstrap.Modal.getInstance(modalEl)
         modal.hide()
-    } catch (err) {
-        console.error(err)
-        toast.error(err.response?.data?.message || 'Gửi đánh giá thất bại!')
-    }
+    // } catch (err) {
+    //     console.error(err)
+    //     toast.error(err.response?.data?.message || 'Gửi đánh giá thất bại!')
+    // }
 }
 
 function listenRealtime(userId) {

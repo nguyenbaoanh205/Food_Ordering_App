@@ -14,14 +14,26 @@ class CartController extends Controller
     // 🧾 Lấy giỏ hàng của 1 user
     public function getCart($userId)
     {
-        $cart = Cart::with(['items.food', 'items.options.option'])->where('user_id', $userId)->first();
+        $cart = Cart::with(['items.food', 'items.options.option'])
+            ->where('user_id', $userId)
+            ->first();
 
         if (!$cart) {
-            return response()->json(['message' => 'Cart not found'], 404);
+            return response()->json([
+                'id' => null,
+                'user_id' => $userId,
+                'items' => [],
+                'message' => 'User has no cart yet'
+            ], 200);
         }
 
-        return response()->json($cart);
+        return response()->json([
+            'id' => $cart->id,
+            'user_id' => $cart->user_id,
+            'items' => $cart->items,
+        ]);
     }
+
 
     // ➕ Thêm sản phẩm vào giỏ
     public function addToCart(Request $request)
@@ -111,7 +123,7 @@ class CartController extends Controller
 
     public function clear(Request $request)
     {
-        $user = $request->user(); // phải tồn tại
+        $user = $request->user();
 
         if (!$user || !$user->cart) {
             return response()->json(['message' => 'No cart found'], 404);

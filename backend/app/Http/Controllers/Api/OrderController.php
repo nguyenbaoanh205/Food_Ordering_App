@@ -177,31 +177,20 @@ class OrderController extends Controller
                 ], 400);
             }
 
+            if (
+                $newStatus === 'delivered' &&
+                $order->payment_status === 'unpaid' &&
+                $order->payment_method === 'cash'
+            ) {
+                $validated['payment_status'] = 'paid';
+            }
+
             // Tạo lịch sử trạng thái
             OrderHistory::create([
                 'order_id' => $order->id,
                 'status'   => $newStatus,
                 'note'     => "Trạng thái đơn hàng thay đổi từ $current → $newStatus",
             ]);
-
-            // if ($newStatus === 'delivered') {
-            //     // Tự động chuyển completed (ví dụ sau 60s)
-            //     dispatch(function () use ($order) {
-            //         sleep(20); // có thể đổi thành phút nếu cần
-            //         if ($order->fresh()->status === 'delivered') {
-            //             $order->update(['status' => 'completed']);
-
-            //             OrderHistory::create([
-            //                 'order_id' => $order->id,
-            //                 'status'   => 'completed',
-            //                 'note'     => 'Tự động hoàn tất đơn hàng sau khi giao xong.',
-            //             ]);
-
-            //             // Có thể bắn event realtime nếu cần
-            //             event(new OrderStatusUpdated($order->fresh()));
-            //         }
-            //     });
-            // }
         }
 
         $order->update($validated);

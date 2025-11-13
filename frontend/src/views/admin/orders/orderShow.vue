@@ -35,7 +35,7 @@
                                     'bg-primary': order.status === 'confirmed',
                                     'bg-info': order.status === 'preparing',
                                     'bg-warning text-dark': order.status === 'shipping',
-                                    'bg-success': order.status === 'delivered',
+                                    'bg-dark': order.status === 'delivered',
                                     'bg-success': order.status === 'completed',
                                     'bg-danger': order.status === 'cancelled'
                                 }">
