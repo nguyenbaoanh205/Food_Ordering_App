@@ -24,7 +24,7 @@
 - [Vue Router](https://router.vuejs.org/)  
 - [Pinia](https://pinia.vuejs.org/)  
 - [Axios](https://axios-http.com/)  
-- [Bootstrap](https://getbootstrap.com/) hoặc [TailwindCSS](https://tailwindcss.com/)  
+- [Bootstrap](https://getbootstrap.com/)
 - [Vue Toastification](https://vue-toastification.maronato.dev/)  
 - [Laravel Echo + Pusher](https://pusher.com/)  
 
@@ -68,8 +68,9 @@
 - composer install
 - cp .env.example .env
 - php artisan key:generate
-- php artisan migrate --seed
+- php artisan migrate
 - php artisan serve
+- php artisan schedule:run
 
 ### 2️⃣ Frontend (Vue.js)
 - cd frontend
@@ -87,12 +88,13 @@
 - Thêm món vào giỏ hàng
 - Thanh toán và đặt hàng
 - Đánh giá, bình luận món ăn
-- Xem lịch sử & trạng thái đơn hàng realtime
+- Xem lịch sử & trạng thái đơn hàng (realtime)
 
 🛠️ Quản trị viên (Admin)
 - Quản lý danh mục & sản phẩm
 - Quản lý người dùng
 - Quản lý đơn hàng (duyệt, giao hàng, hủy)
+- Quản lý đánh giá & bình luận
 - Nhận thông báo realtime khi có đơn hàng mới
 - Thống kê doanh thu, đơn hàng, sản phẩm bán chạy
 
@@ -117,12 +119,12 @@
 
 🧪 Môi trường phát triển
 - Công cụ	Phiên bản khuyến nghị
-- PHP	8.2+
+- PHP	    8.2+
 - Laravel	12x
 - Node.js	22+
-- MySQL	8.0+
+- MySQL	    8.0+
 - Composer	2.8+
-- NPM	10+
+- NPM	    10+
 
 
 
