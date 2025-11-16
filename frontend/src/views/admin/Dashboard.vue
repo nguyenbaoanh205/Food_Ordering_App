@@ -2,7 +2,7 @@
   <div class="container-fluid py-4">
     <h2 class="fw-bold mb-0">Dashboard</h2>
 
-    <!-- Cards thống kê -->
+    <!-- Statistic Cards -->
     <div class="row g-4 mb-4">
       <div class="col-md-3" v-for="item in stats" :key="item.title">
         <div class="card shadow-sm border-0 text-center p-3">
@@ -12,42 +12,43 @@
       </div>
     </div>
 
-    <!-- Biểu đồ -->
+    <!-- Charts -->
     <div class="row g-4">
-      <!-- Biểu đồ cột: Doanh thu theo tháng -->
+      <!-- Bar Chart: Revenue by Month -->
       <div class="col-lg-6">
-        <div class="card shadow-sm p-3">
-          <h5 class="mb-3 text-secondary">📈 Doanh thu 6 tháng gần nhất</h5>
+        <div class="card shadow-sm border-0 p-3">
+          <h5 class="mb-3 text-secondary">📈 Revenue in the Last 6 Months</h5>
           <BarChart :series="barSeries" :categories="barCategories" />
         </div>
       </div>
 
-      <!-- Biểu đồ cột: Món ăn bán chạy -->
+      <!-- Bar Chart: Top Selling Foods -->
       <div class="col-lg-6">
-        <div class="card shadow-sm p-3">
-          <h5 class="mb-3 text-secondary">🍔 Món ăn bán chạy nhất</h5>
+        <div class="card shadow-sm border-0 p-3">
+          <h5 class="mb-3 text-secondary">🍔 Best-Selling Foods</h5>
           <TopFoodsChart :series="topFoodsSeries" :categories="topFoodsCategories" />
         </div>
       </div>
 
-      <!-- Biểu đồ đường: Số đơn hàng theo tháng -->
+      <!-- Line Chart: Orders by Month -->
       <!-- <div class="col-lg-6">
-        <div class="card shadow-sm p-3">
-          <h5 class="mb-3 text-secondary">📉 Số đơn hàng (ước tính theo tháng)</h5>
+        <div class="card shadow-sm border-0 p-3">
+          <h5 class="mb-3 text-secondary">📉 Estimated Monthly Orders</h5>
           <LineChart :series="lineSeries" :categories="barCategories" />
         </div>
       </div> -->
 
-      <!-- Biểu đồ tròn: Tỷ lệ đơn hàng -->
+      <!-- Pie Chart: Order Status Ratio -->
       <div class="col-lg-6">
-        <div class="card shadow-sm p-3">
-          <h5 class="mb-3 text-secondary">🥧 Tỷ lệ đơn hàng theo trạng thái</h5>
-          <PieChart :series="pieSeries" :labels="pieLabels" />
+        <div class="card shadow-sm border-0 p-3">
+          <h5 class="mb-3 text-secondary">🥧 Order Status Distribution</h5>
+          <PieChart :series="pieSeries" :labels="pieLabels" :colors="pieColors"/>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -62,25 +63,43 @@ import echo from '@/plugins/echo'
 const toast = useToast()
 // 🧾 Cards thống kê
 const stats = ref([
-  { title: 'Tổng đơn hàng', value: '...' },
-  { title: 'Doanh thu ($)', value: '...' },
-  { title: 'Người dùng', value: '...' },
-  { title: 'Đơn huỷ', value: '...' },
+  { title: 'Total Orders', value: '...' },
+  { title: 'Revenue ($)', value: '...' },
+  { title: 'Users', value: '...' },
+  { title: 'Cancelled Orders', value: '...' },
 ])
 
-// 📊 Biểu đồ doanh thu theo tháng
-const barSeries = ref([{ name: 'Doanh thu', data: [] }])
+// 📊 Bar Chart: Monthly Revenue
+const barSeries = ref([{ name: 'Revenue', data: [] }])
 const barCategories = ref([])
 
-// 📈 Biểu đồ đường: số đơn hàng
-const lineSeries = ref([{ name: 'Đơn hàng (ước tính)', data: [] }])
+// 📈 Line Chart: Estimated Orders
+const lineSeries = ref([{ name: 'Estimated Orders', data: [] }])
 
-// 🥧 Biểu đồ tròn: tỷ lệ đơn hàng theo trạng thái
+// 🥧 Pie Chart: Order Status Ratio
 const pieSeries = ref([])
-const pieLabels = ref(['Đang xử lý', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy'])
+const pieLabels = ref([
+  'Pending',
+  'Confirmed',
+  'Preparing',
+  'Shipping',
+  'Delivered',
+  'Completed',
+  'Cancelled'
+])
 
-// 🍔 Biểu đồ cột: Top món ăn bán chạy nhất
-const topFoodsSeries = ref([{ name: 'Số lượng bán', data: [] }])
+const pieColors = ref([
+  '#4E79A7', // Màu xanh dương
+  '#F28E2B', // Cam
+  '#E15759', // Đỏ nhạt
+  '#76B7B2', // Xanh ngọc
+  '#59A14F', // Xanh lá
+  '#2ecc71', // Vàng
+  '#B07AA1'  // Tím pastel
+])
+
+// 🍔 Bar Chart: Top Selling Foods
+const topFoodsSeries = ref([{ name: 'Total Sold', data: [] }])
 const topFoodsCategories = ref([])
 
 async function loadStatistics() {
@@ -89,18 +108,21 @@ async function loadStatistics() {
     const data = res.data
 
     stats.value = [
-      { title: 'Tổng đơn hàng', value: data.orders },
-      { title: 'Doanh thu ($)', value: data.revenue.toLocaleString('vi-VN') },
-      { title: 'Người dùng', value: data.users },
-      { title: 'Đơn huỷ', value: data.ordersByStatus.cancelled },
+      { title: 'Total Orders', value: data.orders },
+      { title: 'Revenue ($)', value: data.revenue.toLocaleString('en-US') },
+      { title: 'Users', value: data.users },
+      { title: 'Cancelled Orders', value: data.ordersByStatus.cancelled },
     ]
 
-    barCategories.value = data.revenueByMonth.map(i => `Tháng ${i.month}`)
-    barSeries.value = [{ name: 'Doanh thu', data: data.revenueByMonth.map(i => i.total) }]
+    barCategories.value = data.revenueByMonth.map(i => `Month ${i.month}`)
+    barSeries.value = [{ name: 'Revenue', data: data.revenueByMonth.map(i => i.total) }]
 
     pieSeries.value = [
       data.ordersByStatus.pending,
       data.ordersByStatus.confirmed,
+      data.ordersByStatus.preparing,
+      data.ordersByStatus.shipping,
+      data.ordersByStatus.delivered,
       data.ordersByStatus.completed,
       data.ordersByStatus.cancelled
     ]
@@ -108,14 +130,15 @@ async function loadStatistics() {
     if (data.topFoods && data.topFoods.length > 0) {
       topFoodsCategories.value = data.topFoods.map(f => f.name)
       topFoodsSeries.value = [{
-        name: 'Số lượng bán',
+        name: 'Total Sold',
         data: data.topFoods.map(f => f.total_sold)
       }]
     }
   } catch (err) {
-    console.error('❌ Lỗi khi tải thống kê:', err)
+    console.error('❌ Error loading statistics:', err)
   }
 }
+
 
 // 🧠 Gọi ban đầu
 onMounted(async () => {
