@@ -129,7 +129,7 @@ class PayPalController extends Controller
                     OrderHistory::create([
                         'order_id' => $order->id,
                         'status' => 'confirmed',
-                        'note' => 'Thanh toán PayPal thành công',
+                        'note' => 'PayPal payment successful',
                     ]);
 
                     return $order;
