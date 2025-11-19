@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CartItemOptionController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\FoodOptionController;
 use App\Http\Controllers\Api\OderDetailController;
 use App\Http\Controllers\Api\OderHistoryController;
@@ -78,6 +79,9 @@ Route::get('/users/{id}/cart', [CartController::class, 'getCart']);
 Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::put('/cart-items/{id}', [CartController::class, 'updateQuantity']);
 Route::delete('/cart-items/{id}', [CartController::class, 'removeItem']);
+// Contact [Client]
+Route::post('/contact', [ContactController::class, 'store']);
+
 
 /*
 |--------------------------------------------------------------------------
