@@ -20,6 +20,7 @@
     "apexcharts": "^5.3.5",
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "laravel-echo": "^2.2.4",
     "pinia": "^3.0.3",
     "pusher-js": "^8.4.0",

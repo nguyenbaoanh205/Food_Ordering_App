@@ -175,8 +175,8 @@
             <!-- Danh sách món ăn -->
             <div class="filters-content">
                 <div class="row grid">
-                    <MotionGroup :initial="{ opacity: 0, y: 30 }"
-                        :enter="{ opacity: 1, y: 0 }" :leave="{ opacity: 0, y: -30 }">
+                    <MotionGroup :initial="{ opacity: 0, y: 30 }" :enter="{ opacity: 1, y: 0 }"
+                        :leave="{ opacity: 0, y: -30 }">
                         <FoodCard v-for="foodChildren in filteredFoods" :key="foodChildren.id" :food="foodChildren"
                             @add-to-cart="addToCart" class="col-sm-6 col-lg-4" />
                     </MotionGroup>
@@ -272,39 +272,57 @@ import { useToast } from 'vue-toastification'
 import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
 const testimonials = [
-  {
-    text: 'Lorem ipsum dolor sit amet...',
-    name: 'Moana Michell',
-    subtitle: 'magna aliqua',
-    image: Img13,
-  },
-  {
-    text: 'Sed do eiusmod tempor incididunt...',
-    name: 'Mike Hamell',
-    subtitle: 'magna aliqua',
-    image: Img14,
-  },
-  {
-    text: 'Ut enim ad minim veniam...',
-    name: 'Nnba',
-    subtitle: 'magna aliqua',
-    image: Img14,
-  },
+    {
+        id: 1,
+        name: "James Carter",
+        subtitle: "Customer from New York",
+        image: Img13,
+        text: "Amazing product! The quality is far beyond my expectations."
+    },
+    {
+        id: 2,
+        name: "Emily Johnson",
+        subtitle: "Verified Buyer",
+        image: Img13,
+        text: "Amazing product! The quality is far beyond my expectations."
+    },
+    {
+        id: 3,
+        name: "Michael Brown",
+        subtitle: "Regular Customer",
+        image: Img13,
+        text: "I’m extremely satisfied. Will definitely come back again!"
+    },
+    {
+        id: 4,
+        name: "Sophia Williams",
+        subtitle: "Customer from California",
+        image: Img13,
+        text: "Good experience overall. I would recommend it to others."
+    },
+    {
+        id: 5,
+        name: "Daniel Anderson",
+        subtitle: "Verified Buyer",
+        image: Img13,
+        text: "Amazing product! The quality is far beyond my expectations!"
+    }
 ]
+
 const splideOptions = {
-  type: 'loop',
-  perPage: 3,
-  autoplay: true,
-  interval: 2500,
-  pauseOnHover: false,
-  pauseOnFocus: false,
-  arrows: false,
-  pagination: false,
-  gap: '1rem',
-  breakpoints: {
-    992: { perPage: 2 },
-    768: { perPage: 1 },
-  },
+    type: 'loop',
+    perPage: 3,
+    autoplay: true,
+    interval: 2500,
+    pauseOnHover: false,
+    pauseOnFocus: false,
+    arrows: false,
+    pagination: false,
+    gap: '1rem',
+    breakpoints: {
+        992: { perPage: 2 },
+        768: { perPage: 1 },
+    },
 }
 
 const toast = useToast()
