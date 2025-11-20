@@ -37,7 +37,7 @@ const routes = [
         meta: { title: 'Menu' }
       },
       {
-        path: 'conact',
+        path: 'contact',
         name: 'Contact',
         component: () => import('@/views/client/Contact.vue'),
         meta: { title: 'Contact' }

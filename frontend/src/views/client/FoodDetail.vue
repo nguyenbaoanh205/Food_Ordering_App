@@ -97,33 +97,51 @@
             <!-- 🧁 SẢN PHẨM LIÊN QUAN -->
             <div class="related-section mt-5">
                 <h4 class="fw-bold mb-3">You may also like</h4>
-                <div class="row g-3">
-                    <div v-for="related in relatedFoods" :key="related.id" class="col-6 col-md-3">
+
+                <Splide :options="splideOptions">
+                    <SplideSlide v-for="related in relatedFoods" :key="related.id">
                         <RouterLink :to="{ name: 'foodDetail', params: { id: related.id } }"
                             class="text-decoration-none text-dark">
                             <div class="card shadow-sm border-0 h-100">
                                 <img :src="related.image" class="card-img-top" :alt="related.name" />
                                 <div class="card-body text-center">
-                                    <h6 class="fw-bold">{{ related.name }}</h6>
-                                    <p class="text-primary mb-0">{{ formatCurrency(related.price) }}</p>
+                                    <h5 class="fw-bold">{{ related.name }}</h5>
+                                    <p class="mb-0 text-primary">{{ formatCurrency(related.price) }}</p>
                                 </div>
                             </div>
                         </RouterLink>
-                    </div>
-                </div>
+                    </SplideSlide>
+                </Splide>
             </div>
+
 
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { Splide, SplideSlide } from '@splidejs/vue-splide'
+import '@splidejs/vue-splide/css'
 import api from '@/services/api'
 import { useToast } from 'vue-toastification'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
+
+const splideOptions = {
+  type: 'loop',
+  perPage: 4,
+  gap: '1rem',
+  autoplay: true,
+  interval: 3000,
+  pagination: false,
+  arrows: true,
+  breakpoints: {
+    768: { perPage: 2 },
+    480: { perPage: 1 }
+  }
+}
 
 const toast = useToast()
 const route = useRoute()
@@ -164,7 +182,7 @@ const fetchFoodDetail = async () => {
 const fetchRelatedFoods = async () => {
     if (!food.value.category_id) return
     const res = await api.get(`/foods?category_id=${food.value.category_id}`)
-    relatedFoods.value = res.data.data.filter(f => f.id !== food.value.id).slice(0, 4)
+    relatedFoods.value = res.data.data.filter(f => f.id !== food.value.id).slice(0, 8)
 }
 
 // ✅ Lấy feedback từ khách hàng
@@ -205,7 +223,7 @@ const addToCart = async () => {
         );
 
         toast.success('Added to cart successfully!')
-        router.push('/cart')
+        // router.push('/cart')
 
     } catch (err) {
         console.error(err)
@@ -220,6 +238,14 @@ const formatCurrency = val =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val)
 
 onMounted(fetchFoodDetail)
+
+watch(
+    () => route.params.id,
+    () => {
+        loading.value = true
+        fetchFoodDetail()
+    }
+)
 </script>
 
 <style scoped>
