@@ -185,7 +185,6 @@ class OrderController extends Controller
                 $validated['payment_status'] = 'paid';
             }
 
-            // Tạo lịch sử trạng thái
             OrderHistory::create([
                 'order_id' => $order->id,
                 'status'   => $newStatus,
