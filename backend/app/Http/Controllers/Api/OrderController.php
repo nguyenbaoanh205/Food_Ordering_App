@@ -20,7 +20,6 @@ class OrderController extends Controller
     {
         $query = Order::with(['user', 'details.food', 'details.options.option', 'history']);
 
-        // 🔍 Lấy từ khóa tìm kiếm
         $search = $request->query('q');
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
