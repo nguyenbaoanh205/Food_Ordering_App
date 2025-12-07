@@ -16,17 +16,19 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label">Price</label>
-                            <input v-model="form.price" type="number" step="0.01" class="form-control" placeholder="Enter price" />
+                            <input v-model="form.price" type="number" step="0.01" class="form-control"
+                                placeholder="Enter price" />
                         </div>
 
                         <div class="col-12">
                             <label class="form-label">Description</label>
-                            <textarea v-model="form.description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                            <textarea v-model="form.description" class="form-control" rows="3"
+                                placeholder="Enter description"></textarea>
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Image (URL)</label>
-                            <input v-model="form.image" type="text" class="form-control" placeholder="https://..." />
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" @change="handleImage">
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -62,9 +64,13 @@ const form = ref({
     name: '',
     price: '',
     description: '',
-    image: '',
+    image: null,
     category_id: ''
 })
+
+const handleImage = (e) => {
+    form.value.image = e.target.files[0]
+}
 
 const categories = ref([])
 
@@ -75,11 +81,27 @@ onMounted(async () => {
 
 const createFood = async () => {
     try {
-        await api.post('/foods', form.value)
+        const formData = new FormData()
+        formData.append('name', form.value.name)
+        formData.append('price', form.value.price)
+        formData.append('description', form.value.description ?? '')
+        formData.append('category_id', form.value.category_id)
+
+        if (form.value.image) {
+            formData.append('image', form.value.image)
+        }
+
+        await api.post('/foods', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+
         toast.success('Created successfully!')
         router.push('/admin/food')
     } catch (err) {
         toast.error('Failed to create food')
     }
 }
+
 </script>

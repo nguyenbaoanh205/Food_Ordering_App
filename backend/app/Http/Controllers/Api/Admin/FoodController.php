@@ -49,9 +49,19 @@ class FoodController extends Controller
             'name'        => 'required|string|max:255',
             'price'       => 'required|numeric',
             'description' => 'nullable|string',
-            'image'       => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'category_id' => 'required|exists:categories,id',
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            $imageName = time() . '-' . $image->getClientOriginalName();
+
+            $image->move(public_path('foods'), $imageName);
+
+            $validated['image'] = 'foods/' . $imageName;
+        }
 
         $food = $this->food->create($validated);
 
@@ -91,12 +101,27 @@ class FoodController extends Controller
             'name'        => 'required|string|max:255',
             'price'       => 'required|numeric',
             'description' => 'nullable|string',
-            'image'       => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'category_id' => 'required|exists:categories,id',
         ]);
 
+        if ($request->hasFile('image')) {
+
+            $oldImage = $food->getRawOriginal('image'); // lấy path gốc
+            if ($oldImage && file_exists(public_path($oldImage))) {
+                unlink(public_path($oldImage));
+            }
+
+            $file = $request->file('image');
+            $fileName = time() . '-' . $file->getClientOriginalName();
+            $path = 'foods/' . $fileName;
+
+            $file->move(public_path('foods'), $fileName);
+
+            $validated['image'] = $path;
+        }
+
         $food->update($validated);
-        // load category để frontend dùng luôn
         $food->load('category');
 
         return response()->json([
@@ -111,6 +136,16 @@ class FoodController extends Controller
     public function destroy(string $id)
     {
         $food = $this->food->findOrFail($id);
+
+        // Lấy path gốc của image (foods/xyz.jpg)
+        $imagePath = $food->getRawOriginal('image');
+
+        // Xóa file nếu tồn tại
+        if ($imagePath && file_exists(public_path($imagePath))) {
+            unlink(public_path($imagePath));
+        }
+
+        // Xóa record trong DB
         $food->delete();
 
         return response()->json([

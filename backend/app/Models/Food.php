@@ -22,4 +22,15 @@ class Food extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function getImageAttribute($value)
+    {
+        // Nếu đã là URL đầy đủ rồi thì trả về luôn (tránh lỗi khi update)
+        if (str_starts_with($value, 'http')) {
+            return $value;
+        }
+
+        // Nếu không, tự động tạo URL đầy đủ
+        return $value ? url($value) : null;
+    }
 }
